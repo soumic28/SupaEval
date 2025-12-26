@@ -62,26 +62,30 @@ export function DifferentiationSection() {
                 </div>
 
                 <ScrollReveal delay={0.2} width="100%">
-                    <div className="overflow-x-auto rounded-xl border border-[var(--border)] bg-[var(--secondary)]/10 backdrop-blur-sm">
+                    <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[#0A0A0A]">
                         <table className="w-full text-left text-sm">
                             <thead>
-                                <tr className="border-b border-[var(--border)] bg-[var(--secondary)]/30">
-                                    <th className="p-4 font-medium">Feature</th>
-                                    <th className="p-4 font-medium text-[var(--muted-foreground)]">Traditional Eval</th>
-                                    <th className="p-4 font-bold text-indigo-400 bg-indigo-500/10">SupaEval</th>
+                                <tr className="border-b border-[var(--border)]">
+                                    <th className="p-6 font-semibold text-base text-white w-1/3">Feature</th>
+                                    <th className="p-6 font-medium text-[var(--muted-foreground)] w-1/3">Traditional Eval</th>
+                                    <th className="p-6 font-bold text-indigo-400 bg-indigo-500/10 w-1/3 border-l border-indigo-500/20">SupaEval</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-[var(--border)]">
                                 {comparisonData.map((row, index) => (
-                                    <tr key={index} className="hover:bg-[var(--secondary)]/20 transition-colors">
-                                        <td className="p-4 font-medium">{row.feature}</td>
-                                        <td className="p-4 text-[var(--muted-foreground)] flex items-center gap-2">
-                                            <X className="h-4 w-4 text-red-500/70" />
-                                            {row.traditional}
+                                    <tr key={index} className="group hover:bg-white/[0.02] transition-colors">
+                                        <td className="p-6 font-medium text-white">{row.feature}</td>
+                                        <td className="p-6 text-[var(--muted-foreground)]">
+                                            <div className="flex items-start gap-3">
+                                                <X className="h-5 w-5 text-red-500/70 shrink-0 mt-0.5" />
+                                                <span>{row.traditional}</span>
+                                            </div>
                                         </td>
-                                        <td className="p-4 font-medium bg-indigo-500/5 flex items-center gap-2">
-                                            <Check className="h-4 w-4 text-indigo-400" />
-                                            {row.supaeval}
+                                        <td className="p-6 font-medium bg-indigo-500/5 group-hover:bg-indigo-500/10 transition-colors border-l border-indigo-500/20">
+                                            <div className="flex items-start gap-3">
+                                                <Check className="h-5 w-5 text-indigo-400 shrink-0 mt-0.5" />
+                                                <span className="text-indigo-100">{row.supaeval}</span>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}

@@ -60,44 +60,35 @@ export function HowItWorksSection() {
                     </motion.p>
                 </div>
 
-                <div className="max-w-4xl mx-auto">
-                    <div className="grid md:grid-cols-2 gap-12 relative">
-                        {/* Central line for desktop */}
-                        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-[var(--border)] hidden md:block -translate-x-1/2" />
-
-                        {steps.map((step, index) => (
-                            <div
-                                key={index}
-                                className={`relative flex flex-col ${index % 2 === 0 ? "md:text-right md:items-end" : "md:text-left md:items-start md:col-start-2"
-                                    }`}
-                            >
-                                {/* Dot on the line */}
-                                <div className="absolute top-1 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-[var(--background)] border-2 border-indigo-500 hidden md:block z-10" />
-
-                                <div className="flex items-center gap-4 mb-2 md:hidden">
-                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500/10 text-indigo-500 font-bold text-sm">
-                                        {index + 1}
-                                    </div>
-                                    <h3 className="text-xl font-semibold">{step.title}</h3>
+                <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+                    {steps.map((step, index) => (
+                        <ScrollReveal key={index} delay={index * 0.1} width="100%">
+                            <div className="relative p-8 rounded-3xl border border-[var(--border)] bg-[#0A0A0A] hover:border-indigo-500/30 transition-all duration-300 h-full group overflow-hidden">
+                                <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
+                                    <div className="h-2 w-2 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
                                 </div>
 
-                                <ScrollReveal delay={index * 0.1} width="100%">
-                                    <div className="relative p-6 rounded-2xl border border-[var(--border)] bg-[var(--secondary)]/20 hover:border-indigo-500/30 transition-colors h-full w-full">
-                                        <div className="absolute -top-4 -left-4 h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-600/20 hidden md:flex">
-                                            {index + 1}
-                                        </div>
-                                        <h3 className="text-xl font-semibold mb-3 mt-2 hidden md:block">{step.title}</h3>
-                                        <p className="text-[var(--muted-foreground)] mb-4">
-                                            {step.description}
-                                        </p>
-                                        <div className="p-3 rounded-lg bg-black/30 border border-white/5 font-mono text-xs text-indigo-300 text-left">
-                                            {step.code}
-                                        </div>
+                                <div className="flex items-start justify-between mb-6">
+                                    <div className="h-8 w-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-mono text-sm font-bold">
+                                        {index + 1}
                                     </div>
-                                </ScrollReveal>
+                                </div>
+
+                                <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-indigo-300 transition-colors">
+                                    {step.title}
+                                </h3>
+
+                                <p className="text-[var(--muted-foreground)] mb-6 text-sm leading-relaxed">
+                                    {step.description}
+                                </p>
+
+                                <div className="relative rounded-xl bg-black/50 border border-white/5 p-4 font-mono text-xs text-indigo-300/90 overflow-hidden">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 animate-shimmer" />
+                                    {step.code}
+                                </div>
                             </div>
-                        ))}
-                    </div>
+                        </ScrollReveal>
+                    ))}
                 </div>
             </div>
         </section>

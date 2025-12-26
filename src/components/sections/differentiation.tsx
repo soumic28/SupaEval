@@ -62,7 +62,8 @@ export function DifferentiationSection() {
                 </div>
 
                 <ScrollReveal delay={0.2} width="100%">
-                    <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[#0A0A0A]">
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block overflow-hidden rounded-xl border border-[var(--border)] bg-[#0A0A0A]">
                         <table className="w-full text-left text-sm">
                             <thead>
                                 <tr className="border-b border-[var(--border)]">
@@ -91,6 +92,31 @@ export function DifferentiationSection() {
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+
+                    {/* Mobile Card View */}
+                    <div className="md:hidden space-y-4">
+                        {comparisonData.map((row, index) => (
+                            <div key={index} className="rounded-xl border border-[var(--border)] bg-[#0A0A0A] p-5">
+                                <h3 className="font-semibold text-white mb-4 text-lg">{row.feature}</h3>
+
+                                <div className="space-y-4">
+                                    <div className="p-3 rounded-lg bg-red-500/5 border border-red-500/10">
+                                        <div className="flex items-start gap-3 text-sm text-[var(--muted-foreground)]">
+                                            <X className="h-4 w-4 text-red-500/70 shrink-0 mt-0.5" />
+                                            <span>{row.traditional}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-3 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                                        <div className="flex items-start gap-3 text-sm font-medium text-indigo-100">
+                                            <Check className="h-4 w-4 text-indigo-400 shrink-0 mt-0.5" />
+                                            <span>{row.supaeval}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </ScrollReveal>
             </div>

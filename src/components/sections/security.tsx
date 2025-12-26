@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { FileCheck, Lock, Server, ShieldCheck } from "lucide-react"
+import { HolographicCard } from "@/components/ui/holographic-card"
 
 const features = [
     {
@@ -58,19 +59,18 @@ export function SecuritySection() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 + 0.2 }}
-                            className="flex gap-4"
                         >
-                            <div className="flex-shrink-0">
-                                <div className="h-12 w-12 rounded-lg bg-indigo-500/10 flex items-center justify-center">
-                                    <feature.icon className="h-6 w-6 text-indigo-500" />
+                            <HolographicCard className="h-full border-[var(--border)] bg-[var(--secondary)]/20">
+                                <div className="p-6">
+                                    <div className="h-10 w-10 rounded-lg bg-indigo-500/10 flex items-center justify-center mb-4">
+                                        <feature.icon className="h-5 w-5 text-indigo-400" />
+                                    </div>
+                                    <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                                    <p className="text-[var(--muted-foreground)]">
+                                        {feature.description}
+                                    </p>
                                 </div>
-                            </div>
-                            <div>
-                                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                                <p className="text-[var(--muted-foreground)]">
-                                    {feature.description}
-                                </p>
-                            </div>
+                            </HolographicCard>
                         </motion.div>
                     ))}
                 </div>

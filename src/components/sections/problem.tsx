@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { AlertCircle, EyeOff, Ruler, TrendingDown } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { HolographicCard } from "@/components/ui/holographic-card"
 
 const problems = [
     {
@@ -61,19 +61,17 @@ export function ProblemSection() {
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 + 0.2 }}
                         >
-                            <Card spotlight={true} className="h-full border-[var(--border)] bg-[var(--secondary)]/20 hover:border-red-500/30 transition-colors">
-                                <CardHeader>
+                            <HolographicCard className="h-full border-[var(--border)] bg-[var(--secondary)]/20 hover:border-red-500/30 transition-colors">
+                                <div className="p-6">
                                     <div className="h-12 w-12 rounded-lg bg-red-500/10 flex items-center justify-center mb-4">
                                         <problem.icon className="h-6 w-6 text-red-400" />
                                     </div>
-                                    <CardTitle className="text-xl">{problem.title}</CardTitle>
-                                </CardHeader>
-                                <CardContent>
+                                    <h3 className="text-xl font-semibold mb-2">{problem.title}</h3>
                                     <p className="text-[var(--muted-foreground)]">
                                         {problem.description}
                                     </p>
-                                </CardContent>
-                            </Card>
+                                </div>
+                            </HolographicCard>
                         </motion.div>
                     ))}
                 </div>

@@ -1,31 +1,38 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { ScrollReveal } from "@/components/ui/scroll-reveal"
 
 const steps = [
     {
         title: "Connect your agent",
         description: "Integrate via SDK or API. We support any LLM or agent framework.",
+        code: "npm install supaeval",
     },
     {
         title: "Select datasets",
         description: "Choose from our standardized benchmarks or upload your own custom datasets.",
+        code: "supaeval.datasets.list()",
     },
     {
         title: "Define metrics",
         description: "Configure retrieval, generation, and tool usage metrics without writing code.",
+        code: "metrics: ['accuracy', 'hallucination']",
     },
     {
         title: "Run evaluations",
         description: "Execute scalable, parallel evaluation runs to get results in minutes.",
+        code: "supaeval.run({ dataset: 'v1' })",
     },
     {
         title: "Analyze failures",
         description: "Drill down into specific traces to understand why an agent failed.",
+        code: "supaeval.analysis.get_failures()",
     },
     {
         title: "Improve and re-run",
         description: "Fix the issues, update your agent, and verify improvements immediately.",
+        code: "supaeval.compare(run_a, run_b)",
     },
 ]
 
@@ -59,12 +66,8 @@ export function HowItWorksSection() {
                         <div className="absolute left-1/2 top-0 bottom-0 w-px bg-[var(--border)] hidden md:block -translate-x-1/2" />
 
                         {steps.map((step, index) => (
-                            <motion.div
+                            <div
                                 key={index}
-                                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
                                 className={`relative flex flex-col ${index % 2 === 0 ? "md:text-right md:items-end" : "md:text-left md:items-start md:col-start-2"
                                     }`}
                             >
@@ -78,11 +81,21 @@ export function HowItWorksSection() {
                                     <h3 className="text-xl font-semibold">{step.title}</h3>
                                 </div>
 
-                                <h3 className="text-xl font-semibold mb-2 hidden md:block">{step.title}</h3>
-                                <p className="text-[var(--muted-foreground)] max-w-sm">
-                                    {step.description}
-                                </p>
-                            </motion.div>
+                                <ScrollReveal delay={index * 0.1} width="100%">
+                                    <div className="relative p-6 rounded-2xl border border-[var(--border)] bg-[var(--secondary)]/20 hover:border-indigo-500/30 transition-colors h-full w-full">
+                                        <div className="absolute -top-4 -left-4 h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-600/20 hidden md:flex">
+                                            {index + 1}
+                                        </div>
+                                        <h3 className="text-xl font-semibold mb-3 mt-2 hidden md:block">{step.title}</h3>
+                                        <p className="text-[var(--muted-foreground)] mb-4">
+                                            {step.description}
+                                        </p>
+                                        <div className="p-3 rounded-lg bg-black/30 border border-white/5 font-mono text-xs text-indigo-300 text-left">
+                                            {step.code}
+                                        </div>
+                                    </div>
+                                </ScrollReveal>
+                            </div>
                         ))}
                     </div>
                 </div>

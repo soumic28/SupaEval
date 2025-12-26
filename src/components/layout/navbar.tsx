@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { MagneticButton } from "@/components/ui/magnetic-button"
 
 export function Navbar() {
     return (
@@ -21,7 +21,7 @@ export function Navbar() {
                     <Link href="/login" className="text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] hidden sm:block">
                         Log in
                     </Link>
-                    <Button size="sm">Get Started</Button>
+                    <MagneticButton className="h-9 px-4 text-sm">Get Started</MagneticButton>
                 </div>
             </div>
         </header>

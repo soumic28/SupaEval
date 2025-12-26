@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { BarChart, BrainCircuit, Database, GitBranch, Zap } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { HolographicCard } from "@/components/ui/holographic-card"
 
 const pillars = [
     {
@@ -65,19 +65,17 @@ export function PillarsSection() {
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 + 0.2 }}
                         >
-                            <Card className="h-full border-[var(--border)] bg-[var(--background)]/50 hover:border-indigo-500/30 transition-colors">
-                                <CardHeader>
-                                    <div className="h-12 w-12 rounded-lg bg-indigo-500/10 flex items-center justify-center mb-4">
-                                        <pillar.icon className="h-6 w-6 text-indigo-500" />
+                            <HolographicCard className="h-full border-[var(--border)] bg-[var(--secondary)]/20">
+                                <div className="p-6">
+                                    <div className="h-10 w-10 rounded-lg bg-indigo-500/10 flex items-center justify-center mb-4">
+                                        <pillar.icon className="h-5 w-5 text-indigo-400" />
                                     </div>
-                                    <CardTitle className="text-xl">{pillar.title}</CardTitle>
-                                </CardHeader>
-                                <CardContent>
+                                    <h3 className="text-xl font-semibold mb-2">{pillar.title}</h3>
                                     <p className="text-[var(--muted-foreground)]">
                                         {pillar.description}
                                     </p>
-                                </CardContent>
-                            </Card>
+                                </div>
+                            </HolographicCard>
                         </motion.div>
                     ))}
                 </div>

@@ -1,8 +1,7 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { motion } from "framer-motion"
-import { ArrowRight } from "lucide-react"
+import { MagneticButton } from "@/components/ui/magnetic-button"
+import { ScrollReveal } from "@/components/ui/scroll-reveal"
 
 export function CTASection() {
     return (
@@ -13,30 +12,29 @@ export function CTASection() {
             </div>
 
             <div className="container relative mx-auto px-4 md:px-6 text-center">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="max-w-3xl mx-auto"
-                >
-                    <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
-                        Ship Better AI Agents <br />
-                        <span className="text-indigo-500">With Confidence</span>
-                    </h2>
-                    <p className="text-lg text-[var(--muted-foreground)] mb-10">
-                        Join forward-thinking teams who use SupaEval to ensure their agents are reliable, safe, and performant.
-                    </p>
+                <ScrollReveal width="100%">
+                    <div className="relative overflow-hidden rounded-3xl border border-[var(--border)] bg-indigo-950/20 px-6 py-24 text-center shadow-2xl">
+                        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-transparent" />
 
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Button size="lg" className="w-full sm:w-auto text-base h-12 px-8">
-                            Start Evaluating
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                        <Button variant="outline" size="lg" className="w-full sm:w-auto text-base h-12 px-8">
-                            Talk to Sales
-                        </Button>
+                        <div className="relative z-10 max-w-2xl mx-auto">
+                            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
+                                Ready to evaluate your agents?
+                            </h2>
+                            <p className="text-lg text-[var(--muted-foreground)] mb-10">
+                                Join forward-thinking engineering teams building reliable AI agents with SupaEval.
+                            </p>
+
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                                <MagneticButton className="h-12 px-8 text-base">
+                                    Start for free
+                                </MagneticButton>
+                                <MagneticButton variant="secondary" className="h-12 px-8 text-base">
+                                    Book a demo
+                                </MagneticButton>
+                            </div>
+                        </div>
                     </div>
-                </motion.div>
+                </ScrollReveal>
             </div>
         </section>
     )

@@ -2,37 +2,38 @@
 
 import { motion } from "framer-motion"
 import { Check, X } from "lucide-react"
+import { ScrollReveal } from "@/components/ui/scroll-reveal"
 
-const features = [
+const comparisonData = [
     {
-        name: "Full Agent Lifecycle Evaluation",
-        others: false,
-        supaeval: true,
+        feature: "Full Agent Lifecycle Evaluation",
+        traditional: "Limited to specific stages",
+        supaeval: "Comprehensive, end-to-end evaluation",
     },
     {
-        name: "Continuous Benchmarking",
-        others: false,
-        supaeval: true,
+        feature: "Continuous Benchmarking",
+        traditional: "Manual, ad-hoc testing",
+        supaeval: "Automated, ongoing performance tracking",
     },
     {
-        name: "Platform-Computed Metrics",
-        others: false,
-        supaeval: true,
+        feature: "Platform-Computed Metrics",
+        traditional: "Basic logging, manual analysis",
+        supaeval: "Advanced, AI-driven metric generation",
     },
     {
-        name: "Enterprise-Grade Reliability",
-        others: true,
-        supaeval: true,
+        feature: "Enterprise-Grade Reliability",
+        traditional: "Best-effort, often lacking scalability",
+        supaeval: "Built for scale, high availability, and security",
     },
     {
-        name: "Retrieval & Tool Usage Analysis",
-        others: false,
-        supaeval: true,
+        feature: "Retrieval & Tool Usage Analysis",
+        traditional: "Difficult to track, no dedicated tools",
+        supaeval: "Detailed insights into RAG and tool interactions",
     },
     {
-        name: "No Code Changes Required",
-        others: false,
-        supaeval: true,
+        feature: "No Code Changes Required",
+        traditional: "Requires significant code instrumentation",
+        supaeval: "Integrates seamlessly with minimal setup",
     },
 ]
 
@@ -60,43 +61,34 @@ export function DifferentiationSection() {
                     </motion.p>
                 </div>
 
-                <div className="max-w-4xl mx-auto overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--background)]/50 backdrop-blur-sm">
-                    <div className="grid grid-cols-3 p-6 border-b border-[var(--border)] bg-[var(--secondary)]/30">
-                        <div className="font-semibold text-[var(--muted-foreground)]">Feature</div>
-                        <div className="text-center font-semibold text-[var(--muted-foreground)]">Others</div>
-                        <div className="text-center font-bold text-indigo-500">SupaEval</div>
+                <ScrollReveal delay={0.2} width="100%">
+                    <div className="overflow-x-auto rounded-xl border border-[var(--border)] bg-[var(--secondary)]/10 backdrop-blur-sm">
+                        <table className="w-full text-left text-sm">
+                            <thead>
+                                <tr className="border-b border-[var(--border)] bg-[var(--secondary)]/30">
+                                    <th className="p-4 font-medium">Feature</th>
+                                    <th className="p-4 font-medium text-[var(--muted-foreground)]">Traditional Eval</th>
+                                    <th className="p-4 font-bold text-indigo-400 bg-indigo-500/10">SupaEval</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-[var(--border)]">
+                                {comparisonData.map((row, index) => (
+                                    <tr key={index} className="hover:bg-[var(--secondary)]/20 transition-colors">
+                                        <td className="p-4 font-medium">{row.feature}</td>
+                                        <td className="p-4 text-[var(--muted-foreground)] flex items-center gap-2">
+                                            <X className="h-4 w-4 text-red-500/70" />
+                                            {row.traditional}
+                                        </td>
+                                        <td className="p-4 font-medium bg-indigo-500/5 flex items-center gap-2">
+                                            <Check className="h-4 w-4 text-indigo-400" />
+                                            {row.supaeval}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
-
-                    {features.map((feature, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.05 }}
-                            className={`grid grid-cols-3 p-6 items-center ${index !== features.length - 1 ? "border-b border-[var(--border)]" : ""
-                                } hover:bg-[var(--secondary)]/20 transition-colors`}
-                        >
-                            <div className="font-medium">{feature.name}</div>
-                            <div className="flex justify-center">
-                                {feature.others ? (
-                                    <Check className="h-5 w-5 text-[var(--muted-foreground)]" />
-                                ) : (
-                                    <X className="h-5 w-5 text-[var(--muted-foreground)]/50" />
-                                )}
-                            </div>
-                            <div className="flex justify-center">
-                                {feature.supaeval ? (
-                                    <div className="h-6 w-6 rounded-full bg-indigo-500/20 flex items-center justify-center">
-                                        <Check className="h-4 w-4 text-indigo-500" />
-                                    </div>
-                                ) : (
-                                    <X className="h-5 w-5 text-red-500" />
-                                )}
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
+                </ScrollReveal>
             </div>
         </section>
     )

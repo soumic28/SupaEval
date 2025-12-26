@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { ArrowRight, BarChart3, Database, FileJson, Layers, Lightbulb, Settings2 } from "lucide-react"
+import { ScrollReveal } from "@/components/ui/scroll-reveal"
 
 const steps = [
     {
@@ -67,30 +68,25 @@ export function SolutionSection() {
 
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
                         {steps.map((step, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 + 0.2 }}
-                                className="relative flex flex-col items-center text-center group"
-                            >
-                                <div className="relative z-10 h-24 w-24 rounded-2xl bg-[var(--secondary)] border border-[var(--border)] flex items-center justify-center mb-6 group-hover:border-indigo-500/50 group-hover:shadow-lg group-hover:shadow-indigo-500/20 transition-all duration-300">
-                                    <step.icon className="h-10 w-10 text-[var(--muted-foreground)] group-hover:text-indigo-500 transition-colors" />
-                                </div>
-
-                                <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
-                                <p className="text-sm text-[var(--muted-foreground)]">
-                                    {step.description}
-                                </p>
-
-                                {/* Arrow for mobile/tablet flow */}
-                                {index < steps.length - 1 && (
-                                    <div className="lg:hidden absolute top-12 -right-4 text-[var(--muted-foreground)]/30 transform translate-x-1/2">
-                                        <ArrowRight className="h-6 w-6" />
+                            <ScrollReveal key={index} delay={index * 0.1} width="100%">
+                                <div className="relative flex flex-col items-center text-center group">
+                                    <div className="relative z-10 h-24 w-24 rounded-2xl bg-[var(--secondary)] border border-[var(--border)] flex items-center justify-center mb-6 group-hover:border-indigo-500/50 group-hover:shadow-lg group-hover:shadow-indigo-500/20 transition-all duration-300">
+                                        <step.icon className="h-10 w-10 text-[var(--muted-foreground)] group-hover:text-indigo-500 transition-colors" />
                                     </div>
-                                )}
-                            </motion.div>
+
+                                    <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
+                                    <p className="text-sm text-[var(--muted-foreground)]">
+                                        {step.description}
+                                    </p>
+
+                                    {/* Arrow for mobile/tablet flow */}
+                                    {index < steps.length - 1 && (
+                                        <div className="lg:hidden absolute top-12 -right-4 text-[var(--muted-foreground)]/30 transform translate-x-1/2">
+                                            <ArrowRight className="h-6 w-6" />
+                                        </div>
+                                    )}
+                                </div>
+                            </ScrollReveal>
                         ))}
                     </div>
                 </div>

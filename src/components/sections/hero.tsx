@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+
 import { motion } from "framer-motion"
 import { ArrowRight, CheckCircle2 } from "lucide-react"
 import { MagneticButton } from "@/components/ui/magnetic-button"
@@ -48,9 +48,9 @@ export function Hero() {
                             Get Started Free
                             <ArrowRight className="ml-2 h-4 w-4" />
                         </MagneticButton>
-                        <Button variant="outline" size="lg" className="w-full sm:w-auto text-base h-12 px-8">
+                        <MagneticButton variant="secondary" className="w-full sm:w-auto h-12 px-8 text-base">
                             View Demo
-                        </Button>
+                        </MagneticButton>
                     </div>
                 </ScrollReveal>
 

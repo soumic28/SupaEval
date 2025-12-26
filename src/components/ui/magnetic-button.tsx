@@ -44,8 +44,8 @@ export const MagneticButton = ({
             )}
             {...props}
         >
-            {/* Magic Border Gradient */}
-            <span className="absolute inset-[-100%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,#a5b4fc_50%,transparent_100%)]" />
+            {/* Magic Border Gradient - Single Clockwise Path */}
+            <span className="absolute inset-[-100%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,#a5b4fc_10%,transparent_20%)]" />
 
             {/* Button Background (Mask) */}
             <span className={cn(

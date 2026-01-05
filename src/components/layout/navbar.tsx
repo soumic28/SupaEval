@@ -54,6 +54,40 @@ export function Navbar() {
                 </div>
 
                 <div className="flex items-center gap-4">
+                    {/* Theme Switcher */}
+                    <div className="hidden sm:flex items-center gap-1 bg-white/10 rounded-full p-1 border border-white/10 backdrop-blur-sm">
+                        <button
+                            onClick={() => {
+                                document.documentElement.removeAttribute('data-theme');
+                                localStorage.setItem('theme', 'default');
+                            }}
+                            className="px-3 py-1 text-xs font-medium rounded-full transition-all hover:bg-white/10 text-white"
+                            title="Default Dark"
+                        >
+                            Default
+                        </button>
+                        <button
+                            onClick={() => {
+                                document.documentElement.setAttribute('data-theme', 'light');
+                                localStorage.setItem('theme', 'light');
+                            }}
+                            className="px-3 py-1 text-xs font-medium rounded-full transition-all hover:bg-white/10 text-white"
+                            title="Modern White"
+                        >
+                            White
+                        </button>
+                        <button
+                            onClick={() => {
+                                document.documentElement.setAttribute('data-theme', 'cream');
+                                localStorage.setItem('theme', 'cream');
+                            }}
+                            className="px-3 py-1 text-xs font-medium rounded-full transition-all hover:bg-white/10 text-white"
+                            title="Warm Cream"
+                        >
+                            Cream
+                        </button>
+                    </div>
+
                     <Link href="/login" className={cn(
                         "text-sm font-medium transition-colors hover:text-white hidden sm:block",
                         isScrolled ? "text-white/70" : "text-white"

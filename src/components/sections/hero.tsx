@@ -10,7 +10,7 @@ import { ScrollReveal } from "@/components/ui/scroll-reveal"
 
 export function Hero() {
     return (
-        <section className="relative overflow-hidden pt-20 pb-32 md:pt-32 md:pb-48 bg-noise">
+        <section className="relative overflow-hidden pt-32 pb-32 md:pt-32 md:pb-48 bg-noise">
             {/* Background Orbs */}
             <OrbEffect />
 

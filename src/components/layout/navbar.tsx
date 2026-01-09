@@ -29,7 +29,7 @@ export function Navbar() {
             <div className={cn(
                 "mx-auto transition-all duration-300 ease-in-out flex items-center justify-between px-6",
                 isScrolled
-                    ? "max-w-5xl rounded-full border border-white/10 bg-black/80 backdrop-blur-md py-3 shadow-lg"
+                    ? "max-w-5xl w-[calc(100%-2rem)] md:w-full rounded-full border border-white/10 bg-black/80 backdrop-blur-md py-3 shadow-lg"
                     : "container h-24 bg-transparent py-0"
             )}>
                 <Link href="/" className="flex items-center gap-2">
@@ -147,9 +147,43 @@ export function Navbar() {
                                 Docs
                             </Link>
                             <div className="pt-4 border-t border-white/10 flex flex-col gap-4">
+                                {/* Mobile Theme Switcher */}
+                                <div className="flex items-center justify-center gap-1 bg-white/5 rounded-full p-1 border border-white/10 backdrop-blur-sm mx-auto w-full max-w-xs">
+                                    <button
+                                        onClick={() => {
+                                            document.documentElement.removeAttribute('data-theme');
+                                            localStorage.setItem('theme', 'default');
+                                            setIsOpen(false);
+                                        }}
+                                        className="flex-1 px-3 py-2 text-xs font-medium rounded-full transition-all hover:bg-white/10 text-white text-center"
+                                    >
+                                        Default
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            document.documentElement.setAttribute('data-theme', 'light');
+                                            localStorage.setItem('theme', 'light');
+                                            setIsOpen(false);
+                                        }}
+                                        className="flex-1 px-3 py-2 text-xs font-medium rounded-full transition-all hover:bg-white/10 text-white text-center"
+                                    >
+                                        White
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            document.documentElement.setAttribute('data-theme', 'cream');
+                                            localStorage.setItem('theme', 'cream');
+                                            setIsOpen(false);
+                                        }}
+                                        className="flex-1 px-3 py-2 text-xs font-medium rounded-full transition-all hover:bg-white/10 text-white text-center"
+                                    >
+                                        Cream
+                                    </button>
+                                </div>
+
                                 <Link
                                     href="/login"
-                                    className="text-sm font-medium text-white/70 hover:text-white py-2"
+                                    className="text-sm font-medium text-white/70 hover:text-white py-2 text-center"
                                     onClick={() => setIsOpen(false)}
                                 >
                                     Log in

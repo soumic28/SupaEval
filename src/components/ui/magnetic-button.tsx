@@ -45,18 +45,21 @@ export const MagneticButton = ({
             {...props}
         >
             {/* Magic Border Gradient - Single Clockwise Path */}
-            <span className="absolute inset-[-100%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,#a5b4fc_10%,transparent_20%)]" />
+            <span className="absolute inset-[-100%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,var(--primary)_10%,transparent_20%)]" />
 
             {/* Button Background (Mask) */}
             <span className={cn(
-                "absolute inset-[1px] rounded-full transition-colors duration-300",
+                "absolute inset-[1px] rounded-full transition-all duration-300",
                 variant === "primary"
-                    ? "bg-indigo-600 group-hover:bg-indigo-700"
-                    : "bg-black/90 group-hover:bg-black/80 backdrop-blur-md"
+                    ? "bg-[var(--primary)] group-hover:brightness-110"
+                    : "bg-[var(--secondary)] group-hover:brightness-110 backdrop-blur-md"
             )} />
 
             {/* Content */}
-            <span className="relative z-10 flex items-center justify-center gap-2 text-white">
+            <span className={cn(
+                "relative z-10 flex items-center justify-center gap-2",
+                variant === "primary" ? "text-[var(--primary-foreground)]" : "text-[var(--secondary-foreground)]"
+            )}>
                 {children}
             </span>
         </motion.button>

@@ -38,10 +38,10 @@ export function Navbar() {
                 </Link>
 
                 <div className="hidden md:flex items-center gap-8">
-                    {["Features", "How it Works", "Pricing", "Docs"].map((item) => (
+                    {["Features", "How it Works", "Pricing", "Docs", "Blog"].map((item) => (
                         <Link
                             key={item}
-                            href={`#${item.toLowerCase().replace(/ /g, '-')}`}
+                            href={item === "Blog" ? "/blog" : `#${item.toLowerCase().replace(/ /g, '-')}`}
                             className={cn(
                                 "text-sm font-medium transition-all duration-300 hover:text-foreground relative group",
                                 isScrolled ? "text-muted-foreground" : "text-foreground text-lg"
@@ -55,38 +55,7 @@ export function Navbar() {
 
                 <div className="flex items-center gap-4">
                     {/* Theme Switcher */}
-                    <div className="hidden sm:flex items-center gap-1 bg-secondary/50 rounded-full p-1 border border-border backdrop-blur-sm">
-                        <button
-                            onClick={() => {
-                                document.documentElement.removeAttribute('data-theme');
-                                localStorage.setItem('theme', 'default');
-                            }}
-                            className="px-3 py-1 text-xs font-medium rounded-full transition-all hover:bg-secondary text-muted-foreground hover:text-foreground"
-                            title="Default Dark"
-                        >
-                            Default
-                        </button>
-                        <button
-                            onClick={() => {
-                                document.documentElement.setAttribute('data-theme', 'light');
-                                localStorage.setItem('theme', 'light');
-                            }}
-                            className="px-3 py-1 text-xs font-medium rounded-full transition-all hover:bg-secondary text-muted-foreground hover:text-foreground"
-                            title="Modern White"
-                        >
-                            White
-                        </button>
-                        <button
-                            onClick={() => {
-                                document.documentElement.setAttribute('data-theme', 'cream');
-                                localStorage.setItem('theme', 'cream');
-                            }}
-                            className="px-3 py-1 text-xs font-medium rounded-full transition-all hover:bg-secondary text-muted-foreground hover:text-foreground"
-                            title="Warm Cream"
-                        >
-                            Cream
-                        </button>
-                    </div>
+
 
                     <Link href="/login" className={cn(
                         "text-sm font-medium transition-colors hover:text-foreground hidden sm:block",
@@ -146,40 +115,15 @@ export function Navbar() {
                             >
                                 Docs
                             </Link>
+                            <Link
+                                href="/blog"
+                                className="text-sm font-medium text-muted-foreground hover:text-foreground py-2"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                Blog
+                            </Link>
                             <div className="pt-4 border-t border-border flex flex-col gap-4">
-                                {/* Mobile Theme Switcher */}
-                                <div className="flex items-center justify-center gap-1 bg-secondary/50 rounded-full p-1 border border-border backdrop-blur-sm mx-auto w-full max-w-xs">
-                                    <button
-                                        onClick={() => {
-                                            document.documentElement.removeAttribute('data-theme');
-                                            localStorage.setItem('theme', 'default');
-                                            setIsOpen(false);
-                                        }}
-                                        className="flex-1 px-3 py-2 text-xs font-medium rounded-full transition-all hover:bg-secondary text-muted-foreground hover:text-foreground text-center"
-                                    >
-                                        Default
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            document.documentElement.setAttribute('data-theme', 'light');
-                                            localStorage.setItem('theme', 'light');
-                                            setIsOpen(false);
-                                        }}
-                                        className="flex-1 px-3 py-2 text-xs font-medium rounded-full transition-all hover:bg-secondary text-muted-foreground hover:text-foreground text-center"
-                                    >
-                                        White
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            document.documentElement.setAttribute('data-theme', 'cream');
-                                            localStorage.setItem('theme', 'cream');
-                                            setIsOpen(false);
-                                        }}
-                                        className="flex-1 px-3 py-2 text-xs font-medium rounded-full transition-all hover:bg-secondary text-muted-foreground hover:text-foreground text-center"
-                                    >
-                                        Cream
-                                    </button>
-                                </div>
+
 
                                 <Link
                                     href="/login"

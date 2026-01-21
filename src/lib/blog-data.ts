@@ -6,6 +6,7 @@ export interface BlogPost {
   author: string;
   readTime: string;
   category: string;
+  image: string;
   content: string;
 }
 
@@ -19,6 +20,7 @@ export const blogPosts: BlogPost[] = [
     author: "Sarah Chen",
     readTime: "5 min read",
     category: "Product",
+    image: "/images/blog/supaeval-intro.png",
     content: `
       <p>We are thrilled to announce the launch of SupaEval, the first comprehensive platform designed to test, benchmark, and continuously improve AI agents.</p>
       <h2>Why SupaEval?</h2>
@@ -43,6 +45,7 @@ export const blogPosts: BlogPost[] = [
     author: "David Miller",
     readTime: "8 min read",
     category: "Engineering",
+    image: "/images/blog/rag-pipelines.png",
     content: `
       <p>Retrieval-Augmented Generation (RAG) is a powerful technique for grounding LLMs in external data. However, building a performant RAG pipeline is challenging.</p>
       <h2>Key Strategies</h2>
@@ -65,6 +68,7 @@ export const blogPosts: BlogPost[] = [
     author: "Emily Zhang",
     readTime: "6 min read",
     category: "Industry",
+    image: "/images/blog/agentic-ai.png",
     content: `
       <p>Agentic AI is rapidly evolving, moving from simple chatbots to autonomous systems capable of executing complex tasks.</p>
       <h2>Emerging Trends</h2>

@@ -37,6 +37,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
                     <article>
                         <header className="mb-12">
+                            <div className="relative w-full h-[400px] rounded-2xl overflow-hidden mb-10 border border-border/50 shadow-2xl">
+                                <img
+                                    src={post.image}
+                                    alt={post.title}
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-40" />
+                            </div>
+
                             <div className="flex items-center gap-2 mb-6">
                                 <span className="px-3 py-1 text-xs font-medium text-indigo-600 bg-indigo-500/10 rounded-full border border-indigo-500/20">
                                     {post.category}

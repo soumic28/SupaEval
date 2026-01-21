@@ -37,8 +37,16 @@ export default function BlogPage() {
                             transition={{ delay: index * 0.1 + 0.2 }}
                         >
                             <Link href={`/blog/${post.slug}`} className="block h-full">
-                                <HolographicCard className="h-full border-border bg-secondary/20 hover:border-indigo-500/30 transition-colors duration-300">
-                                    <div className="p-8 flex flex-col h-full">
+                                <HolographicCard className="h-full border-border bg-secondary/20 hover:border-indigo-500/30 transition-colors duration-300 flex flex-col">
+                                    <div className="relative h-48 w-full overflow-hidden border-b border-white/5">
+                                        <img
+                                            src={post.image}
+                                            alt={post.title}
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-60" />
+                                    </div>
+                                    <div className="p-8 flex flex-col flex-1">
                                         <div className="flex items-center gap-2 mb-6">
                                             <span className="px-3 py-1 text-xs font-medium text-indigo-600 bg-indigo-500/10 rounded-full border border-indigo-500/20">
                                                 {post.category}

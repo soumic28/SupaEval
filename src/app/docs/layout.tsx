@@ -14,9 +14,9 @@ export default function DocsLayout({
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
-        <div className="min-h-screen bg-background pt-24">
-            <div className="container mx-auto px-4 md:px-6">
-                <div className="flex gap-8 relative">
+        <div className="min-h-screen bg-background pt-20 sm:pt-24 pb-12">
+            <div className="container mx-auto px-3 sm:px-4 md:px-6">
+                <div className="flex gap-4 sm:gap-6 lg:gap-8 relative">
                     {/* Mobile Sidebar Toggle */}
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}

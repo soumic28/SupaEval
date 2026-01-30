@@ -22,30 +22,32 @@ export function Tabs({ tabs, defaultTab, className }: TabsProps) {
     const activeTabData = tabs.find(tab => tab.value === activeTab);
 
     return (
-        <div className={cn("w-full", className)}>
+        <div className={cn("w-full not-prose", className)}>
             {/* Tab Headers */}
-            <div className="flex items-center gap-1 mb-4 p-1 bg-secondary/50 rounded-lg border border-border w-fit">
-                {tabs.map((tab) => (
-                    <button
-                        key={tab.value}
-                        onClick={() => setActiveTab(tab.value)}
-                        className={cn(
-                            "relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-200",
-                            activeTab === tab.value
-                                ? "text-foreground"
-                                : "text-muted-foreground hover:text-foreground"
-                        )}
-                    >
-                        {activeTab === tab.value && (
-                            <motion.div
-                                layoutId="activeTab"
-                                className="absolute inset-0 bg-background border border-indigo-500/30 rounded-md shadow-sm"
-                                transition={{ type: "spring", duration: 0.5, bounce: 0.2 }}
-                            />
-                        )}
-                        <span className="relative z-10">{tab.label}</span>
-                    </button>
-                ))}
+            <div className="overflow-x-auto mb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+                <div className="flex items-center gap-1 p-1 bg-secondary/50 rounded-lg border border-border w-fit min-w-full sm:min-w-0">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab.value}
+                            onClick={() => setActiveTab(tab.value)}
+                            className={cn(
+                                "relative px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-all duration-200 whitespace-nowrap",
+                                activeTab === tab.value
+                                    ? "text-foreground"
+                                    : "text-muted-foreground hover:text-foreground"
+                            )}
+                        >
+                            {activeTab === tab.value && (
+                                <motion.div
+                                    layoutId="activeTab"
+                                    className="absolute inset-0 bg-background border border-indigo-500/30 rounded-md shadow-sm"
+                                    transition={{ type: "spring", duration: 0.5, bounce: 0.2 }}
+                                />
+                            )}
+                            <span className="relative z-10">{tab.label}</span>
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* Tab Content */}

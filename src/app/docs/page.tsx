@@ -9,15 +9,15 @@ import { docsNavigation } from "@/lib/docs-data";
 
 export default function DocsPage() {
     return (
-        <div className="max-w-6xl mx-auto py-12">
+        <div className="max-w-6xl mx-auto py-8 px-4 sm:py-12">
             {/* Hero Section */}
-            <div className="text-center mb-16">
+            <div className="text-center mb-12 sm:mb-16">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="inline-flex items-center rounded-full border border-indigo-500/20 bg-indigo-500/10 px-4 py-1.5 text-sm text-indigo-600 backdrop-blur-md mb-6"
+                    className="inline-flex items-center rounded-full border border-indigo-500/20 bg-indigo-500/10 px-3 sm:px-4 py-1.5 text-xs sm:text-sm text-indigo-600 backdrop-blur-md mb-4 sm:mb-6"
                 >
-                    <BookOpen className="w-4 h-4 mr-2" />
+                    <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                     Documentation
                 </motion.div>
 
@@ -25,7 +25,7 @@ export default function DocsPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="text-5xl md:text-6xl font-bold tracking-tight mb-6"
+                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 sm:mb-6 px-4"
                 >
                     Welcome to <span className="text-gradient-primary">SupaEval</span> Docs
                 </motion.h1>
@@ -34,7 +34,7 @@ export default function DocsPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed"
+                    className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-6 sm:mb-8 leading-relaxed px-4"
                 >
                     Everything you need to integrate, evaluate, and improve your AI agents with quality intelligence.
                 </motion.p>
@@ -43,15 +43,15 @@ export default function DocsPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
-                    className="flex flex-col sm:flex-row items-center justify-center gap-4"
+                    className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4"
                 >
-                    <Link href="/docs/getting-started/quickstart">
+                    <Link href="/docs/getting-started/quickstart" className="w-full sm:w-auto">
                         <MagneticButton className="w-full sm:w-auto">
                             Get Started
                             <ArrowRight className="ml-2 h-4 w-4" />
                         </MagneticButton>
                     </Link>
-                    <Link href="/docs/sdk/python">
+                    <Link href="/docs/sdk/python" className="w-full sm:w-auto">
                         <MagneticButton variant="secondary" className="w-full sm:w-auto">
                             View SDK Docs
                         </MagneticButton>
@@ -60,7 +60,7 @@ export default function DocsPage() {
             </div>
 
             {/* Quick Links */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16">
                 {[
                     {
                         icon: <Zap className="w-6 h-6" />,
@@ -137,8 +137,8 @@ export default function DocsPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.7 + sectionIndex * 0.1 }}
                     >
-                        <h2 className="text-2xl font-bold mb-6">{section.title}</h2>
-                        <div className="grid md:grid-cols-2 gap-4">
+                        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">{section.title}</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                             {section.items.map((item) => (
                                 <Link key={item.href} href={item.href}>
                                     <div className="p-4 rounded-lg border border-border bg-secondary/20 hover:bg-secondary/40 hover:border-indigo-500/30 transition-all group">

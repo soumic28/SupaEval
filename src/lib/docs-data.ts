@@ -1,12 +1,15 @@
-export interface DocPage {
+// Nested navigation item structure supporting unlimited depth
+export interface DocItem {
   title: string;
-  href: string;
+  href?: string; // Optional - parent items can be non-clickable
   description?: string;
+  items?: DocItem[]; // Recursive nesting
 }
 
 export interface DocSection {
   title: string;
-  items: DocPage[];
+  icon?: string;
+  items: DocItem[];
 }
 
 export const docsNavigation: DocSection[] = [
@@ -14,7 +17,7 @@ export const docsNavigation: DocSection[] = [
     title: "Getting Started",
     items: [
       {
-        title: "Introduction",
+        title: "Quick Introduction",
         href: "/docs/getting-started",
         description: "Learn about SupaEval and core concepts",
       },
@@ -92,19 +95,97 @@ export const docsNavigation: DocSection[] = [
   },
 ];
 
-export function getPageByHref(href: string): DocPage | undefined {
-  for (const section of docsNavigation) {
-    const page = section.items.find((item) => item.href === href);
-    if (page) return page;
+// Helper function to find an item by href (recursive search)
+export function findItemByHref(
+  items: DocItem[],
+  href: string,
+): DocItem | undefined {
+  for (const item of items) {
+    if (item.href === href) return item;
+    if (item.items) {
+      const found = findItemByHref(item.items, href);
+      if (found) return found;
+    }
   }
   return undefined;
 }
 
-export function getSectionByHref(href: string): DocSection | undefined {
-  for (const section of docsNavigation) {
-    if (section.items.some((item) => item.href === href)) {
-      return section;
+// Get all items from all sections (flattened)
+export function getAllItems(): DocItem[] {
+  const allItems: DocItem[] = [];
+
+  function collectItems(items: DocItem[]) {
+    for (const item of items) {
+      allItems.push(item);
+      if (item.items) collectItems(item.items);
     }
   }
+
+  docsNavigation.forEach((section) => collectItems(section.items));
+  return allItems;
+}
+
+// Find item by href across all sections
+export function getPageByHref(href: string): DocItem | undefined {
+  for (const section of docsNavigation) {
+    const found = findItemByHref(section.items, href);
+    if (found) return found;
+  }
   return undefined;
+}
+
+// Get section containing the href
+export function getSectionByHref(href: string): DocSection | undefined {
+  for (const section of docsNavigation) {
+    const found = findItemByHref(section.items, href);
+    if (found) return section;
+  }
+  return undefined;
+}
+
+// Check if an item contains a href in its tree (for active path detection)
+export function isInActivePath(item: DocItem, targetHref: string): boolean {
+  if (item.href === targetHref) return true;
+  if (item.items) {
+    return item.items.some((child) => isInActivePath(child, targetHref));
+  }
+  return false;
+}
+
+// Get all pages with href in sequential order
+export function getAllPages(): DocItem[] {
+  const pages: DocItem[] = [];
+
+  function collectPages(items: DocItem[]) {
+    for (const item of items) {
+      if (item.href) {
+        pages.push(item);
+      }
+      if (item.items) {
+        collectPages(item.items);
+      }
+    }
+  }
+
+  docsNavigation.forEach((section) => collectPages(section.items));
+  return pages;
+}
+
+// Get previous and next pages for navigation
+export function getAdjacentPages(currentHref: string): {
+  previous: DocItem | null;
+  next: DocItem | null;
+} {
+  const allPages = getAllPages();
+  const currentIndex = allPages.findIndex((page) => page.href === currentHref);
+
+  if (currentIndex === -1) {
+    return { previous: null, next: null };
+  }
+
+  return {
+    previous: currentIndex > 0 ? allPages[currentIndex - 1] : null,
+    next:
+      currentIndex < allPages.length - 1 ? allPages[currentIndex + 1] : null,
+  };
 }

@@ -120,4 +120,26 @@ h1, h2, h3, h4, h5, h6 {
   ::-webkit-scrollbar-thumb:hover {
     background: var(--accent);
   }
+
+  /* Thin scrollbar for sidebar */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thumb-slate-700::-webkit-scrollbar-thumb {
+    background: #334155; /* slate-700 */
+    border-radius: 3px;
+  }
+
+  .scrollbar-track-slate-900::-webkit-scrollbar-track {
+    background: #0f172a; /* slate-900 */
+  }
+
+  .scrollbar-thin:hover::-webkit-scrollbar-thumb {
+    background: #475569; /* slate-600 on hover */
+  }
 }

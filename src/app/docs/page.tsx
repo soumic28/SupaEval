@@ -139,8 +139,8 @@ export default function DocsPage() {
                     >
                         <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">{section.title}</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                            {section.items.map((item) => (
-                                <Link key={item.href} href={item.href}>
+                            {section.items.filter(item => item.href).map((item) => (
+                                <Link key={item.href} href={item.href!}>
                                     <div className="p-4 rounded-lg border border-border bg-secondary/20 hover:bg-secondary/40 hover:border-indigo-500/30 transition-all group">
                                         <h3 className="font-semibold mb-1 group-hover:text-indigo-600 transition-colors">
                                             {item.title}

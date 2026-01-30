@@ -41,7 +41,7 @@ export function Navbar() {
                     {["Features", "How it Works", "Pricing", "Docs", "Blog"].map((item) => (
                         <Link
                             key={item}
-                            href={item === "Blog" ? "/blog" : `#${item.toLowerCase().replace(/ /g, '-')}`}
+                            href={item === "Blog" ? "/blog" : item === "Docs" ? "/docs" : `#${item.toLowerCase().replace(/ /g, '-')}`}
                             className={cn(
                                 "text-sm font-medium transition-all duration-300 hover:text-foreground relative group",
                                 isScrolled ? "text-muted-foreground" : "text-foreground text-lg"
@@ -109,7 +109,7 @@ export function Navbar() {
                                 Pricing
                             </Link>
                             <Link
-                                href="#docs"
+                                href="/docs"
                                 className="text-sm font-medium text-muted-foreground hover:text-foreground py-2"
                                 onClick={() => setIsOpen(false)}
                             >

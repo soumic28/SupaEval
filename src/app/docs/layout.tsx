@@ -20,14 +20,14 @@ export default function DocsLayout({
                     {/* Mobile Sidebar Toggle */}
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="fixed bottom-6 right-6 z-50 lg:hidden p-3 rounded-full bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 transition-colors"
+                        className="fixed bottom-6 left-6 z-50 lg:hidden p-3 rounded-full bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 transition-colors"
                         aria-label="Toggle sidebar"
                     >
                         {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </button>
 
-                    {/* Desktop Sidebar */}
-                    <aside className="hidden lg:block">
+                    {/* Desktop Sidebar - Only show on large screens */}
+                    <aside className="hidden lg:block sticky top-24 h-[calc(100vh-6rem)] w-64 flex-shrink-0">
                         <Sidebar />
                     </aside>
 
@@ -35,21 +35,37 @@ export default function DocsLayout({
                     <AnimatePresence>
                         {sidebarOpen && (
                             <>
+                                {/* Backdrop */}
                                 <motion.div
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                     onClick={() => setSidebarOpen(false)}
-                                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
                                 />
+                                {/* Drawer */}
                                 <motion.aside
                                     initial={{ x: "-100%" }}
                                     animate={{ x: 0 }}
                                     exit={{ x: "-100%" }}
-                                    transition={{ type: "spring", damping: 20 }}
-                                    className="fixed left-0 top-24 bottom-0 w-64 bg-background border-r border-border z-40 lg:hidden overflow-y-auto p-4"
+                                    transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                                    className="fixed left-0 top-0 bottom-0 w-72 bg-background/95 backdrop-blur-xl shadow-2xl z-50 lg:hidden overflow-y-auto border-r border-indigo-500/20"
                                 >
-                                    <Sidebar />
+                                    <div className="p-6">
+                                        <div className="flex items-center justify-between mb-6">
+                                            <h2 className="text-lg font-semibold bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
+                                                Documentation
+                                            </h2>
+                                            <button
+                                                onClick={() => setSidebarOpen(false)}
+                                                className="p-2 rounded-lg hover:bg-secondary/80 transition-colors"
+                                                aria-label="Close sidebar"
+                                            >
+                                                <X className="w-5 h-5" />
+                                            </button>
+                                        </div>
+                                        <Sidebar />
+                                    </div>
                                 </motion.aside>
                             </>
                         )}

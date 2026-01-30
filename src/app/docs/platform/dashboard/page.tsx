@@ -11,6 +11,14 @@ export default function DashboardPage() {
                 and agent performance metrics.
             </p>
 
+            <div className="my-6 sm:my-8 rounded-xl overflow-hidden border border-indigo-500/20 bg-slate-900/20">
+                <img
+                    src="/images/Dashboards/Dashbrd.png"
+                    alt="SupaEval Dashboard Overview"
+                    className="w-full h-auto"
+                />
+            </div>
+
             <h2 id="key-sections">Key Dashboard Sections</h2>
 
             <div className="grid sm:grid-cols-2 gap-4 my-6">

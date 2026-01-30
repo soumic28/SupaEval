@@ -23,7 +23,7 @@ export function Sidebar() {
     };
 
     return (
-        <nav className="w-64 flex-shrink-0 sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto pb-8">
+        <nav className="w-full h-full overflow-y-auto pb-8">
             <div className="space-y-6">
                 {docsNavigation.map((section) => {
                     const isExpanded = expandedSections.includes(section.title);

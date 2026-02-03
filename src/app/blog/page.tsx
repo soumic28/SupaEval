@@ -2,10 +2,11 @@ import Link from "next/link";
 import { getArticles, strapiArticleToBlogPost } from "@/lib/strapi";
 import { Calendar, Clock } from "lucide-react";
 import { HolographicCard } from "@/components/ui/holographic-card";
+import { BlogPost } from "@/lib/blog-data";
 
 export default async function BlogPage() {
     // Fetch articles from Strapi
-    let posts = [];
+    let posts: BlogPost[] = [];
 
     try {
         const response = await getArticles({

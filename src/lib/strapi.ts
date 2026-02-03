@@ -42,6 +42,7 @@ export async function fetchAPI<T>(
     headers: {
       "Content-Type": "application/json",
     },
+    cache: "no-store", // Ensure we always get fresh data from Strapi
   };
 
   // Add API token if available
@@ -100,10 +101,8 @@ export async function getArticles(params?: {
     queryParams.append("pagination[pageSize]", params.pageSize.toString());
   if (params?.sort) queryParams.append("sort", params.sort);
 
-  // Add populate to include related data
-  queryParams.append("populate[author][populate]", "avatar");
-  queryParams.append("populate[category]", "*");
-  queryParams.append("populate[cover]", "*");
+  // Strapi v5 populate syntax - use populate=* to get all relations
+  queryParams.append("populate", "*");
 
   const query = queryParams.toString();
   const path = `/api/articles${query ? `?${query}` : ""}`;
@@ -119,10 +118,7 @@ export async function getArticleBySlug(
 ): Promise<StrapiResponse<StrapiArticle> | null> {
   const queryParams = new URLSearchParams();
   queryParams.append("filters[slug][$eq]", slug);
-  queryParams.append("populate[author][populate]", "avatar");
-  queryParams.append("populate[category]", "*");
-  queryParams.append("populate[cover]", "*");
-  queryParams.append("populate[blocks]", "*");
+  queryParams.append("populate", "*");
 
   const path = `/api/articles?${queryParams.toString()}`;
 
@@ -151,7 +147,7 @@ export async function getAuthors(): Promise<
   StrapiCollectionResponse<StrapiAuthor>
 > {
   const queryParams = new URLSearchParams();
-  queryParams.append("populate[avatar]", "*");
+  queryParams.append("populate", "*");
 
   return fetchAPI<StrapiCollectionResponse<StrapiAuthor>>(
     `/api/authors?${queryParams.toString()}`,
@@ -190,7 +186,9 @@ export function strapiArticleToBlogPost(article: StrapiArticle): {
       month: "long",
       day: "numeric",
     }),
-    author: (article.author as any)?.name || "Unknown Author",
+    author: article.author
+      ? (article.author as any).name || "Unknown Author"
+      : "Unknown Author",
     readTime: "5 min read", // You can calculate this based on content length
     category: (article.category as any)?.name || "Uncategorized",
     image:

@@ -39,7 +39,7 @@ export default async function BlogPage() {
                     <div className="text-center text-muted-foreground py-12">
                         <p className="text-lg">No blog posts found. Add some content in Strapi!</p>
                         <a
-                            href="http://localhost:1337/admin"
+                            href={`${process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://supaeval-strapi.azurewebsites.net'}/admin`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-indigo-500 hover:underline mt-4 inline-block"

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { blogPosts } from "@/lib/blog-data";
+import { getArticles, getArticleBySlug, strapiArticleToBlogPost } from "@/lib/strapi";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 
 interface BlogPostPageProps {
@@ -10,14 +10,34 @@ interface BlogPostPageProps {
 }
 
 export async function generateStaticParams() {
-    return blogPosts.map((post) => ({
-        slug: post.slug,
-    }));
+    try {
+        const response = await getArticles({ pageSize: 100 });
+        // Only generate paths for articles that have a valid slug
+        return response.data
+            .filter(article => article.slug)
+            .map((article) => ({
+                slug: article.slug,
+            }));
+    } catch (error) {
+        console.error('Error generating static params:', error);
+        return [];
+    }
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
     const { slug } = await params;
-    const post = blogPosts.find((p) => p.slug === slug);
+
+    // Fetch article from Strapi
+    let post = null;
+
+    try {
+        const response = await getArticleBySlug(slug);
+        if (response && response.data) {
+            post = strapiArticleToBlogPost(response.data);
+        }
+    } catch (error) {
+        console.error('Error fetching article:', error);
+    }
 
     if (!post) {
         notFound();
@@ -82,8 +102,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 prose-ul:list-disc prose-ul:pl-6 prose-ul:text-muted-foreground
                 prose-li:marker:text-indigo-500/50
                 prose-img:rounded-xl prose-img:border prose-img:border-border"
-                            dangerouslySetInnerHTML={{ __html: post.content }}
-                        />
+                        >
+                            {post.content ? (
+                                <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                            ) : (
+                                <div>
+                                    <p>{post.excerpt}</p>
+                                    <p className="text-sm text-muted-foreground mt-4">
+                                        Full content coming soon. Edit this article in Strapi to add more content.
+                                    </p>
+                                </div>
+                            )}
+                        </div>
                     </article>
                 </div>
             </div>

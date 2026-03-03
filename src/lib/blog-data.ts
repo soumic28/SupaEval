@@ -1,3 +1,21 @@
+// ============================================================================
+// STRAPI INTEGRATION EXAMPLE
+// ============================================================================
+// Uncomment the imports below to use Strapi for dynamic blog posts:
+// import { getArticles, strapiArticleToBlogPost } from './strapi';
+//
+// Example usage:
+// export async function fetchBlogPostsFromStrapi() {
+//   const response = await getArticles({ pageSize: 10, sort: 'publishedAt:desc' });
+//   return response.data.map(strapiArticleToBlogPost);
+// }
+//
+// To switch from static to dynamic data:
+// 1. Uncomment the imports above
+// 2. Use fetchBlogPostsFromStrapi() in your components instead of blogPosts array
+// 3. Make sure Strapi is running on http://localhost:1337
+// ============================================================================
+
 export interface BlogPost {
   slug: string;
   title: string;

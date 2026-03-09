@@ -11,7 +11,7 @@ import { AgentQualityMonitor } from "./hero/agent-quality-monitor"
 
 export function Hero() {
     return (
-        <section className="relative overflow-hidden pt-32 pb-32 md:pt-32 md:pb-48 bg-noise">
+        <section className="relative overflow-hidden pt-32 pb-16 md:pt-32 md:pb-24 bg-noise">
             {/* Background Orbs */}
             <OrbEffect />
 

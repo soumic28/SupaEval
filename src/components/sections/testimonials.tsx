@@ -4,7 +4,7 @@ import { motion, useInView } from "framer-motion"
 import { Quote } from "lucide-react"
 import useEmblaCarousel from "embla-carousel-react"
 import Autoplay from "embla-carousel-autoplay"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 
 const testimonials = [
     {
@@ -30,9 +30,10 @@ const testimonials = [
 export function TestimonialsSection() {
     const sectionRef = useRef<HTMLElement>(null)
     const isInView = useInView(sectionRef, { once: false, amount: 0.3 })
+    const plugins = useMemo(() => [Autoplay({ delay: 4000, stopOnInteraction: true, playOnInit: false })], [])
     const [emblaRef, emblaApi] = useEmblaCarousel(
         { align: "start", loop: false },
-        [Autoplay({ delay: 4000, stopOnInteraction: true, playOnInit: false })]
+        plugins
     )
     const [selectedIndex, setSelectedIndex] = useState(0)
 
@@ -51,7 +52,14 @@ export function TestimonialsSection() {
         if (!autoplay) return
 
         if (isInView) {
-            autoplay.play()
+            const container = emblaApi.rootNode()
+            if (container && container.offsetParent !== null) {
+                try {
+                    autoplay.play()
+                } catch (e) {
+                    // Ignore autoplay errors if carousel is uninitialized
+                }
+            }
         } else {
             autoplay.stop()
             autoplay.reset() // Reset the timer when leaving view

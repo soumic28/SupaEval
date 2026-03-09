@@ -72,10 +72,9 @@ export function DifferentiationSection() {
                 </div>
 
                 <ScrollReveal delay={0.2} width="100%">
-                    {/* Desktop Table View */}
-                    <div className="hidden lg:block overflow-hidden rounded-2xl border border-[var(--border)] bg-[#0A0A0A] shadow-2xl">
+                    <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[#0A0A0A] shadow-2xl">
                         <div className="overflow-x-auto">
-                            <table className="w-full text-left text-xs xl:text-sm border-collapse">
+                            <table className="w-full text-left text-xs xl:text-sm border-collapse min-w-[800px]">
                                 <thead>
                                     <tr className="border-b border-[var(--border)] bg-white/[0.02]">
                                         <th className="p-4 font-semibold text-white w-[15%]">Capability</th>
@@ -102,42 +101,6 @@ export function DifferentiationSection() {
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-
-                    {/* Mobile/Tablet Card View */}
-                    <div className="lg:hidden space-y-6">
-                        {comparisonData.map((row, index) => (
-                            <div key={index} className="rounded-2xl border border-[var(--border)] bg-[#0A0A0A] p-6 shadow-lg">
-                                <h3 className="font-bold text-white mb-6 text-lg border-b border-white/5 pb-2">{row.capability}</h3>
-
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-1">
-                                        <span className="text-[10px] uppercase tracking-wider text-slate-500 block">Manual</span>
-                                        <p className="text-sm text-slate-400">{row.manual}</p>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <span className="text-[10px] uppercase tracking-wider text-slate-500 block">Open Source</span>
-                                        <p className="text-sm text-slate-400">{row.deepeval}</p>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <span className="text-[10px] uppercase tracking-wider text-slate-500 block">LangSmith</span>
-                                        <p className="text-sm text-slate-400">{row.langsmith}</p>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <span className="text-[10px] uppercase tracking-wider text-slate-500 block">Internal</span>
-                                        <p className="text-sm text-slate-400">{row.internal}</p>
-                                    </div>
-                                </div>
-
-                                <div className="mt-6 p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
-                                    <span className="text-[10px] uppercase tracking-widest text-indigo-400 font-bold block mb-1">SupaEval</span>
-                                    <div className="flex items-center gap-2">
-                                        <Check className="h-4 w-4 text-indigo-400 shrink-0" />
-                                        <span className="text-sm font-semibold text-indigo-100">{row.supaeval}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
                     </div>
                 </ScrollReveal>
             </div>

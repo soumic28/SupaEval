@@ -6,24 +6,19 @@ import { HolographicCard } from "@/components/ui/holographic-card"
 
 const problems = [
     {
-        title: "Surface-Level Evaluation",
-        description: "Teams only evaluate final answers, missing critical failures in retrieval, reasoning, or tool usage steps.",
+        title: "\"Response quality is bad.\"",
+        description: "Your team keeps hearing it. Customer success escalates. The CTO asks questions. But nobody can explain WHY the quality is bad — just that it is.",
         icon: TrendingDown,
     },
     {
-        title: "Black Box Context",
-        description: "No visibility into what context was retrieved or how the agent decided to use specific tools.",
-        icon: EyeOff,
-    },
-    {
-        title: "No Standard Benchmarks",
-        description: "Lack of standardized datasets makes it impossible to compare performance across different models or versions.",
-        icon: Ruler,
-    },
-    {
-        title: "Silent Regressions",
-        description: "Updates to prompts or models often cause silent regressions that aren't caught until production.",
+        title: "\"The model is hallucinating.\"",
+        description: "The default blame for every AI failure. But when you actually dig in, the model is often fine — it's retrieval, intent routing, or tool usage that's broken. You just can't see it.",
         icon: AlertCircle,
+    },
+    {
+        title: "\"We can't scale this to more customers.\"",
+        description: "You're fixing issues case by case. Every new customer, every model upgrade — you re-test everything manually and pray nothing breaks.",
+        icon: Ruler,
     },
 ]
 
@@ -38,21 +33,11 @@ export function ProblemSection() {
                         viewport={{ once: true }}
                         className="text-3xl md:text-5xl font-bold tracking-tight mb-4"
                     >
-                        Evaluating AI Agents Is <br />
-                        <span className="text-red-400">Broken Today</span>
+                        Sound familiar?
                     </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="text-lg text-[var(--muted-foreground)]"
-                    >
-                        Most teams are flying blind, relying on manual testing or basic metrics that don&apos;t capture the complexity of agentic workflows.
-                    </motion.p>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid md:grid-cols-3 gap-6">
                     {problems.map((problem, index) => (
                         <motion.div
                             key={index}

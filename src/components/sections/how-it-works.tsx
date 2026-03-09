@@ -6,33 +6,23 @@ import { ScrollReveal } from "@/components/ui/scroll-reveal"
 const steps = [
     {
         title: "Connect your agent",
-        description: "Integrate via SDK or API. We support any LLM or agent framework.",
-        code: "npm install supaeval",
+        description: "One SDK call. Works with any framework — LangChain, LlamaIndex, custom builds. No code changes to your agent.",
+        code: "supaeval.trace(your_agent)",
     },
     {
-        title: "Select datasets",
-        description: "Choose from our standardized benchmarks or upload your own custom datasets.",
-        code: "supaeval.datasets.list()",
+        title: "Evaluate every layer",
+        description: "SupaEval automatically evaluates retrieval, intent routing, chunking, generation, and tool use — with thousands of synthetic test cases generated for your domain.",
+        code: "supaeval.evaluate(layers='all')",
     },
     {
-        title: "Define metrics",
-        description: "Configure retrieval, generation, and tool usage metrics without writing code.",
-        code: "metrics: ['accuracy', 'hallucination']",
+        title: "Pinpoint the root cause",
+        description: "One dashboard shows exactly which layer is failing and why. No trace-by-trace debugging. No war rooms. Just data.",
+        code: "supaeval.get_root_cause()",
     },
     {
-        title: "Run evaluations",
-        description: "Execute scalable, parallel evaluation runs to get results in minutes.",
-        code: "supaeval.run({ dataset: 'v1' })",
-    },
-    {
-        title: "Analyze failures",
-        description: "Drill down into specific traces to understand why an agent failed.",
-        code: "supaeval.analysis.get_failures()",
-    },
-    {
-        title: "Improve and re-run",
-        description: "Fix the issues, update your agent, and verify improvements immediately.",
-        code: "supaeval.compare(run_a, run_b)",
+        title: "Fix with suggestions",
+        description: "SupaEval suggests fixes — prompt improvements, few-shot examples, instruction changes. Implement, re-run, improve.",
+        code: "supaeval.suggest_fixes()",
     },
 ]
 
@@ -47,7 +37,7 @@ export function HowItWorksSection() {
                         viewport={{ once: true }}
                         className="text-3xl md:text-5xl font-bold tracking-tight mb-4"
                     >
-                        How It Works
+                        From "quality is bad" to "intent routing is fixed." In one week.
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}

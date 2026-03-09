@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SupaEval — Pinpoint where your AI agents are failing.</title>
+  <meta name="description" content="SupaEval evaluates every layer of your AI agent - retrieval, intent routing, generation, and tools — so you know exactly what's broken and how to fix it.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f0f1a;
+      color: #e2e8f0;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* ===== UTILITIES ===== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 32px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 24px rgba(99, 102, 241, 0.25);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 0 32px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 32px;
+      background: transparent;
+      color: #c7d2fe;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: #6366f1;
+      background: rgba(99, 102, 241, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .section-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #818cf8;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.2;
+      color: #f1f5f9;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      font-size: 1.125rem;
+      color: #94a3b8;
+      max-width: 680px;
+      line-height: 1.7;
+    }
+
+    /* ===== NAVIGATION ===== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 16px 0;
+      transition: background 0.3s, backdrop-filter 0.3s, box-shadow 0.3s;
+    }
+
+    .nav.scrolled {
+      background: rgba(15, 15, 26, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #94a3b8;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #e2e8f0;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-login {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #94a3b8;
+      transition: color 0.2s;
+    }
+
+    .nav-login:hover {
+      color: #e2e8f0;
+    }
+
+    .nav-cta {
+      padding: 10px 22px;
+      font-size: 0.875rem;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .nav-cta:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .nav-mobile-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .nav-mobile-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: #e2e8f0;
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding: 160px 0 100px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #a5b4fc;
+      margin-bottom: 28px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: #f8fafc;
+      margin-bottom: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: #94a3b8;
+      max-width: 640px;
+      margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .hero-badges {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 64px;
+    }
+
+    .hero-badge {
+      padding: 6px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #94a3b8;
+    }
+
+    /* ===== AGENT HEALTH MONITOR DASHBOARD ===== */
+    .dashboard {
+      max-width: 680px;
+      margin: 0 auto;
+      background: #13132a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 28px 32px 24px;
+      text-align: left;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4), 0 0 60px rgba(99, 102, 241, 0.08);
+    }
+
+    .dashboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .dashboard-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #64748b;
+      letter-spacing: 0.04em;
+    }
+
+    .dashboard-live {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #22c55e;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse-green 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-green {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
+      }
+      50% {
+        box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+      }
+    }
+
+    .dashboard-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .dashboard-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .dashboard-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #94a3b8;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      min-width: 160px;
+      flex-shrink: 0;
+    }
+
+    .dashboard-bar-track {
+      flex: 1;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .dashboard-bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      width: 0%;
+      transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .dashboard-bar-fill.animated {
+      /* width set by data attribute via JS */
+    }
+
+    .bar-red { background: #ef4444; }
+    .bar-orange { background: #f59e0b; }
+    .bar-green { background: #22c55e; }
+
+    .dashboard-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      min-width: 36px;
+      text-align: right;
+    }
+
+    .pct-red { color: #ef4444; }
+    .pct-orange { color: #f59e0b; }
+    .pct-green { color: #22c55e; }
+
+    .dashboard-callout {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px;
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.18);
+      border-radius: 10px;
+    }
+
+    .dashboard-callout-icon {
+      font-size: 1.2rem;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .dashboard-callout-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #a5b4fc;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .dashboard-callout-text {
+      font-size: 0.85rem;
+      color: #c7d2fe;
+      line-height: 1.5;
+    }
+
+    /* ===== PROBLEM SECTION ===== */
+    .problem {
+      padding: 120px 0;
+    }
+
+    .problem .section-title {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .problem-card {
+      background: #16162e;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 32px 28px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .problem-card:hover {
+      border-color: rgba(99, 102, 241, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .problem-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 12px;
+    }
+
+    .problem-card p {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+
+    /* ===== AHA SECTION ===== */
+    .aha {
+      padding: 120px 0;
+    }
+
+    .aha-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .aha-header .section-subtitle {
+      margin: 0 auto;
+    }
+
+    .aha-panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto 40px;
+    }
+
+    .aha-panel {
+      border-radius: 14px;
+      padding: 32px 28px;
+    }
+
+    .aha-panel-left {
+      background: #16162e;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      opacity: 0.6;
+    }
+
+    .aha-panel-right {
+      background: #16162e;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      box-shadow: 0 0 40px rgba(99, 102, 241, 0.08);
+    }
+
+    .aha-panel-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 24px;
+    }
+
+    .aha-panel-left .aha-panel-label {
+      color: #64748b;
+    }
+
+    .aha-panel-right .aha-panel-label {
+      color: #818cf8;
+    }
+
+    .aha-simple-result {
+      text-align: center;
+      padding: 40px 0;
+    }
+
+    .aha-simple-score {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #22c55e;
+      margin-bottom: 4px;
+    }
+
+    .aha-simple-label {
+      font-size: 0.95rem;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+
+    .aha-simple-status {
+      font-size: 1rem;
+      color: #22c55e;
+      font-weight: 600;
+    }
+
+    .aha-detail-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .aha-detail-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .aha-detail-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: #94a3b8;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      min-width: 130px;
+      flex-shrink: 0;
+    }
+
+    .aha-detail-bar-track {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .aha-detail-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    .aha-detail-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      min-width: 32px;
+      text-align: right;
+    }
+
+    .aha-highlight-row {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 0 -12px;
+    }
+
+    .aha-callout {
+      text-align: center;
+      padding: 20px 28px;
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.18);
+      border-radius: 10px;
+      max-width: 900px;
+      margin: 0 auto;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #c7d2fe;
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .how-it-works {
+      padding: 120px 0;
+    }
+
+    .how-it-works .section-title {
+      text-align: center;
+      margin-bottom: 56px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .step-card {
+      background: #16162e;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 32px 24px;
+      position: relative;
+    }
+
+    .step-number {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .step-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 12px;
+    }
+
+    .step-card p {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+
+    .step-code {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: #0f0f1a;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: #a5b4fc;
+      overflow-x: auto;
+    }
+
+    /* ===== SOCIAL PROOF ===== */
+    .social-proof {
+      padding: 120px 0;
+    }
+
+    .social-proof .section-title {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .testimonial-card {
+      background: #16162e;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 32px 28px;
+    }
+
+    .testimonial-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #818cf8;
+      margin-bottom: 16px;
+      letter-spacing: 0.02em;
+    }
+
+    .testimonial-quote {
+      font-size: 1rem;
+      color: #cbd5e1;
+      line-height: 1.75;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .testimonial-attr {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #64748b;
+    }
+
+    /* ===== FEATURES ===== */
+    .features {
+      padding: 120px 0;
+    }
+
+    .features-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .features-header .section-subtitle {
+      margin: 0 auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: #16162e;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 32px 28px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(99, 102, 241, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .feature-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+
+    /* ===== COMPARISON TABLE ===== */
+    .comparison {
+      padding: 120px 0;
+    }
+
+    .comparison .section-title {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .comparison-table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .comparison-table {
+      width: 100%;
+      min-width: 860px;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .comparison-table thead th {
+      padding: 16px 18px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: #16162e;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      white-space: nowrap;
+    }
+
+    .comparison-table thead th:first-child {
+      border-top-left-radius: 14px;
+    }
+
+    .comparison-table thead th.col-supaeval {
+      color: #a5b4fc;
+      background: rgba(99, 102, 241, 0.1);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .comparison-table thead th:last-child {
+      border-top-right-radius: 14px;
+    }
+
+    .comparison-table tbody td {
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #94a3b8;
+      vertical-align: top;
+    }
+
+    .comparison-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison-table tbody tr:last-child td:first-child {
+      border-bottom-left-radius: 14px;
+    }
+
+    .comparison-table tbody tr:last-child td:last-child {
+      border-bottom-right-radius: 14px;
+    }
+
+    .comparison-table tbody td:first-child {
+      font-weight: 600;
+      color: #cbd5e1;
+      white-space: nowrap;
+    }
+
+    .comparison-table tbody td.col-supaeval {
+      background: rgba(99, 102, 241, 0.06);
+      color: #c7d2fe;
+      font-weight: 600;
+      border-left: 1px solid rgba(99, 102, 241, 0.15);
+      border-right: 1px solid rgba(99, 102, 241, 0.15);
+    }
+
+    .comparison-table tbody tr:last-child td.col-supaeval {
+      border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+      border-bottom-right-radius: 14px;
+    }
+
+    /* ===== GROWTH / PRICING CONTEXT ===== */
+    .growth {
+      padding: 120px 0;
+    }
+
+    .growth-inner {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .growth-inner .section-title {
+      margin-bottom: 20px;
+    }
+
+    .growth-inner p {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      line-height: 1.8;
+      margin-bottom: 36px;
+    }
+
+    /* ===== FINAL CTA ===== */
+    .final-cta {
+      padding: 120px 0;
+      text-align: center;
+      position: relative;
+    }
+
+    .final-cta::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .final-cta .section-title {
+      margin-bottom: 16px;
+    }
+
+    .final-cta .section-subtitle {
+      margin: 0 auto 40px;
+    }
+
+    .final-cta-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      padding: 64px 0 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand .nav-logo {
+      margin-bottom: 12px;
+    }
+
+    .footer-tagline {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    .footer-col h4 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #94a3b8;
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col a {
+      font-size: 0.875rem;
+      color: #64748b;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover {
+      color: #e2e8f0;
+    }
+
+    .footer-bottom {
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.8rem;
+      color: #475569;
+      text-align: center;
+    }
+
+    /* ===== MOBILE NAV ===== */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 15, 26, 0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+    }
+
+    .mobile-menu.active {
+      display: flex;
+    }
+
+    .mobile-menu a {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    .mobile-menu-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: #e2e8f0;
+      font-size: 1.75rem;
+      cursor: pointer;
+      padding: 8px;
+      line-height: 1;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links,
+      .nav-right {
+        display: none;
+      }
+
+      .nav-mobile-toggle {
+        display: flex;
+      }
+
+      .hero {
+        padding: 120px 0 80px;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .dashboard {
+        padding: 20px 18px 18px;
+      }
+
+      .dashboard-label {
+        min-width: 100px;
+        font-size: 0.6rem;
+      }
+
+      .dashboard-pct {
+        font-size: 0.7rem;
+        min-width: 30px;
+      }
+
+      .problem-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .aha-panels {
+        grid-template-columns: 1fr;
+      }
+
+      .aha-panel-left {
+        order: 2;
+      }
+
+      .aha-panel-right {
+        order: 1;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .aha-detail-label {
+        min-width: 90px;
+        font-size: 0.58rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-badges {
+        gap: 8px;
+      }
+
+      .hero-badge {
+        font-size: 0.7rem;
+        padding: 5px 10px;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        padding: 12px 24px;
+        font-size: 0.9rem;
+        width: 100%;
+      }
+
+      .hero-ctas {
+        flex-direction: column;
+      }
+
+      .final-cta-buttons {
+        flex-direction: column;
+      }
+    }
+
+    /* ===== ANIMATION DELAYS FOR DASHBOARD BARS ===== */
+    .dashboard-bar-fill:nth-child(1) { transition-delay: 0.1s; }
+
+    .dashboard-rows .dashboard-row:nth-child(1) .dashboard-bar-fill { transition-delay: 0.1s; }
+    .dashboard-rows .dashboard-row:nth-child(2) .dashboard-bar-fill { transition-delay: 0.3s; }
+    .dashboard-rows .dashboard-row:nth-child(3) .dashboard-bar-fill { transition-delay: 0.5s; }
+    .dashboard-rows .dashboard-row:nth-child(4) .dashboard-bar-fill { transition-delay: 0.7s; }
+    .dashboard-rows .dashboard-row:nth-child(5) .dashboard-bar-fill { transition-delay: 0.9s; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="nav" id="nav">
+    <div class="container nav-inner">
+      <a href="#" class="nav-logo gradient-text">SupaEval</a>
+      <ul class="nav-links">
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+      </ul>
+      <div class="nav-right">
+        <a href="#" class="nav-login">Log in</a>
+        <a href="#" class="nav-cta">Book a Demo</a>
+      </div>
+      <button class="nav-mobile-toggle" id="mobileToggle" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" id="mobileClose" aria-label="Close menu">&times;</button>
+    <a href="#how-it-works" class="mobile-menu-link">How It Works</a>
+    <a href="#features" class="mobile-menu-link">Features</a>
+    <a href="#pricing" class="mobile-menu-link">Pricing</a>
+    <a href="#" class="mobile-menu-link">Log in</a>
+    <a href="#" class="btn-primary" style="margin-top: 8px;">Book a Demo</a>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">AI Agent Evaluation Platform</div>
+
+      <h1>Pinpoint where your AI agents are failing.</h1>
+
+      <p class="hero-sub">Your customer says "the AI isn't working." We show you exactly which layer is causing it — retrieval, intent routing, generation, or tools.</p>
+
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary">Book a Demo</a>
+        <a href="#" class="btn-secondary">Start Free Trial</a>
+      </div>
+
+      <div class="hero-badges">
+        <span class="hero-badge">Model-agnostic</span>
+        <span class="hero-badge">Framework-agnostic</span>
+        <span class="hero-badge">Setup in 30 minutes</span>
+        <span class="hero-badge">10x Cheaper</span>
+      </div>
+
+      <!-- Agent Health Monitor Dashboard -->
+      <div class="dashboard" id="dashboard">
+        <div class="dashboard-header">
+          <span class="dashboard-title">// AGENT QUALITY MONITOR — PROD</span>
+          <span class="dashboard-live"><span class="live-dot"></span> LIVE</span>
+        </div>
+
+        <div class="dashboard-rows">
+          <div class="dashboard-row">
+            <span class="dashboard-label">INTENT ROUTING</span>
+            <div class="dashboard-bar-track">
+              <div class="dashboard-bar-fill bar-red" data-width="45"></div>
+            </div>
+            <span class="dashboard-pct pct-red">45%</span>
+          </div>
+          <div class="dashboard-row">
+            <span class="dashboard-label">DOC HIT RATE</span>
+            <div class="dashboard-bar-track">
+              <div class="dashboard-bar-fill bar-orange" data-width="65"></div>
+            </div>
+            <span class="dashboard-pct pct-orange">65%</span>
+          </div>
+          <div class="dashboard-row">
+            <span class="dashboard-label">RETRIEVAL PRECISION</span>
+            <div class="dashboard-bar-track">
+              <div class="dashboard-bar-fill bar-orange" data-width="70"></div>
+            </div>
+            <span class="dashboard-pct pct-orange">70%</span>
+          </div>
+          <div class="dashboard-row">
+            <span class="dashboard-label">CHUNKING QUALITY</span>
+            <div class="dashboard-bar-track">
+              <div class="dashboard-bar-fill bar-green" data-width="91"></div>
+            </div>
+            <span class="dashboard-pct pct-green">91%</span>
+          </div>
+          <div class="dashboard-row">
+            <span class="dashboard-label">FINAL ANSWER</span>
+            <div class="dashboard-bar-track">
+              <div class="dashboard-bar-fill bar-orange" data-width="76"></div>
+            </div>
+            <span class="dashboard-pct pct-orange">76%</span>
+          </div>
+        </div>
+
+        <div class="dashboard-callout">
+          <span class="dashboard-callout-icon">&#9889;</span>
+          <div>
+            <div class="dashboard-callout-title">ROOT CAUSE IDENTIFIED</div>
+            <div class="dashboard-callout-text">It's not hallucination. Your intent layer needs improvement. Retrieval &amp; model layers are healthy.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROBLEM SECTION ===== -->
+  <section class="problem">
+    <div class="container">
+      <h2 class="section-title">Sound familiar?</h2>
+
+      <div class="problem-grid">
+        <div class="problem-card">
+          <h3>"Response quality is bad."</h3>
+          <p>Your team keeps hearing it. Customer success escalates. The CTO asks questions. But nobody can explain WHY the quality is bad — just that it is.</p>
+        </div>
+        <div class="problem-card">
+          <h3>"The model is hallucinating."</h3>
+          <p>The default blame for every AI failure. But when you actually dig in, the model is often fine — it's retrieval, intent routing, or tool usage that's broken. You just can't see it.</p>
+        </div>
+        <div class="problem-card">
+          <h3>"We can't scale this to more customers."</h3>
+          <p>You're fixing issues case by case. Every new customer, every model upgrade — you re-test everything manually and pray nothing breaks.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== AHA SECTION ===== -->
+  <section class="aha">
+    <div class="container">
+      <div class="aha-header">
+        <h2 class="section-title">Your final answer scores 76%. Your intent routing is at 45%.</h2>
+        <p class="section-subtitle">Final-answer tools say "looks fine." SupaEval pinpoints the issue.</p>
+      </div>
+
+      <div class="aha-panels">
+        <!-- Left Panel: Other tools -->
+        <div class="aha-panel aha-panel-left">
+          <div class="aha-panel-label">What other tools see</div>
+          <div class="aha-simple-result">
+            <div class="aha-simple-score">76% &#10003;</div>
+            <div class="aha-simple-label">Final Answer</div>
+            <div class="aha-simple-status">All looks good!</div>
+          </div>
+        </div>
+
+        <!-- Right Panel: SupaEval -->
+        <div class="aha-panel aha-panel-right">
+          <div class="aha-panel-label">What SupaEval sees</div>
+          <div class="aha-detail-rows">
+            <div class="aha-detail-row aha-highlight-row">
+              <span class="aha-detail-label">INTENT ROUTING</span>
+              <div class="aha-detail-bar-track">
+                <div class="aha-detail-bar-fill bar-red" style="width: 45%;"></div>
+              </div>
+              <span class="aha-detail-pct pct-red">45%</span>
+            </div>
+            <div class="aha-detail-row">
+              <span class="aha-detail-label">DOC HIT RATE</span>
+              <div class="aha-detail-bar-track">
+                <div class="aha-detail-bar-fill bar-orange" style="width: 65%;"></div>
+              </div>
+              <span class="aha-detail-pct pct-orange">65%</span>
+            </div>
+            <div class="aha-detail-row">
+              <span class="aha-detail-label">RETRIEVAL PRECISION</span>
+              <div class="aha-detail-bar-track">
+                <div class="aha-detail-bar-fill bar-orange" style="width: 70%;"></div>
+              </div>
+              <span class="aha-detail-pct pct-orange">70%</span>
+            </div>
+            <div class="aha-detail-row">
+              <span class="aha-detail-label">CHUNKING QUALITY</span>
+              <div class="aha-detail-bar-track">
+                <div class="aha-detail-bar-fill bar-green" style="width: 91%;"></div>
+              </div>
+              <span class="aha-detail-pct pct-green">91%</span>
+            </div>
+            <div class="aha-detail-row">
+              <span class="aha-detail-label">FINAL ANSWER</span>
+              <div class="aha-detail-bar-track">
+                <div class="aha-detail-bar-fill bar-orange" style="width: 76%;"></div>
+              </div>
+              <span class="aha-detail-pct pct-orange">76%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="aha-callout">It's not hallucination. Your intent layer needs improvement.</div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <h2 class="section-title">From "quality is bad" to "intent routing is fixed." In one week.</h2>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h3>Connect your agent</h3>
+          <p>One SDK call. Works with any framework — LangChain, LlamaIndex, custom builds. No code changes to your agent.</p>
+          <div class="step-code">supaeval.trace(your_agent)</div>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h3>Evaluate every layer</h3>
+          <p>SupaEval automatically evaluates retrieval, intent routing, chunking, generation, and tool use — with thousands of synthetic test cases generated for your domain.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h3>Pinpoint the root cause</h3>
+          <p>One dashboard shows exactly which layer is failing and why. No trace-by-trace debugging. No war rooms. Just data.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <h3>Fix with suggestions</h3>
+          <p>SupaEval suggests fixes — prompt improvements, few-shot examples, instruction changes. Implement, re-run, improve.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SOCIAL PROOF ===== -->
+  <section class="social-proof">
+    <div class="container">
+      <h2 class="section-title">Teams that stopped guessing.</h2>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-label">Enterprise SaaS Company, 500+ employees</div>
+          <p class="testimonial-quote">"Every team was blaming the AI/ML team — 'the model is hallucinating.' But the layer-wise data showed intent detection and document retrieval were the real issues. The blame game ended. Our CPO mandated an eval-first strategy across the company."</p>
+          <div class="testimonial-attr">— Head of AI Engineering</div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-label">Fortune 500 Tech Company</div>
+          <p class="testimonial-quote">"We had war rooms with 300 prompts divided among engineers and stopwatches for latency. Half the prompts never got executed. Automated layer-wise evaluation changed the entire release process overnight."</p>
+          <div class="testimonial-attr">— Principal Engineer</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="features-header">
+        <h2 class="section-title">Everything you need to evaluate AI agents.</h2>
+        <p class="section-subtitle">Purpose-built for quality. Not observability with eval bolted on.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Layer-by-Layer Evaluation</h3>
+          <p>Evaluate every layer independently — retrieval precision, intent routing accuracy, chunking quality, generation faithfulness, tool use correctness. Know exactly WHY the final answer is wrong.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Synthetic Data Pipeline</h3>
+          <p>Generate thousands of diverse test cases from 200 seed prompts. PDFs, HTML, tables, images — all document types. First run takes hours, not the months it takes to build manually.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Fix Suggestions</h3>
+          <p>When a layer fails, SupaEval generates actionable fixes — prompt improvements, few-shot examples, system instruction changes. Don't just find the problem — start solving it.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Real-Time Production Monitoring</h3>
+          <p>Evaluate quality metrics on live traces. Failed metrics automatically expand your test dataset. Catch regressions before customers do.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMPARISON TABLE ===== -->
+  <section class="comparison" id="pricing">
+    <div class="container">
+      <h2 class="section-title">What you're doing now vs. SupaEval</h2>
+
+      <div class="comparison-table-wrap">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Capability</th>
+              <th>Manual Testing</th>
+              <th>DeepEval / Ragas</th>
+              <th>LangSmith / Datadog</th>
+              <th>Build Internally</th>
+              <th class="col-supaeval">SupaEval</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Test coverage</td>
+              <td>100–300 prompts</td>
+              <td>Bring your own</td>
+              <td>Traces only</td>
+              <td>Custom, limited</td>
+              <td class="col-supaeval">Thousands, auto-generated</td>
+            </tr>
+            <tr>
+              <td>Root cause identification</td>
+              <td>No</td>
+              <td>No (final answer only)</td>
+              <td>Shows traces, not quality</td>
+              <td>Maybe, after months</td>
+              <td class="col-supaeval">Automated, per layer</td>
+            </tr>
+            <tr>
+              <td>Setup time</td>
+              <td>Ongoing manual</td>
+              <td>Weeks</td>
+              <td>Days (observability only)</td>
+              <td>2–3 months</td>
+              <td class="col-supaeval">1 week</td>
+            </tr>
+            <tr>
+              <td>Annual cost</td>
+              <td>1 tester + 1 engineer</td>
+              <td>Tool + your team's time</td>
+              <td>Tool + your team's time</td>
+              <td>$300–500K/year</td>
+              <td class="col-supaeval">$50–100 per run</td>
+            </tr>
+            <tr>
+              <td>Fix suggestions</td>
+              <td>No</td>
+              <td>No</td>
+              <td>No</td>
+              <td>No</td>
+              <td class="col-supaeval">Yes, AI-powered</td>
+            </tr>
+            <tr>
+              <td>Framework lock-in</td>
+              <td>N/A</td>
+              <td>Some (e.g., LangChain)</td>
+              <td>Some</td>
+              <td>N/A</td>
+              <td class="col-supaeval">None — any framework</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GROWTH / PRICING CONTEXT ===== -->
+  <section class="growth">
+    <div class="container">
+      <div class="growth-inner">
+        <h2 class="section-title">No eval engineer required.</h2>
+        <p>Pinpoint where your agent is failing for $50–100 per run. No $300K evaluation team. No 3 months building internal tools. No code changes to your agent. Connect, evaluate, fix — your first root cause analysis in one week.</p>
+        <a href="#" class="btn-primary">Book a Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FINAL CTA ===== -->
+  <section class="final-cta">
+    <div class="container">
+      <h2 class="section-title">Stop guessing. Start evaluating. Layer by layer.</h2>
+      <p class="section-subtitle">Join engineering teams that debug with data, not blame.</p>
+      <div class="final-cta-buttons">
+        <a href="#" class="btn-primary">Book a Demo</a>
+        <a href="#" class="btn-secondary">Start Free Trial</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="nav-logo gradient-text">SupaEval</div>
+          <p class="footer-tagline">AI Agent Evaluation Platform</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">API Reference</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2026 SupaEval Inc. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // --- Sticky nav scroll effect ---
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // --- Mobile menu toggle ---
+    const mobileToggle = document.getElementById('mobileToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileClose = document.getElementById('mobileClose');
+
+    mobileToggle.addEventListener('click', () => {
+      mobileMenu.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+
+    mobileClose.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+
+    // Close mobile menu when clicking a link
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // --- Animate dashboard bars on load / scroll into view ---
+    function animateBars() {
+      const bars = document.querySelectorAll('.dashboard-bar-fill[data-width]');
+      bars.forEach(bar => {
+        const targetWidth = bar.getAttribute('data-width');
+        bar.style.width = targetWidth + '%';
+      });
+    }
+
+    // Use IntersectionObserver so bars animate when dashboard scrolls into view
+    const dashboardEl = document.getElementById('dashboard');
+    let barsAnimated = false;
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !barsAnimated) {
+            barsAnimated = true;
+            animateBars();
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+
+      observer.observe(dashboardEl);
+    } else {
+      // Fallback: animate on load
+      window.addEventListener('load', animateBars);
+    }
+  </script>
+</body>
+</html>

@@ -35,6 +35,7 @@ export const TextScramble = ({
                             if (index < iteration) {
                                 return text[index];
                             }
+                            if (char === " ") return " ";
                             return characterSet[Math.floor(Math.random() * characterSet.length)];
                         })
                         .join("")
@@ -56,7 +57,7 @@ export const TextScramble = ({
 
     return (
         <motion.span
-            className={cn("inline-block font-mono", className)}
+            className={cn("inline font-mono text-inherit", className)}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}

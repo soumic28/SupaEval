@@ -29,8 +29,9 @@ export function Hero() {
                 </ScrollReveal>
 
                 <ScrollReveal width="100%" delay={0.1}>
-                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
-                        Pinpoint where your <br />
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
+                        Pinpoint where your{" "}
+                        <br className="hidden md:block" />
                         <span className="text-gradient-primary font-light">
                             <TextScramble text="AI agents are failing." />
                         </span>

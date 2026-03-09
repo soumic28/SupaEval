@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useState } from "react"
 import { ComingSoonModal } from "@/components/ui/coming-soon-modal"
 
@@ -21,8 +22,11 @@ export function Footer() {
                     <div className="grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
                         <div className="col-span-2 lg:col-span-2">
                             <Link href="/" className="flex items-center gap-2 mb-4">
-                                <div className="h-6 w-6 rounded-md bg-gradient-to-br from-indigo-500 to-violet-500" />
-                                <span className="text-lg font-bold tracking-tight">SupaEval</span>
+                                <Image src="/logos/icon-on-black.svg" alt="SupaEval Logo" width={32} height={32} className="h-8 w-8 rounded-md" />
+                                <span className="text-xl font-bold tracking-tight">
+                                    <span className="text-foreground">supa</span>
+                                    <span className="text-blue-600">eval</span>
+                                </span>
                             </Link>
                             <p className="text-sm text-[var(--muted-foreground)] max-w-xs mb-6">
                                 Evaluation is infrastructure. Quality intelligence for AI agents.

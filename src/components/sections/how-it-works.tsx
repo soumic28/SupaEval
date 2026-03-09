@@ -37,7 +37,7 @@ export function HowItWorksSection() {
                         viewport={{ once: true }}
                         className="text-3xl md:text-5xl font-bold tracking-tight mb-4"
                     >
-                        From "quality is bad" to "intent routing is fixed." In one week.
+                        From "<span className="text-red-500">quality is bad</span>" to <br className="hidden md:block" />"<span className="text-emerald-500">intent routing is fixed.</span>" In one week.
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}

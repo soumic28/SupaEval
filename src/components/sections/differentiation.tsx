@@ -57,7 +57,7 @@ const comparisonData = [
 
 export function DifferentiationSection() {
     return (
-        <section className="py-24 bg-[var(--secondary)]/10" id="pricing">
+        <section className="py-12 md:py-24 bg-[var(--secondary)]/10" id="pricing">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center max-w-3xl mx-auto mb-16">
                     <motion.h2

@@ -18,7 +18,7 @@ const testimonials = [
 
 export function TestimonialsSection() {
     return (
-        <section className="py-24 bg-[var(--background)]">
+        <section className="py-12 md:py-24 bg-[var(--background)]">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center max-w-3xl mx-auto mb-16">
                     <motion.h2

@@ -64,7 +64,7 @@ export function CTASection() {
             onMouseLeave={handleMouseLeave}
         >
             {/* Growth Section Context */}
-            <div className="py-24 bg-white/5 border-y border-white/5">
+            <div className="py-12 md:py-24 bg-white/5 border-y border-white/5">
                 <div className="container mx-auto px-4 md:px-6 text-center max-w-3xl">
                     <ScrollReveal width="100%">
                         <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
@@ -111,7 +111,7 @@ export function CTASection() {
                 <div className="absolute inset-0 h-full w-full bg-[radial-gradient(var(--primary)_1.5px,transparent_1.5px)] [background-size:20px_20px]" />
             </motion.div>
 
-            <div className="py-32 container relative mx-auto px-4 md:px-6 text-center">
+            <div className="py-16 md:py-32 container relative mx-auto px-4 md:px-6 text-center">
                 <ScrollReveal width="100%">
                     <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-indigo-500/5 px-6 py-24 text-center shadow-2xl">
                         {/* Inner subtle gradient for the card */}

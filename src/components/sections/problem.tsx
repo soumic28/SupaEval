@@ -24,7 +24,7 @@ const problems = [
 
 export function ProblemSection() {
     return (
-        <section className="pt-16 pb-24 md:pt-20 md:pb-32 bg-[var(--secondary)]/20">
+        <section className="py-12 md:py-24 bg-[var(--secondary)]/20">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center max-w-3xl mx-auto mb-16">
                     <motion.h2

@@ -13,7 +13,7 @@ const supaMetrics = [
 
 export function SolutionSection() {
     return (
-        <section className="py-24 bg-[var(--background)] overflow-hidden">
+        <section className="py-12 md:py-24 bg-[var(--background)] overflow-hidden">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center max-w-4xl mx-auto mb-16">
                     <motion.h2

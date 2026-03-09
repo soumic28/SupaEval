@@ -67,12 +67,27 @@ export function CTASection() {
             <div className="py-12 md:py-24 bg-white/5 border-y border-white/5">
                 <div className="container mx-auto px-4 md:px-6 text-center max-w-3xl">
                     <ScrollReveal width="100%">
-                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
+                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-8 text-slate-900">
                             No eval engineer required.
                         </h2>
-                        <p className="text-lg text-slate-400 mb-8 leading-relaxed">
-                            Pinpoint where your agent is failing for $50–100 per run. No $300K evaluation team. No 3 months building internal tools. No code changes to your agent. Connect, evaluate, fix — your first root cause analysis in one week.
-                        </p>
+                        <ul className="text-lg text-slate-500 mb-10 space-y-4 text-left inline-block max-w-xl">
+                            <li className="flex items-start gap-3">
+                                <span className="text-indigo-500 mt-1 font-bold">✓</span>
+                                <span>Pinpoint where your agent is failing for <span className="text-slate-800 font-bold">$50–100 per run</span>.</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <span className="text-indigo-500 mt-1 font-bold">✓</span>
+                                <span><span className="text-slate-800 font-bold">No $300K</span> evaluation team. <span className="text-slate-800 font-bold">No 3 months</span> building internal tools.</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <span className="text-indigo-500 mt-1 font-bold">✓</span>
+                                <span><span className="text-slate-800 font-bold">No code changes</span> to your agent.</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <span className="text-emerald-500 mt-1 font-bold">✓</span>
+                                <span>Connect, evaluate, fix — your first root cause analysis <span className="text-emerald-500 font-bold tracking-wide">in one week</span>.</span>
+                            </li>
+                        </ul>
                         <MagneticButton className="h-12 px-8 text-base mb-12">
                             Book a Demo
                         </MagneticButton>

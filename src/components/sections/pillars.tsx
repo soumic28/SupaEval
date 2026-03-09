@@ -6,29 +6,24 @@ import { HolographicCard } from "@/components/ui/holographic-card"
 
 const pillars = [
     {
-        title: "Data Foundation",
-        description: "Standardized, versioned datasets for AI evaluation. Manage prompts, conversations, and multi-turn tasks in one place.",
-        icon: Database,
-    },
-    {
-        title: "Evaluation Definition",
-        description: "Declarative configs without code changes. Define metrics, judges, and pass/fail criteria in a version-controlled format.",
-        icon: GitBranch,
-    },
-    {
-        title: "Execution & Benchmarking",
-        description: "Scalable, deterministic evaluation runs. Run thousands of tests in parallel with reproducible results.",
+        title: "Layer-By-Layer Evaluation",
+        description: "Evaluate every layer independently — retrieval precision, intent routing accuracy, chunking quality, generation faithfulness, tool use correctness. Know exactly WHY the final answer is wrong.",
         icon: Zap,
     },
     {
-        title: "Insights & Dashboards",
-        description: "Root-cause analysis across agent layers. Drill down from overall scores to specific retrieval or generation failures.",
-        icon: BarChart,
+        title: "Synthetic Data Pipeline",
+        description: "Generate thousands of diverse test cases from 200 seed prompts. PDFs, HTML, tables, images — all document types. First run takes hours, not the months it takes to build manually.",
+        icon: Database,
     },
     {
-        title: "Learning & Optimization",
-        description: "Feedback loops and RLHF-ready outputs. Turn evaluation insights into training data for continuous improvement.",
+        title: "Fix Suggestions",
+        description: "When a layer fails, SupaEval generates actionable fixes — prompt improvements, few-shot examples, system instruction changes. Don't just find the problem — start solving it.",
         icon: BrainCircuit,
+    },
+    {
+        title: "Real-Time Production Monitoring",
+        description: "Evaluate quality metrics on live traces. Failed metrics automatically expand your test dataset. Catch regressions before customers do.",
+        icon: BarChart,
     },
 ]
 
@@ -43,7 +38,7 @@ export function PillarsSection() {
                         viewport={{ once: true }}
                         className="text-3xl md:text-5xl font-bold tracking-tight mb-4"
                     >
-                        The <span className="text-indigo-500">SupaEval</span> Platform
+                        Everything you need to <span className="text-secondary">evaluate AI agents.</span>
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -52,11 +47,11 @@ export function PillarsSection() {
                         transition={{ delay: 0.1 }}
                         className="text-lg text-[var(--muted-foreground)]"
                     >
-                        Five pillars of quality intelligence to ensure your agents are production-ready.
+                        Purpose-built for quality. Not observability with eval bolted on.
                     </motion.p>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-2 gap-6">
                     {pillars.map((pillar, index) => (
                         <motion.div
                             key={index}

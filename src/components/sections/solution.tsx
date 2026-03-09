@@ -1,55 +1,29 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ArrowRight, BarChart3, Database, FileJson, Layers, Lightbulb, Settings2 } from "lucide-react"
-import { ScrollReveal } from "@/components/ui/scroll-reveal"
+import { Check, X } from "lucide-react"
 
-const steps = [
-    {
-        title: "Datasets",
-        icon: Database,
-        description: "Standardized, versioned datasets",
-    },
-    {
-        title: "Config",
-        icon: Settings2,
-        description: "Declarative evaluation setup",
-    },
-    {
-        title: "Execution",
-        icon: Layers,
-        description: "Scalable, deterministic runs",
-    },
-    {
-        title: "Scoring",
-        icon: FileJson,
-        description: "Multi-layered metric computation",
-    },
-    {
-        title: "Insights",
-        icon: BarChart3,
-        description: "Root-cause analysis",
-    },
-    {
-        title: "Improvement",
-        icon: Lightbulb,
-        description: "Feedback loops & RLHF",
-    },
+const supaMetrics = [
+    { label: "INTENT ROUTING", value: 45, color: "bg-red-500", textColor: "text-red-400", highlight: true },
+    { label: "DOC HIT RATE", value: 65, color: "bg-amber-500", textColor: "text-amber-400" },
+    { label: "RETRIEVAL PRECISION", value: 70, color: "bg-amber-500", textColor: "text-amber-400" },
+    { label: "CHUNKING QUALITY", value: 91, color: "bg-emerald-500", textColor: "text-emerald-400" },
+    { label: "FINAL ANSWER", value: 76, color: "bg-amber-500", textColor: "text-amber-400" },
 ]
 
 export function SolutionSection() {
     return (
-        <section className="py-24 bg-[var(--background)]">
+        <section className="py-24 bg-[var(--background)] overflow-hidden">
             <div className="container mx-auto px-4 md:px-6">
-                <div className="text-center max-w-3xl mx-auto mb-20">
+                <div className="text-center max-w-4xl mx-auto mb-16">
                     <motion.h2
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         className="text-3xl md:text-5xl font-bold tracking-tight mb-6"
                     >
-                        A Complete Evaluation Platform <br />
-                        <span className="text-indigo-500">Not Just Metrics</span>
+                        Your final answer scores 76%. <br />
+                        <span className="text-indigo-500 text-2xl md:text-4xl">Your intent routing is at 45%.</span>
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -58,38 +32,83 @@ export function SolutionSection() {
                         transition={{ delay: 0.1 }}
                         className="text-lg text-[var(--muted-foreground)]"
                     >
-                        SupaEval provides the infrastructure to run repeatable evaluations, produce comparable benchmarks, and generate actionable insights for your AI agents.
+                        Final-answer tools say "looks fine." SupaEval pinpoints the issue.
                     </motion.p>
                 </div>
 
-                <div className="relative">
-                    {/* Connecting line for desktop */}
-                    <div className="absolute top-12 left-0 w-full h-0.5 bg-gradient-to-r from-indigo-500/0 via-indigo-500/50 to-indigo-500/0 hidden lg:block" />
+                <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
+                    {/* Left Panel: Traditional Tools */}
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        className="relative p-8 rounded-3xl border border-white/5 bg-white/[0.02] backdrop-blur-sm opacity-60 grayscale hover:grayscale-0 transition-all duration-500"
+                    >
+                        <div className="text-[10px] font-mono text-slate-500 tracking-widest uppercase mb-12">
+                            What other tools see
+                        </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-                        {steps.map((step, index) => (
-                            <ScrollReveal key={index} delay={index * 0.1} width="100%">
-                                <div className="relative flex flex-col items-center text-center group">
-                                    <div className="relative z-10 h-24 w-24 rounded-2xl bg-[var(--secondary)] border border-[var(--border)] flex items-center justify-center mb-6 group-hover:border-indigo-500/50 group-hover:shadow-lg group-hover:shadow-indigo-500/20 transition-all duration-300">
-                                        <step.icon className="h-10 w-10 text-[var(--muted-foreground)] group-hover:text-indigo-500 transition-colors" />
-                                    </div>
+                        <div className="flex flex-col items-center justify-center py-12 text-center">
+                            <span className="text-6xl font-bold text-emerald-500/80 mb-2">76%</span>
+                            <span className="text-sm font-medium text-slate-400 mb-6 uppercase tracking-wider">Final Answer</span>
+                            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold text-sm">
+                                <Check className="h-4 w-4" />
+                                All looks good!
+                            </div>
+                        </div>
+                    </motion.div>
 
-                                    <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
-                                    <p className="text-sm text-[var(--muted-foreground)]">
-                                        {step.description}
-                                    </p>
+                    {/* Right Panel: SupaEval */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        className="relative p-8 rounded-3xl border border-indigo-500/30 bg-indigo-500/5 shadow-2xl shadow-indigo-500/10"
+                    >
+                        <div className="text-[10px] font-mono text-indigo-400 tracking-widest uppercase mb-12 font-bold">
+                            What SupaEval sees
+                        </div>
 
-                                    {/* Arrow for mobile/tablet flow */}
-                                    {index < steps.length - 1 && (
-                                        <div className="lg:hidden absolute top-12 -right-4 text-[var(--muted-foreground)]/30 transform translate-x-1/2">
-                                            <ArrowRight className="h-6 w-6" />
+                        <div className="space-y-4">
+                            {supaMetrics.map((metric, idx) => (
+                                <div
+                                    key={metric.label}
+                                    className={`relative p-3 rounded-xl transition-colors duration-500 ${metric.highlight ? 'bg-red-500/10 border border-red-500/20' : ''}`}
+                                >
+                                    <div className="grid grid-cols-[110px_1fr_40px] items-center gap-4">
+                                        <span className={`font-mono text-[9px] font-medium tracking-wider ${metric.highlight ? 'text-red-300' : 'text-slate-400'}`}>
+                                            {metric.label}
+                                        </span>
+                                        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                whileInView={{ width: `${metric.value}%` }}
+                                                viewport={{ once: true }}
+                                                transition={{ duration: 1, delay: 0.3 + idx * 0.1 }}
+                                                className={`h-full ${metric.color} rounded-full`}
+                                            />
                                         </div>
-                                    )}
+                                        <span className={`font-mono text-[10px] font-bold text-right ${metric.textColor}`}>
+                                            {metric.value}%
+                                        </span>
+                                    </div>
                                 </div>
-                            </ScrollReveal>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    </motion.div>
                 </div>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    viewport={{ once: true }}
+                    className="text-center"
+                >
+                    <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-200 font-semibold italic text-lg shadow-lg">
+                        It's not hallucination. Your intent layer needs improvement.
+                    </div>
+                </motion.div>
             </div>
         </section>
     )

@@ -42,19 +42,19 @@ export function SolutionSection() {
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        className="relative p-8 rounded-3xl border border-white/5 bg-white/[0.02] backdrop-blur-sm opacity-60 grayscale hover:grayscale-0 transition-all duration-500"
+                        className="relative p-8 rounded-3xl border border-white/5 bg-white/[0.02] backdrop-blur-sm opacity-80 hover:opacity-100 transition-all duration-500"
                     >
                         <div className="mb-10">
-                            <h3 className="inline-block px-4 py-2 rounded-lg border border-white/10 bg-black/20 text-xs md:text-sm font-bold text-slate-400 tracking-wider uppercase">
+                            <h3 className="inline-block px-4 py-2 rounded-lg bg-slate-800 text-xs md:text-sm font-bold text-slate-300 tracking-wider uppercase shadow-md">
                                 What other tools see
                             </h3>
                         </div>
 
                         <div className="flex flex-col items-center justify-center py-12 text-center">
-                            <span className="text-6xl font-bold text-emerald-500/80 mb-2">76%</span>
+                            <span className="text-6xl font-bold text-emerald-500 mb-2">76%</span>
                             <span className="text-sm font-medium text-slate-400 mb-6 uppercase tracking-wider">Final Answer</span>
-                            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold text-sm">
-                                <Check className="h-4 w-4" />
+                            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 font-semibold text-sm">
+                                <Check className="h-4 w-4 text-emerald-500" />
                                 All looks good!
                             </div>
                         </div>
@@ -68,7 +68,7 @@ export function SolutionSection() {
                         className="relative p-8 rounded-3xl border border-indigo-500/30 bg-indigo-500/5 shadow-2xl shadow-indigo-500/10"
                     >
                         <div className="mb-10">
-                            <h3 className="inline-block px-4 py-2 rounded-lg border border-indigo-500/30 bg-indigo-500/10 text-xs md:text-sm font-bold text-indigo-400 tracking-wider uppercase shadow-[0_0_15px_rgba(99,102,241,0.15)]">
+                            <h3 className="inline-block px-4 py-2 rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-xs md:text-sm font-bold text-indigo-300 tracking-wider uppercase shadow-[0_0_15px_rgba(99,102,241,0.2)]">
                                 What SupaEval sees
                             </h3>
                         </div>

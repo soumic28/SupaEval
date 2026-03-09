@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SupaEval — AI Agent Evaluation Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow-x: hidden; }
+html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    background: #0A0A0F;
+    color: #ffffff;
+}
+body {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    background: #0A0A0F;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ===== CSS VARIABLES ===== */
+:root {
+    --bg: #0A0A0F;
+    --navy: #111827;
+    --blue: #1B6FEE;
+    --blue-deep: #0D47A1;
+    --blue-light: #E8F1FD;
+    --red: #ef4444;
+    --orange: #f59e0b;
+    --green: #22c55e;
+    --text-primary: #ffffff;
+    --text-secondary: #9ca3af;
+    --gray: #6B7280;
+    --mono: 'JetBrains Mono', 'Consolas', monospace;
+}
+
+/* ===== SLIDE BASE ===== */
+.slide {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+    padding: clamp(24px, 5vh, 60px) clamp(24px, 6vw, 100px);
+}
+
+.slide-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* ===== GRID OVERLAY ===== */
+.slide::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(27,111,238,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(27,111,238,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ===== TYPOGRAPHY ===== */
+.headline {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.1rem, 4vw, 3.2rem); /* Increased */
+    margin-bottom: clamp(18px, 3.5vh, 40px);
+    color: var(--text-primary);
+    line-height: 1.18;
+}
+.headline .accent { color: var(--blue); }
+
+.mono {
+    font-family: var(--mono);
+    font-size: clamp(0.65rem, 1.1vw, 0.85rem);
+    color: var(--blue);
+    letter-spacing: 0.05em;
+}
+
+.body-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ===== GLOW SYSTEM ===== */
+.blue-glow {
+    box-shadow: 0 0 20px rgba(27,111,238,0.2), 0 0 40px rgba(27,111,238,0.08);
+    border: 1px solid rgba(27,111,238,0.25);
+}
+
+/* ===== CARDS ===== */
+.card {
+    background: rgba(17,24,39,0.8);
+    border-radius: 12px;
+    padding: clamp(16px, 2.5vh, 28px) clamp(16px, 2vw, 28px);
+    transition: box-shadow 0.4s ease, transform 0.3s ease;
+}
+.card:hover {
+    box-shadow: 0 0 20px rgba(27,111,238,0.25), 0 0 40px rgba(27,111,238,0.1);
+    transform: translateY(-2px);
+}
+
+/* ===== ANIMATIONS ===== */
+.animate-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.visible .animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+.visible .animate-in:nth-child(1) { transition-delay: 0.1s; }
+.visible .animate-in:nth-child(2) { transition-delay: 0.2s; }
+.visible .animate-in:nth-child(3) { transition-delay: 0.3s; }
+.visible .animate-in:nth-child(4) { transition-delay: 0.4s; }
+.visible .animate-in:nth-child(5) { transition-delay: 0.5s; }
+
+.stagger-1 { transition-delay: 0.1s !important; }
+.stagger-2 { transition-delay: 0.25s !important; }
+.stagger-3 { transition-delay: 0.4s !important; }
+.stagger-4 { transition-delay: 0.55s !important; }
+
+/* ===== PROGRESS BAR ===== */
+#progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--blue);
+    box-shadow: 0 0 10px rgba(27,111,238,0.5);
+    z-index: 1000;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+/* ===== NAV DOTS ===== */
+#nav-dots {
+    position: fixed;
+    right: clamp(12px, 2vw, 24px);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.nav-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.nav-dot.active {
+    background: var(--blue);
+    border-color: var(--blue);
+    box-shadow: 0 0 8px rgba(27,111,238,0.5);
+}
+
+/* ===== CANVAS ===== */
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+    html { scroll-behavior: auto; }
+    .animate-in { opacity: 1; transform: none; }
+}
+
+/* ============================================
+   SLIDE 1: TITLE
+   ============================================ */
+#slide-title {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+#slide-title .slide-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.title-label {
+    font-family: var(--mono);
+    font-size: clamp(0.65rem, 1vw, 0.8rem);
+    color: var(--blue);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: clamp(12px, 2vh, 24px);
+    opacity: 0.8;
+}
+.title-logo {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: clamp(12px, 2vh, 24px);
+}
+.title-logo .icon-wrap {
+    margin-right: clamp(12px, 2vw, 20px);
+}
+.title-wordmark {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 10vw, 7rem);
+    letter-spacing: -0.035em;
+    line-height: 1;
+}
+.title-wordmark .supa { color: var(--text-primary); }
+.title-wordmark .eval { color: var(--blue); }
+.title-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    font-size: clamp(1rem, 2.2vw, 1.5rem);
+    color: var(--text-secondary);
+    max-width: 600px;
+}
+
+/* ============================================
+   SLIDE 2: THE PAIN
+   ============================================ */
+.pain-cards {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 1.5vh, 18px);
+}
+.pain-card {
+    background: rgba(17,24,39,0.8);
+    border-radius: 10px;
+    padding: clamp(14px, 2vh, 22px) clamp(16px, 2vw, 24px);
+    border-left: 3px solid var(--red);
+    transition: box-shadow 0.4s ease;
+}
+.pain-card.blue-border { border-left-color: var(--blue); }
+.pain-card:hover {
+    box-shadow: 0 0 15px rgba(27,111,238,0.15);
+}
+.pain-card strong {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.25rem, 2vw, 1.5rem); /* Increased */
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: clamp(6px, 1vh, 12px);
+}
+.pain-card p {
+    font-size: clamp(1.05rem, 1.5vw, 1.15rem); /* Increased */
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ============================================
+   SLIDE 3: TODAY'S REALITY (TABLE)
+   ============================================ */
+.reality-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(17,24,39,0.7);
+}
+.reality-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 520px;
+}
+.reality-table thead tr {
+    background: rgba(17,24,39,0.9);
+}
+.reality-table th {
+    padding: clamp(12px, 2vh, 20px) clamp(16px, 2vw, 28px);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.05rem, 1.5vw, 1.15rem); /* Increased */
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 2px solid rgba(255,255,255,0.08);
+    text-align: left;
+}
+.reality-table th.th-approach { color: var(--blue); }
+.reality-table th.th-reality  { color: var(--orange); }
+.reality-table th.th-pain     { color: var(--red); }
+.reality-table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.25s ease;
+}
+.reality-table tbody tr:last-child { border-bottom: none; }
+.reality-table tbody tr:hover { background: rgba(27,111,238,0.05); }
+.reality-table td {
+    padding: clamp(14px, 2vh, 22px) clamp(16px, 2vw, 28px);
+    vertical-align: top;
+    line-height: 1.6;
+    font-size: clamp(1.05rem, 1.5vw, 1.15rem); /* Increased */
+}
+.reality-table .cell-approach {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    color: var(--blue);
+    white-space: nowrap;
+    font-size: clamp(0.78rem, 1.1vw, 0.95rem);
+}
+.reality-table .cell-approach .row-emoji {
+    display: inline-block;
+    margin-right: 6px;
+    font-style: normal;
+}
+.reality-table .cell-reality {
+    color: var(--orange);
+}
+.reality-table .cell-pain {
+    color: #f87171;
+    font-style: italic;
+}
+.bottom-annotation {
+    margin-top: clamp(18px, 3vh, 32px);
+    font-family: var(--mono);
+    font-size: clamp(1.05rem, 1.5vw, 1.15rem); /* Increased */
+    color: var(--blue);
+    opacity: 0.8;
+}
+
+/* ============================================
+   SLIDE 4: DASHBOARD
+   ============================================ */
+.dashboard-card {
+    background: rgba(17,24,39,0.9);
+    border-radius: 12px;
+    padding: clamp(16px, 2.5vh, 28px) clamp(16px, 2vw, 28px);
+    border: 1px solid rgba(27,111,238,0.25);
+    box-shadow: 0 0 20px rgba(27,111,238,0.15), 0 0 40px rgba(27,111,238,0.05);
+}
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: clamp(14px, 2vh, 24px);
+    font-family: var(--mono);
+    font-size: clamp(0.6rem, 1vw, 0.78rem);
+    color: var(--gray);
+    letter-spacing: 0.05em;
+}
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse-dot 2s infinite;
+    box-shadow: 0 0 6px rgba(34,197,94,0.6);
+}
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+}
+.bar-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: clamp(8px, 1.2vh, 14px);
+    gap: clamp(8px, 1vw, 14px);
+}
+.bar-label {
+    font-family: var(--mono);
+    font-size: clamp(0.55rem, 0.9vw, 0.72rem);
+    color: var(--text-secondary);
+    min-width: clamp(100px, 15vw, 170px);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+.bar-track {
+    flex: 1;
+    height: clamp(16px, 2.5vh, 26px);
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+.bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    width: 0%;
+    transition: width 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.visible .bar-fill { /* width set inline */ }
+.bar-fill.red { background: var(--red); box-shadow: 0 0 10px rgba(239,68,68,0.4); }
+.bar-fill.orange { background: var(--orange); box-shadow: 0 0 10px rgba(245,158,11,0.4); }
+.bar-fill.green { background: var(--green); box-shadow: 0 0 10px rgba(34,197,94,0.4); }
+.bar-score {
+    font-family: var(--mono);
+    font-size: clamp(0.6rem, 1vw, 0.78rem);
+    color: var(--text-primary);
+    min-width: 36px;
+    text-align: right;
+    font-weight: 700;
+}
+.root-cause {
+    margin-top: clamp(12px, 2vh, 20px);
+    padding: clamp(10px, 1.5vh, 16px) clamp(12px, 1.5vw, 20px);
+    border-left: 3px solid var(--blue);
+    background: rgba(27,111,238,0.08);
+    border-radius: 0 8px 8px 0;
+    font-family: var(--mono);
+    font-size: clamp(0.6rem, 1vw, 0.78rem);
+    color: var(--text-primary);
+    box-shadow: 0 0 15px rgba(27,111,238,0.08);
+}
+.dashboard-footer {
+    margin-top: clamp(10px, 1.5vh, 18px);
+    font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   SLIDE 5: HOW IT WORKS
+   ============================================ */
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(10px, 1.5vw, 18px);
+}
+@media (max-width: 768px) {
+    .steps-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.step-card {
+    background: rgba(17,24,39,0.8);
+    border-radius: 12px;
+    padding: clamp(14px, 2vh, 24px) clamp(12px, 1.5vw, 20px);
+    border: 1px solid rgba(27,111,238,0.12);
+    transition: box-shadow 0.4s ease, transform 0.3s ease;
+}
+.step-card:hover {
+    box-shadow: 0 0 20px rgba(27,111,238,0.2);
+    transform: translateY(-2px);
+}
+.step-num {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+    color: var(--blue);
+    margin-bottom: clamp(4px, 0.8vh, 10px);
+}
+.step-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+    color: var(--text-primary);
+    margin-bottom: clamp(4px, 0.6vh, 8px);
+}
+.step-desc {
+    font-size: clamp(0.72rem, 1vw, 0.85rem);
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* ============================================
+   SLIDE 6: KEY FEATURES
+   ============================================ */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(10px, 1.5vw, 18px);
+}
+@media (max-width: 600px) {
+    .features-grid { grid-template-columns: 1fr; }
+}
+.feature-card {
+    background: rgba(17,24,39,0.8);
+    border-radius: 12px;
+    padding: clamp(14px, 2vh, 22px) clamp(14px, 1.5vw, 22px);
+    border: 1px solid rgba(27,111,238,0.1);
+    transition: box-shadow 0.4s ease, transform 0.3s ease;
+}
+.feature-card:hover {
+    box-shadow: 0 0 20px rgba(27,111,238,0.2), 0 0 40px rgba(27,111,238,0.08);
+    transform: translateY(-2px);
+}
+.feature-icon {
+    width: clamp(32px, 4vw, 44px);
+    height: clamp(32px, 4vw, 44px);
+    margin-bottom: clamp(6px, 1vh, 12px);
+}
+.feature-icon svg {
+    width: 100%;
+    height: 100%;
+}
+.feature-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+    color: var(--text-primary);
+    margin-bottom: clamp(4px, 0.5vh, 8px);
+}
+.feature-desc {
+    font-size: clamp(0.72rem, 1vw, 0.85rem);
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* ============================================
+   SLIDE 7: RESULTS
+   ============================================ */
+.story-card {
+    background: rgba(17,24,39,0.9);
+    border-radius: 14px;
+    padding: clamp(20px, 3vh, 36px) clamp(20px, 3vw, 36px);
+    border: 1px solid rgba(27,111,238,0.2);
+    box-shadow: 0 0 20px rgba(27,111,238,0.1);
+}
+.story-company {
+    font-family: var(--mono);
+    font-size: clamp(0.65rem, 1vw, 0.8rem);
+    color: var(--blue);
+    margin-bottom: clamp(12px, 1.5vh, 20px);
+    letter-spacing: 0.05em;
+}
+.story-section {
+    margin-bottom: clamp(10px, 1.5vh, 18px);
+}
+.story-label {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+    color: var(--text-primary);
+    margin-bottom: clamp(4px, 0.5vh, 6px);
+}
+.story-text {
+    font-size: clamp(0.78rem, 1.1vw, 0.92rem);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-style: italic;
+}
+.story-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(27,111,238,0.3), transparent);
+    margin: clamp(12px, 2vh, 20px) 0;
+}
+.story-stat {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.1rem, 2vw, 1.6rem);
+    color: var(--blue);
+    text-align: center;
+}
+
+/* ============================================
+   SLIDE 8: COMPARISON
+   ============================================ */
+.comparison-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: clamp(0.62rem, 1vw, 0.8rem);
+    min-width: 580px;
+}
+.comparison-table th, .comparison-table td {
+    padding: clamp(8px, 1.2vh, 14px) clamp(8px, 1vw, 14px);
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.comparison-table th {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    color: var(--text-secondary);
+    font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+    white-space: nowrap;
+}
+.comparison-table td:first-child, .comparison-table th:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+}
+.comparison-table .col-supa {
+    background: rgba(27,111,238,0.06);
+    box-shadow: inset 0 0 30px rgba(27,111,238,0.04);
+}
+.comparison-table .col-supa-head {
+    color: var(--blue) !important;
+    font-weight: 800 !important;
+}
+.check { color: var(--blue); font-weight: 700; font-size: clamp(0.85rem, 1.2vw, 1.1rem); }
+.cross { color: rgba(255,255,255,0.2); font-size: clamp(0.85rem, 1.2vw, 1.1rem); }
+.partial { color: var(--orange); font-weight: 700; font-size: clamp(0.85rem, 1.2vw, 1.1rem); }
+
+/* ============================================
+   SLIDE 9: BUILT FOR YOUR TEAM
+   ============================================ */
+.stat-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(10px, 1.5vw, 18px);
+}
+@media (max-width: 600px) {
+    .stat-cards { grid-template-columns: 1fr; }
+}
+.stat-card {
+    background: rgba(17,24,39,0.8);
+    border-radius: 12px;
+    padding: clamp(16px, 2.5vh, 28px) clamp(14px, 1.5vw, 22px);
+    border: 1px solid rgba(27,111,238,0.15);
+    box-shadow: 0 0 15px rgba(27,111,238,0.1);
+    text-align: center;
+}
+.stat-value {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    color: var(--blue);
+    line-height: 1.1;
+    margin-bottom: clamp(2px, 0.5vh, 6px);
+}
+.stat-unit {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: clamp(0.8rem, 1.2vw, 1rem);
+    color: var(--text-primary);
+    margin-bottom: clamp(6px, 1vh, 12px);
+}
+.stat-desc {
+    font-size: clamp(0.7rem, 1vw, 0.82rem);
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* ============================================
+   SLIDE 10: WEEK 1
+   ============================================ */
+.flow-list {
+    position: relative;
+    padding-left: clamp(30px, 4vw, 50px);
+}
+.flow-line {
+    position: absolute;
+    left: clamp(10px, 1.5vw, 18px);
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--blue), rgba(27,111,238,0.1));
+}
+.flow-item {
+    position: relative;
+    margin-bottom: clamp(10px, 1.8vh, 20px);
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(10px, 1.5vw, 16px);
+}
+.flow-dot {
+    position: absolute;
+    left: clamp(-25px, -3.2vw, -40px);
+    top: 4px;
+    width: clamp(14px, 2vw, 20px);
+    height: clamp(14px, 2vw, 20px);
+    background: var(--bg);
+    border: 2px solid var(--blue);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(27,111,238,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: clamp(0.45rem, 0.7vw, 0.55rem);
+    color: var(--blue);
+    font-weight: 700;
+}
+.flow-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+    color: var(--text-primary);
+}
+.flow-desc {
+    font-size: clamp(0.72rem, 1vw, 0.85rem);
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* ============================================
+   SLIDE 11: TESTIMONIALS
+   ============================================ */
+.quote-cards {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 1.5vh, 18px);
+}
+.quote-card {
+    background: rgba(17,24,39,0.8);
+    border-radius: 12px;
+    padding: clamp(16px, 2vh, 26px) clamp(16px, 2vw, 26px);
+    border: 1px solid rgba(27,111,238,0.12);
+}
+.quote-card.blue-glow {
+    border-color: rgba(27,111,238,0.25);
+    box-shadow: 0 0 15px rgba(27,111,238,0.1);
+}
+.quote-card.subtle-glow {
+    border-color: rgba(255,255,255,0.1);
+    box-shadow: 0 0 15px rgba(255,255,255,0.03);
+}
+.quote-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+    color: var(--text-primary);
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: clamp(8px, 1vh, 14px);
+}
+.quote-attr {
+    font-family: var(--mono);
+    font-size: clamp(0.6rem, 0.9vw, 0.72rem);
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   SLIDE 12: CTA
+   ============================================ */
+#slide-cta {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+#slide-cta .slide-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.cta-headline {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--text-primary);
+    line-height: 1.15;
+    margin-bottom: clamp(6px, 1vh, 14px);
+}
+.cta-sub {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    color: var(--blue);
+    margin-bottom: clamp(20px, 4vh, 40px);
+}
+.cta-button {
+    display: inline-block;
+    padding: clamp(14px, 2vh, 20px) clamp(36px, 5vw, 56px);
+    background: var(--blue);
+    border: 2px solid var(--blue);
+    color: #ffffff;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1rem, 1.6vw, 1.3rem);
+    border-radius: 60px;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 0 20px rgba(27,111,238,0.3), 0 0 40px rgba(27,111,238,0.1);
+    animation: pulse-glow 3s infinite;
+    transition: all 0.3s ease;
+}
+.cta-button:hover {
+    background: #2a7df5;
+    box-shadow: 0 0 30px rgba(27,111,238,0.5), 0 0 60px rgba(27,111,238,0.2);
+}
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(27,111,238,0.3), 0 0 40px rgba(27,111,238,0.1); }
+    50% { box-shadow: 0 0 30px rgba(27,111,238,0.5), 0 0 60px rgba(27,111,238,0.2); }
+}
+.cta-email {
+    margin-top: clamp(16px, 2.5vh, 28px);
+    font-family: var(--mono);
+    font-size: clamp(0.8rem, 1.2vw, 1rem);
+    color: var(--text-secondary);
+}
+.cta-site {
+    margin-top: clamp(6px, 1vh, 12px);
+    font-size: clamp(0.7rem, 1vw, 0.85rem);
+    color: rgba(255,255,255,0.3);
+}
+
+/* ===== HEIGHT BREAKPOINTS ===== */
+@media (max-height: 700px) {
+    .headline { font-size: clamp(1.3rem, 3vw, 2.2rem); margin-bottom: clamp(10px, 2vh, 20px); }
+    .card { padding: clamp(10px, 1.5vh, 18px) clamp(12px, 1.5vw, 20px); }
+    .pain-cards, .reality-list, .quote-cards { gap: clamp(6px, 1vh, 12px); }
+    .title-wordmark { font-size: clamp(2.5rem, 8vw, 5rem); }
+}
+@media (max-height: 600px) {
+    .headline { font-size: clamp(1.1rem, 2.5vw, 1.8rem); margin-bottom: clamp(8px, 1.5vh, 16px); }
+    .slide { padding: clamp(16px, 3vh, 36px) clamp(20px, 5vw, 80px); }
+    .pain-card p, .step-desc, .feature-desc, .flow-desc, .stat-desc { font-size: clamp(0.65rem, 0.9vw, 0.78rem); }
+    .title-wordmark { font-size: clamp(2rem, 7vw, 4rem); }
+}
+@media (max-height: 500px) {
+    .headline { font-size: clamp(1rem, 2.2vw, 1.5rem); margin-bottom: clamp(6px, 1vh, 12px); }
+    .slide { padding: clamp(10px, 2vh, 24px) clamp(16px, 4vw, 60px); }
+    .title-wordmark { font-size: clamp(1.8rem, 6vw, 3rem); }
+    .bar-row { margin-bottom: clamp(4px, 0.8vh, 8px); }
+}
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div id="progress-bar"></div>
+
+<!-- Navigation Dots -->
+<nav id="nav-dots" aria-label="Slide navigation"></nav>
+
+<!-- Particle Canvas -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- ========== SLIDE 1: TITLE ========== -->
+<section class="slide" id="slide-title" data-slide="0">
+    <div class="slide-inner">
+        <div class="title-label animate-in">AI Agent Evaluation Platform</div>
+        <div class="title-logo animate-in">
+            <div class="icon-wrap">
+                <svg width="80" height="80" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 8 L32 8 L44 20 L26 20 Z" fill="#1B6FEE"/>
+                    <path d="M12 28 L30 28 L46 44 L28 44 Z" fill="#FFFFFF" opacity="0.9"/>
+                    <path d="M26 20 L44 20 L30 28 L12 28 Z" fill="#1B6FEE" opacity="0.55"/>
+                </svg>
+            </div>
+            <div class="title-wordmark">
+                <span class="supa">supa</span><span class="eval">eval</span>
+            </div>
+        </div>
+        <p class="title-sub animate-in">Pinpoint where your AI agents are failing.</p>
+    </div>
+</section>
+
+<!-- ========== SLIDE 2: THE PAIN ========== -->
+<section class="slide" id="slide-pain" data-slide="1">
+    <div class="slide-inner">
+        <h2 class="headline animate-in"><span class="accent">Pain : Sound familiar?</span></h2>
+        <div class="pain-cards">
+            <div class="pain-card animate-in stagger-1">
+                <strong>"The AI Agent isn't working."</strong>
+                <p>Your customer keeps saying it. Customer success escalates. The CTO asks. But nobody can explain WHY.</p>
+            </div>
+            <div class="pain-card blue-border animate-in stagger-2">
+                <strong>"The model is hallucinating."</strong>
+                <p>The default blame. But when you dig in, the model is fine — it's retrieval or intent routing that's broken.</p>
+            </div>
+            <div class="pain-card animate-in stagger-3">
+                <strong>"We can't scale this to more customers."</strong>
+                <p>Fixing issues case by case. Every new customer, every model upgrade — you re-test everything manually and pray.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 3: TODAY'S REALITY ========== -->
+<section class="slide" id="slide-reality" data-slide="2">
+    <div class="slide-inner">
+        <h2 class="headline animate-in">What <span class="accent">Your team</span> does Today</h2>
+        <div class="reality-table-wrap animate-in">
+            <table class="reality-table">
+                <thead>
+                    <tr>
+                        <th class="th-approach">&#x2192; Approach</th>
+                        <th class="th-reality">&#x25CF; Reality</th>
+                        <th class="th-pain">&#x26A0; Pain Point</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-in stagger-1">
+                        <td class="cell-approach"><span class="row-emoji">🧪</span>Manual Testing</td>
+                        <td class="cell-reality">100–300 prompts run by 1 tester + 1 engineer</td>
+                        <td class="cell-pain">Real user prompt coverage is tiny, real cases never tested.</td>
+                    </tr>
+                    <tr class="animate-in stagger-3">
+                        <td class="cell-approach"><span class="row-emoji">📊</span>Existing eval tools- Final-Answer Eval</td>
+                        <td class="cell-reality">Tools report "76% quality score"</td>
+                        <td class="cell-pain">Bluffed with Hidden failures like intent routing, retrieval etc</td>
+                    </tr>
+                    <tr class="animate-in stagger-4">
+                        <td class="cell-approach"><span class="row-emoji">🔧</span>Fix with user feedback</td>
+                        <td class="cell-reality">Engineers patch when customers complain</td>
+                        <td class="cell-pain">Fixes one - another fails, system never improves overall.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="bottom-annotation animate-in">// There has to be a better way.</div>
+    </div>
+</section>
+<section class="slide" id="slide-dashboard" data-slide="3">
+    <div class="slide-inner">
+        <h2 class="headline animate-in">
+            Customer (Enterprise RAG Agent) case study: Existing tool said <span class="accent">overall quality is >90%</span>.<br/> 
+           <br/> <span class="accent">SupaEval</span> detected <span style="color: var(--red);">retrieval</span> and 
+            <span style="color: var(--red);">intent</span> were driving production issues.
+        </h2>
+
+        <div class="dashboard-card animate-in" id="agent-dashboard">
+            <div class="dashboard-header">
+                <span>// ENTERPRISE RAG AGENT — PRODUCTION CASE STUDY</span>
+                <div class="live-dot"></div>
+                <span style="color: var(--green); font-size: clamp(0.55rem, 0.8vw, 0.68rem);">LIVE</span>
+            </div>
+
+            <div class="bar-row">
+                <span class="bar-label">RETRIEVAL-Quality</span>
+                <div class="bar-track"><div class="bar-fill red" data-width="45"></div></div>
+                <span class="bar-score">63%</span>
+            </div>
+
+            <div class="bar-row">
+                <span class="bar-label">INTENT-ACCURACY</span>
+                <div class="bar-track"><div class="bar-fill red" data-width="15"></div></div>
+                <span class="bar-score">68%</span>
+            </div>
+
+            <div class="bar-row">
+                <span class="bar-label">CHUNKING QUALITY</span>
+                <div class="bar-track"><div class="bar-fill green" data-width="89"></div></div>
+                <span class="bar-score">89%</span>
+            </div>
+
+            <div class="bar-row">
+                <span class="bar-label">GENERATION QUALITY</span>
+                <div class="bar-track"><div class="bar-fill green" data-width="87"></div></div>
+                <span class="bar-score">87%</span>
+            </div>
+
+            <div class="bar-row">
+                <span class="bar-label">OVERALL AGENT QUALITY</span>
+                <div class="bar-track"><div class="bar-fill orange" data-width="63"></div></div>
+                <span class="bar-score">63%</span>
+            </div>
+
+            <div class="root-cause">
+                ROOT CAUSE: Existing tools marked the agent as healthy, but customer complaints kept rising. 
+                SupaEval showed retrieval was driving 45% of production issues and intent handling another 15%. 
+                
+            </div>
+        </div>
+        <h2 class="headline animate-in">
+         After fixing those layers, overall <span class="accent">quality improved from 63% to 81%.</span>
+        </h2>
+
+        <p class="dashboard-footer animate-in">
+            Other tools saw a passing agent. SupaEval showed where customers were actually feeling the pain.
+        </p>
+    </div>
+</section>
+
+<!-- ========== SLIDE 4: DASHBOARD ========== -->
+<section class="slide" id="slide-dashboard" data-slide="3">
+    <div class="slide-inner">
+        <h2 class="headline animate-in">Your final answer scores <span class="accent">76%</span>. Your intent routing is at <span style="color: var(--red);">45%</span>.</h2>
+        <div class="dashboard-card animate-in" id="agent-dashboard">
+            <div class="dashboard-header">
+                <span>// AGENT QUALITY MONITOR — PROD</span>
+                <div class="live-dot"></div>
+                <span style="color: var(--green); font-size: clamp(0.55rem, 0.8vw, 0.68rem);">LIVE</span>
+            </div>
+            <div class="bar-row">
+                <span class="bar-label">INTENT ROUTING</span>
+                <div class="bar-track"><div class="bar-fill red" data-width="45"></div></div>
+                <span class="bar-score">45%</span>
+            </div>
+            <div class="bar-row">
+                <span class="bar-label">DOC HIT RATE</span>
+                <div class="bar-track"><div class="bar-fill orange" data-width="65"></div></div>
+                <span class="bar-score">65%</span>
+            </div>
+            <div class="bar-row">
+                <span class="bar-label">RETRIEVAL PRECISION</span>
+                <div class="bar-track"><div class="bar-fill orange" data-width="70"></div></div>
+                <span class="bar-score">70%</span>
+            </div>
+            <div class="bar-row">
+                <span class="bar-label">CHUNKING QUALITY</span>
+                <div class="bar-track"><div class="bar-fill green" data-width="91"></div></div>
+                <span class="bar-score">91%</span>
+            </div>
+            <div class="bar-row">
+                <span class="bar-label">FINAL ANSWER</span>
+                <div class="bar-track"><div class="bar-fill orange" data-width="76"></div></div>
+                <span class="bar-score">76%</span>
+            </div>
+            <div class="root-cause">ROOT CAUSE: It's not hallucination. Your intent layer needs improvement. Retrieval &amp; model layers are healthy.</div>
+        </div>
+        <p class="dashboard-footer animate-in">Other tools see 76% and say "all good." SupaEval sees 45% and shows you where to fix.</p>
+    </div>
+</section>
+
+<!-- ========== SLIDE 5: HOW IT WORKS ========== -->
+<section class="slide" id="slide-how" data-slide="4">
+    <div class="slide-inner">
+        <h2 class="headline animate-in"><span class="accent">Connect</span> &rarr; <span class="accent">Evaluate</span> &rarr; <span class="accent">Pinpoint</span> &rarr; <span class="accent">Fix</span></h2>
+        <div class="steps-grid">
+            <div class="step-card animate-in stagger-1">
+                <div class="step-num">01</div>
+                <div class="step-title">Connect</div>
+                <div class="step-desc">SDK or API ,<br/> Framework agnostic, <br/>Supports pro/low code</div>
+            </div>
+            <div class="step-card animate-in stagger-2">
+                <div class="step-num">02</div>
+                <div class="step-title">Choose dataset & Evaluate</div>
+                <div class="step-desc">Every layer tested: retrieval, intent, chunking, generation, tools. <br/>Thousands of synthetic test cases.</div>
+            </div>
+            <div class="step-card animate-in stagger-3">
+                <div class="step-num">03</div>
+                <div class="step-title">Pinpoint</div>
+                <div class="step-desc">Root cause identified automatically. Layer-wise metrics. No trace-by-trace debugging.</div>
+            </div>
+            <div class="step-card animate-in stagger-4">
+                <div class="step-num">04</div>
+                <div class="step-title">Fix</div>
+                <div class="step-desc">AI-powered suggestions: prompt improvements, few-shot examples, instruction changes.</div>
+            </div>
+        </div>
+        <div class="bottom-annotation animate-in" style="margin-top: clamp(16px, 2.5vh, 28px);">Time to first root cause analysis: &lt; 3 days</div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 6: KEY FEATURES ========== -->
+<section class="slide" id="slide-features" data-slide="5">
+    <div class="slide-inner">
+        <h2 class="headline animate-in">Everything you need to <span class="accent">evaluate AI agents.</span></h2>
+        <div class="features-grid">
+            <div class="feature-card animate-in stagger-1">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="6" y="8" width="32" height="6" rx="2" stroke="#1B6FEE" stroke-width="1.5" opacity="0.5"/>
+                        <rect x="6" y="19" width="32" height="6" rx="2" stroke="#1B6FEE" stroke-width="1.5" opacity="0.7"/>
+                        <rect x="6" y="30" width="32" height="6" rx="2" stroke="#1B6FEE" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <div class="feature-title">Layer-wise Evaluation</div>
+                <div class="feature-desc">Evaluate retrieval, intent routing, chunking, generation, tool use independently. Know WHY, not just WHAT.</div>
+            </div>
+            <div class="feature-card animate-in stagger-2">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="22" r="4" stroke="#1B6FEE" stroke-width="1.5"/>
+                        <circle cx="32" cy="14" r="3" stroke="#1B6FEE" stroke-width="1.5"/>
+                        <circle cx="32" cy="30" r="3" stroke="#1B6FEE" stroke-width="1.5"/>
+                        <line x1="16" y1="21" x2="29" y2="15" stroke="#1B6FEE" stroke-width="1" opacity="0.5"/>
+                        <line x1="16" y1="23" x2="29" y2="29" stroke="#1B6FEE" stroke-width="1" opacity="0.5"/>
+                    </svg>
+                </div>
+                <div class="feature-title">Synthetic+ Human Labelled + Benchmark Data Pipeline</div>
+                <div class="feature-desc">200 seed prompts &rarr; thousands of synthetic test cases. All doc types. Hours, not months.</div>
+            </div>
+            <div class="feature-card animate-in stagger-3">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="22" cy="16" r="6" stroke="#1B6FEE" stroke-width="1.5"/>
+                        <line x1="22" y1="13" x2="22" y2="19" stroke="#1B6FEE" stroke-width="1.5"/>
+                        <line x1="19" y1="16" x2="25" y2="16" stroke="#1B6FEE" stroke-width="1.5"/>
+                        <path d="M14 30 L22 36 L30 30" stroke="#1B6FEE" stroke-width="1.5" fill="none" opacity="0.6"/>
+                    </svg>
+                </div>
+                <div class="feature-title">Fix Suggestions</div>
+                <div class="feature-desc">When a layer fails, get actionable fixes: prompt improvements, few-shot examples, instruction changes.</div>
+            </div>
+            <div class="feature-card animate-in stagger-4">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polyline points="6,28 14,20 20,24 28,14 38,18" stroke="#1B6FEE" stroke-width="1.5" fill="none"/>
+                        <circle cx="38" cy="18" r="3" stroke="#1B6FEE" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <div class="feature-title">Real-Time quality Monitoring</div>
+                <div class="feature-desc">Evaluate live production traces. Failed metrics auto-feed into datasets. Catch regressions first.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 7: RESULTS ========== -->
+<section class="slide" id="slide-results" data-slide="6">
+    <div class="slide-inner">
+        <h2 class="headline animate-in"> <span class="accent">Impact: </span>From blame to <span class="accent">data.</span></h2>
+        <div class="story-card animate-in">
+            <div class="story-company">Enterprise SaaS Company — 500+ employees, 20+ AI agents</div>
+            <div class="story-section">
+                <div class="story-label">Before:</div>
+                <div class="story-text">"Every team was blaming the AI/ML team. 'The model is hallucinating.' But when we saw layer-wise data — 1,000 prompts showing document hit rate and intent detection were the real issues — the blame game ended."</div>
+            </div>
+            <div class="story-section">
+                <div class="story-label">After:</div>
+                <div class="story-text">"The CPO mandated an eval-first strategy across the company. 'Without eval, don't ship.'"</div>
+            </div>
+            <div class="story-divider"></div>
+            <div class="story-stat">20+ agents evaluated. Single dashboard. Zero blame.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 8: COMPARISON ========== -->
+<section class="slide" id="slide-compare" data-slide="7">
+    <div class="slide-inner">
+        <h2 class="headline animate-in">How SupaEval <span class="accent">compares.</span></h2>
+        <div class="comparison-wrapper animate-in">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Manual Testing</th>
+                        <th>DeepEval / LangFuse /LangSmith</th>
+                        <th>Arize / BrainTrust</th>
+                        <th>Build Internally</th>
+                        <th class="col-supa col-supa-head">SupaEval</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Layer-wise eval</td>
+                        <td><span class="cross">&times;</span></td>
+                        <td><span class="cross">&times;</span></td>
+                        <td><span class="partial">~</span></td>
+                        <td><span class="partial">~</span></td>
+                        <td class="col-supa"><span class="check">&check;</span></td>
+                    </tr>
+                    <tr>
+                        <td>Synthetic data</td>
+                        <td><span class="cross">&times;</span></td>
+                        <td><span class="cross">&times;</span></td>
+                        <td><span class="check">&times;</span></td>
+                        <td><span class="partial">&times;</span></td>
+                        <td class="col-supa"><span class="check">&check;</span></td>
+                    </tr>
+                    <tr>
+                        <td>Fix suggestions</td>
+                        <td><span class="cross">&times;</span></td>
+                        <td><span class="cross">&times;</span></td>
+                        <td><span class="partial">&times;</span></td>
+                        <td><span class="partial">&times;</span></td>
+                        <td class="col-supa"><span class="check">&check;</span></td>
+                    </tr>
+                    <tr>
+                        <td>Setup time</td>
+                        <td>Ongoing</td>
+                        <td>Weeks</td>
+                        <td>Days</td>
+                        <td>Ongoing</td>
+                        <td class="col-supa" style="color: var(--blue); font-weight: 700;">1 week</td>
+                    </tr>
+                    <tr>
+                        <td>Cost (~50K metrics)</td>
+                        <td style="font-size: clamp(0.55rem, 0.85vw, 0.72rem);">$300-500K team</td>
+                        <td style="font-size: clamp(0.55rem, 0.85vw, 0.72rem);">~$70</td>
+                        <td style="font-size: clamp(0.55rem, 0.85vw, 0.72rem);">~20K per year</td>
+                        <td style="font-size: clamp(0.55rem, 0.85vw, 0.72rem);">$300-500K/yr</td>
+                        <td class="col-supa" style="color: var(--blue); font-weight: 700;">$50</td>
+                    </tr>
+                    <tr>
+                        <td>Framework lock-in</td>
+                        <td>N/A</td>
+                        <td><span class="partial">~</span></td>
+                        <td><span class="partial">None</span></td>
+                        <td>N/A</td>
+                        <td class="col-supa" style="color: var(--blue); font-weight: 700;">None</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 9: BUILT FOR YOUR TEAM ========== -->
+<section class="slide" id="slide-team" data-slide="8">
+    <div class="slide-inner">
+        <h2 class="headline animate-in">Right-sized for teams shipping their <span class="accent">first AI agents.</span></h2>
+        <div class="stat-cards">
+            <div class="stat-card animate-in stagger-1">
+                <div class="stat-value">$50-100</div>
+                <div class="stat-unit">per 50K metrics</div>
+                <div class="stat-desc">Fits within discretionary budgets. No procurement required.</div>
+            </div>
+            <div class="stat-card animate-in stagger-2">
+                <div class="stat-value">1 day</div>
+                <div class="stat-unit">setup</div>
+                <div class="stat-desc">Not 2-3 months building internally. Not enterprise onboarding.</div>
+            </div>
+            <div class="stat-card animate-in stagger-3">
+                <div class="stat-value">Zero</div>
+                <div class="stat-unit">DevOps required</div>
+                <div class="stat-desc">No infrastructure to manage. No eval engineer to hire.</div>
+            </div>
+        </div>
+        <div class="bottom-annotation animate-in" style="margin-top: clamp(20px, 3vh, 32px); text-align: center;">You don't need a $300K evaluation team. You need SupaEval.</div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 10: WEEK 1 ========== -->
+<section class="slide" id="slide-week1" data-slide="9">
+    <div class="slide-inner">
+        <h2 class="headline animate-in">Week 1: <span class="accent">"I know exactly where my agent is failing."</span></h2>
+        <div class="flow-list animate-in">
+            <div class="flow-line"></div>
+            <div class="flow-item animate-in stagger-1">
+                <div class="flow-dot">1</div>
+                <div>
+                    <div class="flow-title">Identify</div>
+                    <div class="flow-desc">SupaEval pinpoints the failing layer (e.g., intent detection at 45%)</div>
+                </div>
+            </div>
+            <div class="flow-item animate-in stagger-2">
+                <div class="flow-dot">2</div>
+                <div>
+                    <div class="flow-title">Suggest</div>
+                    <div class="flow-desc">AI generates fix recommendations (prompt improvements, few-shot examples)</div>
+                </div>
+            </div>
+            <div class="flow-item animate-in stagger-3">
+                <div class="flow-dot">3</div>
+                <div>
+                    <div class="flow-title">Implement</div>
+                    <div class="flow-desc">Your team applies the fix in your system</div>
+                </div>
+            </div>
+            <div class="flow-item animate-in stagger-4">
+                <div class="flow-dot">4</div>
+                <div>
+                    <div class="flow-title">Re-evaluate</div>
+                    <div class="flow-desc">Run SupaEval again. Metrics improve.</div>
+                </div>
+            </div>
+            <div class="flow-item animate-in" style="transition-delay: 0.65s;">
+                <div class="flow-dot">5</div>
+                <div>
+                    <div class="flow-title">Repeat</div>
+                    <div class="flow-desc">Until quality targets are met. Data-driven, not guesswork.</div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-annotation animate-in" style="margin-top: clamp(16px, 2.5vh, 28px);">90-95% of pilot teams convert to paid.</div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 11: TESTIMONIALS ========== -->
+<section class="slide" id="slide-quotes" data-slide="10">
+    <div class="slide-inner">
+        <h2 class="headline animate-in">Speak with <span class="accent">data</span>, not intuition.</h2>
+        <div class="quote-cards">
+            <div class="quote-card subtle-glow animate-in stagger-1">
+                <div class="quote-text">"No questions asked. One screenshot, one dashboard. The data speaks for itself."</div>
+                <div class="quote-attr">— Engineering Leader, Enterprise SaaS</div>
+            </div>
+            <div class="quote-card blue-glow animate-in stagger-2">
+                <div class="quote-text">"Let's not debate retreival or modal. Let eval data find out"</div>
+                <div class="quote-attr">— Engineering Leader, Enterprise SaaS</div>
+            </div>
+            <div class="quote-card subtle-glow animate-in stagger-3">
+                <div class="quote-text">"Without eval from SupaEval, don't ship. That became the mandate."</div>
+                <div class="quote-attr">— CPO, Enterprise SaaS</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 12: CTA ========== -->
+<section class="slide" id="slide-cta" data-slide="11">
+    <div class="slide-inner">
+        <h1 class="cta-headline animate-in">Stop guessing.<br>Start evaluating.</h1>
+        <div class="cta-sub animate-in">Layer by layer.</div>
+        <a href="mailto:hello@supaeval.com" class="cta-button animate-in">Book a Demo</a>
+        <div class="cta-email animate-in">hello@supaeval.com</div>
+        <div class="cta-site animate-in">supaeval.com</div>
+    </div>
+</section>
+
+<script>
+/* =========================================================
+   PARTICLE CANVAS
+   ========================================================= */
+(function() {
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const PARTICLE_COUNT = 30;
+    let animationId;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    function createParticles() {
+        particles = [];
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
+                radius: Math.random() * 1.5 + 0.5,
+                opacity: Math.random() * 0.2 + 0.05
+            });
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const p of particles) {
+            if (!prefersReducedMotion) {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+            }
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(27, 111, 238, ${p.opacity})`;
+            ctx.fill();
+        }
+        animationId = requestAnimationFrame(draw);
+    }
+
+    resize();
+    createParticles();
+    draw();
+    window.addEventListener('resize', () => { resize(); createParticles(); });
+})();
+
+/* =========================================================
+   SLIDE PRESENTATION CLASS
+   ========================================================= */
+class SlidePresentation {
+    constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.totalSlides = this.slides.length;
+        this.currentSlide = 0;
+        this.isScrolling = false;
+        this.scrollCooldown = 800;
+        this.touchStartY = 0;
+        this.touchStartX = 0;
+
+        this.progressBar = document.getElementById('progress-bar');
+        this.navDotsContainer = document.getElementById('nav-dots');
+
+        this.createNavDots();
+        this.setupIntersectionObserver();
+        this.setupKeyboardNav();
+        this.setupTouchNav();
+        this.setupWheelNav();
+        this.updateProgress();
+    }
+
+    createNavDots() {
+        for (let i = 0; i < this.totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+            dot.setAttribute('role', 'button');
+            dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+            dot.addEventListener('click', () => this.goToSlide(i));
+            this.navDotsContainer.appendChild(dot);
+        }
+    }
+
+    setupIntersectionObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const slideIndex = parseInt(entry.target.dataset.slide);
+                    this.currentSlide = slideIndex;
+                    this.updateProgress();
+                    this.updateNavDots();
+                    if (slideIndex === 3) {
+                        this.animateDashboardBars();
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+
+        this.slides.forEach(slide => observer.observe(slide));
+    }
+
+    animateDashboardBars() {
+        const bars = document.querySelectorAll('#agent-dashboard .bar-fill');
+        bars.forEach((bar, i) => {
+            setTimeout(() => {
+                bar.style.width = bar.dataset.width + '%';
+            }, i * 150);
+        });
+    }
+
+    setupKeyboardNav() {
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowDown':
+                case 'ArrowRight':
+                case ' ':
+                case 'PageDown':
+                    e.preventDefault();
+                    this.nextSlide();
+                    break;
+                case 'ArrowUp':
+                case 'ArrowLeft':
+                case 'PageUp':
+                    e.preventDefault();
+                    this.prevSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    this.goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    this.goToSlide(this.totalSlides - 1);
+                    break;
+            }
+        });
+    }
+
+    setupTouchNav() {
+        document.addEventListener('touchstart', (e) => {
+            this.touchStartY = e.touches[0].clientY;
+            this.touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            const deltaY = this.touchStartY - e.changedTouches[0].clientY;
+            const deltaX = this.touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 50) {
+                if (deltaY > 0) {
+                    this.nextSlide();
+                } else {
+                    this.prevSlide();
+                }
+            }
+        }, { passive: true });
+    }
+
+    setupWheelNav() {
+        document.addEventListener('wheel', (e) => {
+            if (this.isScrolling) return;
+            this.isScrolling = true;
+
+            if (e.deltaY > 30) {
+                this.nextSlide();
+            } else if (e.deltaY < -30) {
+                this.prevSlide();
+            }
+
+            setTimeout(() => { this.isScrolling = false; }, this.scrollCooldown);
+        }, { passive: true });
+    }
+
+    nextSlide() {
+        if (this.currentSlide < this.totalSlides - 1) {
+            this.goToSlide(this.currentSlide + 1);
+        }
+    }
+
+    prevSlide() {
+        if (this.currentSlide > 0) {
+            this.goToSlide(this.currentSlide - 1);
+        }
+    }
+
+    goToSlide(index) {
+        if (index < 0 || index >= this.totalSlides) return;
+        this.currentSlide = index;
+        this.slides[index].scrollIntoView({ behavior: 'smooth' });
+        this.updateProgress();
+        this.updateNavDots();
+    }
+
+    updateProgress() {
+        const progress = ((this.currentSlide + 1) / this.totalSlides) * 100;
+        this.progressBar.style.width = progress + '%';
+    }
+
+    updateNavDots() {
+        const dots = this.navDotsContainer.querySelectorAll('.nav-dot');
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === this.currentSlide);
+        });
+    }
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', () => {
+    const presentation = new SlidePresentation();
+    document.querySelector('.slide[data-slide="0"]').classList.add('visible');
+});
+</script>
+</body>
+</html>

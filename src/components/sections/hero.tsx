@@ -11,7 +11,7 @@ import { AgentQualityMonitor } from "./hero/agent-quality-monitor"
 
 export function Hero() {
     return (
-        <section className="relative overflow-hidden pt-32 pb-32 md:pt-32 md:pb-48 bg-noise">
+        <section className="relative overflow-hidden pt-32 pb-16 md:pt-32 md:pb-24 bg-noise">
             {/* Background Orbs */}
             <OrbEffect />
 
@@ -29,8 +29,9 @@ export function Hero() {
                 </ScrollReveal>
 
                 <ScrollReveal width="100%" delay={0.1}>
-                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
-                        Pinpoint where your <br />
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
+                        Pinpoint where your{" "}
+                        <br className="hidden md:block" />
                         <span className="text-gradient-primary font-light">
                             <TextScramble text="AI agents are failing." />
                         </span>
@@ -39,7 +40,7 @@ export function Hero() {
 
                 <ScrollReveal width="100%" delay={0.2}>
                     <p className="text-lg md:text-xl text-[var(--muted-foreground)] max-w-3xl mx-auto mb-10 leading-relaxed">
-                        Your customer says "the AI isn't working." We show you exactly which layer is causing it — retrieval, intent routing, generation, or tools.
+                        Your customer says <span className="text-orange-400 font-medium">"the AI isn't working."</span> We show you exactly which layer is causing it — <span className="text-indigo-500 font-semibold">retrieval</span>, <span className="text-indigo-500 font-semibold">intent routing</span>, <span className="text-indigo-500 font-semibold">generation</span>, or <span className="text-indigo-500 font-semibold">tools</span>.
                     </p>
                 </ScrollReveal>
 
@@ -59,19 +60,19 @@ export function Hero() {
                     <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm text-[var(--muted-foreground)] mb-16">
                         <div className="flex items-center gap-2">
                             <CheckCircle2 className="h-4 w-4 text-indigo-400" />
-                            <span>Model-agnostic</span>
+                            <span className="font-medium text-slate-300">Model-agnostic</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <CheckCircle2 className="h-4 w-4 text-indigo-400" />
-                            <span>Framework-agnostic</span>
+                            <span className="font-medium text-slate-300">Framework-agnostic</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <CheckCircle2 className="h-4 w-4 text-indigo-400" />
-                            <span>Setup in 30 minutes</span>
+                            <span className="font-medium text-slate-300">Setup in 30 minutes</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <CheckCircle2 className="h-4 w-4 text-indigo-400" />
-                            <span>10x Cheaper</span>
+                            <span className="font-medium text-slate-300">10x Cheaper</span>
                         </div>
                     </div>
                 </ScrollReveal>

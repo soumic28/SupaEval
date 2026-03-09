@@ -28,7 +28,7 @@ const steps = [
 
 export function HowItWorksSection() {
     return (
-        <section id="how-it-works" className="py-24 bg-[var(--background)]">
+        <section id="how-it-works" className="py-12 md:py-24 bg-[var(--background)]">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center max-w-3xl mx-auto mb-16">
                     <motion.h2
@@ -37,7 +37,7 @@ export function HowItWorksSection() {
                         viewport={{ once: true }}
                         className="text-3xl md:text-5xl font-bold tracking-tight mb-4"
                     >
-                        From "quality is bad" to "intent routing is fixed." In one week.
+                        From "<span className="text-red-500">quality is bad</span>" to <br className="hidden md:block" />"<span className="text-emerald-500">intent routing is fixed.</span>" In one week.
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}

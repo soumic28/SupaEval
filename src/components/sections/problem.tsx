@@ -7,24 +7,36 @@ import { HolographicCard } from "@/components/ui/holographic-card"
 const problems = [
     {
         title: "\"Response quality is bad.\"",
-        description: "Your team keeps hearing it. Customer success escalates. The CTO asks questions. But nobody can explain WHY the quality is bad — just that it is.",
+        description: (
+            <>
+                Your team keeps hearing it. <span className="text-orange-400 font-medium">Customer success</span> escalates. The CTO asks questions. But nobody can explain <span className="text-indigo-500 font-semibold">WHY</span> the quality is bad — just that it is.
+            </>
+        ),
         icon: TrendingDown,
     },
     {
         title: "\"The model is hallucinating.\"",
-        description: "The default blame for every AI failure. But when you actually dig in, the model is often fine — it's retrieval, intent routing, or tool usage that's broken. You just can't see it.",
+        description: (
+            <>
+                The default blame for every AI failure. But when you actually dig in, the model is often fine — it's <span className="text-indigo-500 font-semibold">retrieval</span>, <span className="text-indigo-500 font-semibold">intent routing</span>, or <span className="text-indigo-500 font-semibold">tool usage</span> that's broken. You just can't see it.
+            </>
+        ),
         icon: AlertCircle,
     },
     {
         title: "\"We can't scale this to more customers.\"",
-        description: "You're fixing issues case by case. Every new customer, every model upgrade — you re-test everything manually and pray nothing breaks.",
+        description: (
+            <>
+                You're fixing issues case by case. Every new customer, every model upgrade — you <span className="text-orange-400 font-medium">re-test everything manually</span> and pray nothing breaks.
+            </>
+        ),
         icon: Ruler,
     },
 ]
 
 export function ProblemSection() {
     return (
-        <section className="py-24 bg-[var(--secondary)]/20">
+        <section className="py-12 md:py-24 bg-[var(--secondary)]/20">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center max-w-3xl mx-auto mb-16">
                     <motion.h2

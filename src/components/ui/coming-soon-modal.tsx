@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion"
 import { X } from "lucide-react"
+import Image from "next/image"
 import { MagneticButton } from "@/components/ui/magnetic-button"
 
 interface ComingSoonModalProps {
@@ -48,9 +49,9 @@ export function ComingSoonModal({ isOpen, onClose, featureName = "This feature" 
 
                                 {/* Content */}
                                 <div className="relative mt-2 flex flex-col items-center text-center">
-                                    {/* <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-indigo-500/20 bg-indigo-500/10 shadow-[0_0_30px_rgba(99,102,241,0.2)]">
-                                        <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 shadow-[0_0_15px_rgba(99,102,241,0.5)]" />
-                                    </div> */}
+                                    <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-indigo-500/20 bg-indigo-500/10 shadow-[0_0_30px_rgba(99,102,241,0.2)]">
+                                        <Image src="/logos/icon-on-black.svg" alt="SupaEval Logo" width={32} height={32} className="h-8 w-8 rounded-xl" />
+                                    </div>
 
                                     <h3 className="mb-2 text-2xl font-bold tracking-tight text-white">
                                         Coming Soon

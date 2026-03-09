@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#0A0A0F"/>
+  <rect width="1200" height="5" fill="#1B6FEE"/>
+  <path d="M0 630 L600 0 L1200 0 L1200 630 Z" fill="#1B6FEE" opacity="0.04"/>
+  <path d="M162.0,237.0 L360.0,237.0 L468.0,345.0 L306.0,345.0 Z" fill="#1B6FEE"/>
+  <path d="M306.0,345.0 L468.0,345.0 L342.0,417.0 L180.0,417.0 Z" fill="#1B6FEE" opacity="0.55"/>
+  <path d="M180.0,417.0 L342.0,417.0 L486.0,561.0 L324.0,561.0 Z" fill="#FFFFFF" opacity="0.88"/>
+  <text font-family=''Outfit','DM Sans',Arial,sans-serif' font-weight="800" font-size="128" letter-spacing="-4" x="430" y="396">
+    <tspan fill="#FFFFFF">supa</tspan><tspan fill="#1B6FEE">eval</tspan>
+  </text>
+  <text font-family=''Outfit','DM Sans',Arial,sans-serif' font-weight="500" font-size="28" fill="#1B6FEE" opacity="0.72" x="434" y="452">supaeval.com</text>
+</svg>

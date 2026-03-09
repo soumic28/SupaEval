@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 398 64" width="398" height="64">
+  <g transform="translate(0,4)">
+  <path d="M10 8 L32 8 L44 20 L26 20 Z" fill="#1B6FEE"/>
+  <path d="M26 20 L44 20 L30 28 L12 28 Z" fill="#1B6FEE" opacity="0.5"/>
+  <path d="M12 28 L30 28 L46 44 L28 44 Z" fill="#0A0A0F" opacity="0.85"/>
+  </g>
+  <text font-family=''Outfit','DM Sans',Arial,sans-serif' font-weight="800" font-size="48" letter-spacing="-1.6" x="74" y="54">
+    <tspan fill="#0A0A0F">supa</tspan><tspan fill="#1B6FEE">eval</tspan>
+  </text>
+</svg>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
 import { Menu, X } from "lucide-react"
 import { MagneticButton } from "@/components/ui/magnetic-button"
@@ -33,8 +34,11 @@ export function Navbar() {
                     : "container h-24 bg-transparent py-0"
             )}>
                 <Link href="/" className="flex items-center gap-2">
-                    <div className="h-6 w-6 rounded-md bg-gradient-to-br from-indigo-500 to-violet-500" />
-                    <span className="text-lg font-bold tracking-tight text-foreground">SupaEval</span>
+                    <Image src="/logos/icon-on-black.svg" alt="SupaEval Logo" width={32} height={32} className="h-8 w-8 rounded-md" />
+                    <span className="text-xl font-bold tracking-tight">
+                        <span className="text-foreground">supa</span>
+                        <span className="text-blue-600">eval</span>
+                    </span>
                 </Link>
 
                 <div className="hidden md:flex items-center gap-8">

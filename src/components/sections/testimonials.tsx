@@ -1,10 +1,10 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useInView } from "framer-motion"
 import { Quote } from "lucide-react"
 import useEmblaCarousel from "embla-carousel-react"
 import Autoplay from "embla-carousel-autoplay"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 const testimonials = [
     {
@@ -20,9 +20,11 @@ const testimonials = [
 ]
 
 export function TestimonialsSection() {
+    const sectionRef = useRef<HTMLElement>(null)
+    const isInView = useInView(sectionRef, { once: false, amount: 0.3 })
     const [emblaRef, emblaApi] = useEmblaCarousel(
         { align: "start", loop: false },
-        [Autoplay({ delay: 4000, stopOnInteraction: true })]
+        [Autoplay({ delay: 4000, stopOnInteraction: true, playOnInit: false })]
     )
     const [selectedIndex, setSelectedIndex] = useState(0)
 
@@ -34,8 +36,22 @@ export function TestimonialsSection() {
         })
     }, [emblaApi])
 
+    useEffect(() => {
+        if (!emblaApi) return
+
+        const autoplay = emblaApi.plugins().autoplay
+        if (!autoplay) return
+
+        if (isInView) {
+            autoplay.play()
+        } else {
+            autoplay.stop()
+            autoplay.reset() // Reset the timer when leaving view
+        }
+    }, [emblaApi, isInView])
+
     return (
-        <section className="py-12 md:py-24 bg-[var(--background)]">
+        <section ref={sectionRef} className="py-12 md:py-24 bg-[var(--background)]">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="text-center max-w-3xl mx-auto mb-16">
                     <motion.h2
@@ -110,7 +126,7 @@ export function TestimonialsSection() {
                                 onClick={() => emblaApi?.scrollTo(index)}
                                 aria-label={`Go to slide ${index + 1}`}
                             >
-                                {index === selectedIndex && (
+                                {index === selectedIndex && isInView && (
                                     <motion.div
                                         className="absolute top-0 bottom-0 left-0 bg-indigo-500 rounded-full"
                                         initial={{ width: "0%" }}

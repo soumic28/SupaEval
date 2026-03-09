@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { Check, X } from "lucide-react"
 import { ScrollReveal } from "@/components/ui/scroll-reveal"
 import useEmblaCarousel from "embla-carousel-react"
+import Autoplay from "embla-carousel-autoplay"
 import { useState, useEffect } from "react"
 
 const comparisonData = [
@@ -58,7 +59,10 @@ const comparisonData = [
 ]
 
 export function DifferentiationSection() {
-    const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", loop: false })
+    const [emblaRef, emblaApi] = useEmblaCarousel(
+        { align: "start", loop: false },
+        [Autoplay({ delay: 4000, stopOnInteraction: true })]
+    )
     const [selectedIndex, setSelectedIndex] = useState(0)
 
     useEffect(() => {
@@ -180,11 +184,21 @@ export function DifferentiationSection() {
                             {comparisonData.map((_, index) => (
                                 <button
                                     key={index}
-                                    className={`h-1.5 rounded-full transition-all duration-300 ${index === selectedIndex ? "w-6 bg-indigo-500" : "w-1.5 bg-white/20"
+                                    className={`relative h-1.5 rounded-full overflow-hidden transition-all duration-300 ${index === selectedIndex ? "w-8 bg-indigo-950" : "w-1.5 bg-white/20"
                                         }`}
                                     onClick={() => emblaApi?.scrollTo(index)}
                                     aria-label={`Go to slide ${index + 1}`}
-                                />
+                                >
+                                    {index === selectedIndex && (
+                                        <motion.div
+                                            className="absolute top-0 bottom-0 left-0 bg-indigo-500 rounded-full"
+                                            initial={{ width: "0%" }}
+                                            animate={{ width: "100%" }}
+                                            transition={{ duration: 4, ease: "linear" }}
+                                            key={`progress-${selectedIndex}`}
+                                        />
+                                    )}
+                                </button>
                             ))}
                         </div>
                         <p className="text-center text-xs text-slate-500 mt-4 flex items-center justify-center gap-2">

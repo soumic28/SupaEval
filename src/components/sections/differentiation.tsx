@@ -100,7 +100,7 @@ export function DifferentiationSection() {
                         className="text-3xl md:text-5xl font-bold tracking-tight mb-4"
                     >
                         What you're doing now <br />
-                        <span className="text-indigo-500 text-2xl md:text-4xl">vs. SupaEval</span>
+                        <span className="text-indigo-500 font-bold">vs. SupaEval</span>
                     </motion.h2>
                 </div>
 

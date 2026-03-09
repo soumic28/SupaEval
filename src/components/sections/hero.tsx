@@ -40,7 +40,7 @@ export function Hero() {
 
                 <ScrollReveal width="100%" delay={0.2}>
                     <p className="text-lg md:text-xl text-[var(--muted-foreground)] max-w-3xl mx-auto mb-10 leading-relaxed">
-                        Your customer says "the AI isn't working." We show you exactly which layer is causing it — retrieval, intent routing, generation, or tools.
+                        Your customer says <span className="text-orange-400 font-medium">"the AI isn't working."</span> We show you exactly which layer is causing it — <span className="text-indigo-500 font-semibold">retrieval</span>, <span className="text-indigo-500 font-semibold">intent routing</span>, <span className="text-indigo-500 font-semibold">generation</span>, or <span className="text-indigo-500 font-semibold">tools</span>.
                     </p>
                 </ScrollReveal>
 
@@ -60,19 +60,19 @@ export function Hero() {
                     <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm text-[var(--muted-foreground)] mb-16">
                         <div className="flex items-center gap-2">
                             <CheckCircle2 className="h-4 w-4 text-indigo-400" />
-                            <span>Model-agnostic</span>
+                            <span className="font-medium text-slate-300">Model-agnostic</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <CheckCircle2 className="h-4 w-4 text-indigo-400" />
-                            <span>Framework-agnostic</span>
+                            <span className="font-medium text-slate-300">Framework-agnostic</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <CheckCircle2 className="h-4 w-4 text-indigo-400" />
-                            <span>Setup in 30 minutes</span>
+                            <span className="font-medium text-slate-300">Setup in 30 minutes</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <CheckCircle2 className="h-4 w-4 text-indigo-400" />
-                            <span>10x Cheaper</span>
+                            <span className="font-medium text-slate-300">10x Cheaper</span>
                         </div>
                     </div>
                 </ScrollReveal>

@@ -9,12 +9,20 @@ import { useState, useEffect, useRef } from "react"
 const testimonials = [
     {
         label: "Enterprise SaaS Company, 500+ employees",
-        quote: "Every team was blaming the AI/ML team — 'the model is hallucinating.' But the layer-wise data showed intent detection and document retrieval were the real issues. The blame game ended. Our CPO mandated an eval-first strategy across the company.",
+        quote: (
+            <>
+                Every team was blaming the AI/ML team — <span className="text-indigo-500 font-bold">'the model is hallucinating.'</span> But the layer-wise data showed <span className="text-orange-400 font-medium">intent detection</span> and <span className="text-orange-400 font-medium">document retrieval</span> were the real issues. The blame game ended. Our CPO mandated an <span className="text-indigo-500 font-bold">eval-first strategy</span> across the company.
+            </>
+        ),
         attr: "Head of AI Engineering"
     },
     {
         label: "Fortune 500 Tech Company",
-        quote: "We had war rooms with 300 prompts divided among engineers and stopwatches for latency. Half the prompts never got executed. Automated layer-wise evaluation changed the entire release process overnight.",
+        quote: (
+            <>
+                We had war rooms with <span className="text-orange-400 font-medium">300 prompts</span> divided among engineers and stopwatches for latency. Half the prompts never got executed. <span className="text-indigo-500 font-bold">Automated layer-wise evaluation</span> changed the entire release process overnight.
+            </>
+        ),
         attr: "Principal Engineer"
     }
 ]
@@ -81,7 +89,7 @@ export function TestimonialsSection() {
                                     {t.label}
                                 </div>
                                 <p className="text-lg text-slate-300 italic leading-relaxed">
-                                    "{t.quote}"
+                                    &quot;{t.quote}&quot;
                                 </p>
                             </div>
                             <div className="text-sm font-semibold text-slate-500">
@@ -104,7 +112,7 @@ export function TestimonialsSection() {
                                                 {t.label}
                                             </div>
                                             <p className="text-lg text-slate-300 italic leading-relaxed">
-                                                "{t.quote}"
+                                                &quot;{t.quote}&quot;
                                             </p>
                                         </div>
                                         <div className="text-sm font-semibold text-slate-500">

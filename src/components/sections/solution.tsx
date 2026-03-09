@@ -22,8 +22,8 @@ export function SolutionSection() {
                         viewport={{ once: true }}
                         className="text-3xl md:text-5xl font-bold tracking-tight mb-6"
                     >
-                        Your final answer scores 76%. <br />
-                        <span className="text-indigo-500 text-2xl md:text-4xl">Your intent routing is at 45%.</span>
+                        Your final answer scores <span className="text-indigo-500">76%.</span> <br />
+                        Your intent routing is at <span className="text-red-500">45%.</span>
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -106,7 +106,7 @@ export function SolutionSection() {
                     className="text-center"
                 >
                     <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-200 font-semibold italic text-lg shadow-lg">
-                        It's not hallucination. Your intent layer needs improvement.
+                        It's not hallucination. Your <span className="text-indigo-500 font-bold">intent layer</span> needs improvement.
                     </div>
                 </motion.div>
             </div>

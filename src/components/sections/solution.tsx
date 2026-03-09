@@ -44,8 +44,10 @@ export function SolutionSection() {
                         viewport={{ once: true }}
                         className="relative p-8 rounded-3xl border border-white/5 bg-white/[0.02] backdrop-blur-sm opacity-60 grayscale hover:grayscale-0 transition-all duration-500"
                     >
-                        <div className="text-[10px] font-mono text-slate-500 tracking-widest uppercase mb-12">
-                            What other tools see
+                        <div className="mb-10">
+                            <h3 className="inline-block px-4 py-2 rounded-lg border border-white/10 bg-black/20 text-xs md:text-sm font-bold text-slate-400 tracking-wider uppercase">
+                                What other tools see
+                            </h3>
                         </div>
 
                         <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -65,8 +67,10 @@ export function SolutionSection() {
                         viewport={{ once: true }}
                         className="relative p-8 rounded-3xl border border-indigo-500/30 bg-indigo-500/5 shadow-2xl shadow-indigo-500/10"
                     >
-                        <div className="text-[10px] font-mono text-indigo-400 tracking-widest uppercase mb-12 font-bold">
-                            What SupaEval sees
+                        <div className="mb-10">
+                            <h3 className="inline-block px-4 py-2 rounded-lg border border-indigo-500/30 bg-indigo-500/10 text-xs md:text-sm font-bold text-indigo-400 tracking-wider uppercase shadow-[0_0_15px_rgba(99,102,241,0.15)]">
+                                What SupaEval sees
+                            </h3>
                         </div>
 
                         <div className="space-y-4">

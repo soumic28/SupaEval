@@ -59,6 +59,7 @@ export function Footer() {
                         <div>
                             <h3 className="text-sm font-semibold mb-4">Company</h3>
                             <ul className="space-y-3 text-sm text-[var(--muted-foreground)]">
+                                <li><Link href="/pmf-partner" className="hover:text-[var(--foreground)]">PMF Partner</Link></li>
                                 <li><a href="#" onClick={handleComingSoon("About Us")} className="hover:text-[var(--foreground)] cursor-pointer">About</a></li>
                                 <li><a href="#" onClick={handleComingSoon("Careers")} className="hover:text-[var(--foreground)] cursor-pointer">Careers</a></li>
                                 <li><a href="#" onClick={handleComingSoon("Legal Terms")} className="hover:text-[var(--foreground)] cursor-pointer">Legal</a></li>

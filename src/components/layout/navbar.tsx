@@ -42,10 +42,10 @@ export function Navbar() {
                 </Link>
 
                 <div className="hidden md:flex items-center gap-8">
-                    {["Features", "How it Works", "Pricing", "Docs", "Blog"].map((item) => (
+                    {["Features", "How it Works", "PMF Partner", "Pricing", "Docs", "Blog"].map((item) => (
                         <Link
                             key={item}
-                            href={item === "Blog" ? "/blog" : item === "Docs" ? "/docs" : `#${item.toLowerCase().replace(/ /g, '-')}`}
+                            href={item === "Blog" ? "/blog" : item === "Docs" ? "/docs" : item === "PMF Partner" ? "/pmf-partner" : `#${item.toLowerCase().replace(/ /g, '-')}`}
                             className={cn(
                                 "text-sm font-medium transition-all duration-300 hover:text-foreground relative group",
                                 isScrolled ? "text-muted-foreground" : "text-foreground text-lg"
@@ -104,6 +104,13 @@ export function Navbar() {
                                 onClick={() => setIsOpen(false)}
                             >
                                 How it Works
+                            </Link>
+                            <Link
+                                href="/pmf-partner"
+                                className="text-sm font-medium text-muted-foreground hover:text-foreground py-2"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                PMF Partner
                             </Link>
                             <Link
                                 href="#pricing"

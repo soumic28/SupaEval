@@ -41,7 +41,7 @@ export function Navbar() {
                     </span>
                 </Link>
 
-                <div className="hidden md:flex items-center gap-8">
+                <div className="hidden lg:flex items-center gap-8">
                     {["Features", "How it Works", "PMF Partner", "Pricing", "Docs", "Blog"].map((item) => (
                         <Link
                             key={item}
@@ -73,7 +73,7 @@ export function Navbar() {
 
                     {/* Mobile Menu Button */}
                     <button
-                        className="md:hidden p-2 text-foreground hover:text-foreground/80"
+                        className="lg:hidden p-2 text-foreground hover:text-foreground/80"
                         onClick={() => setIsOpen(!isOpen)}
                     >
                         {isOpen ? <X /> : <Menu />}
@@ -88,7 +88,7 @@ export function Navbar() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden border-b border-border bg-background/95 backdrop-blur-xl absolute top-full left-0 right-0"
+                        className="lg:hidden border-b border-border bg-background/95 backdrop-blur-xl absolute top-full left-0 right-0"
                     >
                         <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
                             <Link

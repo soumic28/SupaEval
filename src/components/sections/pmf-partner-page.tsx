@@ -35,15 +35,15 @@ const CountUp = ({ value, suffix = "", delay = 0 }: { value: number; suffix?: st
 
 const PMFPartnerPage = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   // Mouse Parallax Effect
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  
+
   const springConfig = { damping: 25, stiffness: 150 };
   const smoothMouseX = useSpring(mouseX, springConfig);
   const smoothMouseY = useSpring(mouseY, springConfig);
-  
+
   const rotateX = useTransform(smoothMouseY, [-300, 300], [5, -5]);
   const rotateY = useTransform(smoothMouseX, [-300, 300], [-5, 5]);
 
@@ -57,16 +57,16 @@ const PMFPartnerPage = () => {
   };
 
   return (
-    <div 
+    <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
       className="relative min-h-screen bg-noise overflow-hidden pb-16 pt-24 md:pt-32 lg:pt-40 bg-white"
     >
       {/* Background Orbs with Mouse Follow */}
-      <motion.div 
-        style={{ 
+      <motion.div
+        style={{
           x: useTransform(smoothMouseX, (v) => v * 0.05),
-          y: useTransform(smoothMouseY, (v) => v * 0.05) 
+          y: useTransform(smoothMouseY, (v) => v * 0.05)
         }}
         className="absolute inset-0 pointer-events-none"
       >
@@ -77,7 +77,7 @@ const PMFPartnerPage = () => {
         {/* Topbar / Tag with Live Indicator */}
         <ScrollReveal width="100%">
           <div className="flex justify-center mb-8 md:mb-12">
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.05, y: -2 }}
               className="inline-flex items-center gap-3 px-4 py-2 border border-slate-200 rounded-full bg-white/80 backdrop-blur-md text-sm text-slate-600 shadow-lg shadow-indigo-500/5 group cursor-pointer"
             >
@@ -99,7 +99,7 @@ const PMFPartnerPage = () => {
           <ScrollReveal width="100%" delay={0.1}>
             <motion.div style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}>
               <HolographicCard className="p-6 sm:p-8 md:p-12 relative overflow-hidden flex flex-col justify-center min-h-[450px] md:min-h-[500px] border-slate-200 bg-white/50 shadow-2xl shadow-indigo-500/5">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-sm font-medium mb-6 w-fit"
@@ -117,13 +117,13 @@ const PMFPartnerPage = () => {
                     <span className="text-indigo-600">
                       <CountUp value={90} suffix="%+" delay={0.5} /> quality
                     </span>
-                    <motion.span 
+                    <motion.span
                       initial={{ width: 0 }}
                       whileInView={{ width: "100%" }}
                       transition={{ duration: 1.5, delay: 1, ease: "easeOut" }}
                       className="absolute -bottom-2 left-0 h-1 bg-indigo-500/20 rounded-full overflow-hidden"
                     >
-                      <motion.span 
+                      <motion.span
                         animate={{ x: ["-100%", "100%"] }}
                         transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent w-1/3"
@@ -142,7 +142,7 @@ const PMFPartnerPage = () => {
                     { text: "Direct roadmap input", icon: Target },
                     { text: "Fast founder access", icon: Mail }
                   ].map((benefit, idx) => (
-                    <motion.span 
+                    <motion.span
                       key={benefit.text}
                       whileHover={{ scale: 1.05, backgroundColor: "rgba(238, 242, 255, 1)", borderColor: "rgba(199, 210, 254, 1)" }}
                       initial={{ opacity: 0, y: 10 }}
@@ -171,7 +171,7 @@ const PMFPartnerPage = () => {
                 </div>
 
                 <div className="relative group">
-                  <motion.div 
+                  <motion.div
                     whileHover={{ scale: 1.02, x: 5 }}
                     className="flex items-center gap-3 p-3 rounded-2xl bg-white border border-slate-200 w-fit shadow-md shadow-slate-200/50 cursor-pointer"
                   >
@@ -179,7 +179,7 @@ const PMFPartnerPage = () => {
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20">
                         S
                       </div>
-                      <motion.div 
+                      <motion.div
                         animate={{ scale: [1, 1.2, 1] }}
                         transition={{ duration: 2, repeat: Infinity }}
                         className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center"
@@ -203,7 +203,7 @@ const PMFPartnerPage = () => {
               <HolographicCard className="p-6 md:p-8 group border-slate-200 bg-white/50 hover:bg-white transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-indigo-600 text-[10px] md:text-xs uppercase tracking-widest font-bold">Now inviting</h3>
-                  <motion.div 
+                  <motion.div
                     animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
                     transition={{ duration: 5, repeat: Infinity }}
                   >
@@ -226,7 +226,7 @@ const PMFPartnerPage = () => {
               <HolographicCard className="p-6 md:p-8 border-slate-200 bg-white/50 hover:bg-white transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1 group">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-indigo-600 text-[10px] md:text-xs uppercase tracking-widest font-bold">Ideal Cohort</h3>
-                  <motion.div 
+                  <motion.div
                     animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 180, 270, 360] }}
                     transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                   >
@@ -236,7 +236,7 @@ const PMFPartnerPage = () => {
                 <div className="space-y-4 mb-4">
                   <div className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 leading-tight">
                     {["AI Agents", "Copilots", "RAG Apps"].map((text, i) => (
-                      <motion.div 
+                      <motion.div
                         key={text}
                         initial={{ opacity: 0, x: -10 }}
                         whileInView={{ opacity: 1, x: 0 }}
@@ -248,13 +248,13 @@ const PMFPartnerPage = () => {
                   </div>
                 </div>
                 <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden mb-4 relative">
-                  <motion.div 
+                  <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: "100%" }}
                     transition={{ duration: 2, delay: 0.5 }}
                     className="h-full bg-indigo-500"
                   />
-                  <motion.div 
+                  <motion.div
                     animate={{ x: ["-100%", "200%"] }}
                     transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent w-1/2"
@@ -272,20 +272,20 @@ const PMFPartnerPage = () => {
         <ScrollReveal width="100%" delay={0.4}>
           <HolographicCard className="p-6 sm:p-10 md:p-16 relative overflow-hidden border-slate-200 bg-white/50">
             <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight mb-8 text-slate-900">This is a personal invite.</h2>
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-12">
               <div className="space-y-4 md:space-y-6 text-slate-600 text-base md:text-lg lg:text-xl leading-relaxed">
                 <p>Hi — I’m building <strong className="text-indigo-600 font-bold italic tracking-tight">SupaEval</strong>.</p>
                 <p>Too many AI products are launched without a reliable way to know if quality is improving, breaking, or drifting over time.</p>
                 <p className="text-pretty">Our mission is simple: <strong className="relative inline-block group">
                   <span className="relative z-10 text-indigo-700 font-bold">make every AI agent work with 90%+ quality.</span>
-                  <motion.span 
+                  <motion.span
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     transition={{ duration: 1, delay: 0.5 }}
                     className="absolute bottom-1 left-0 w-full h-3 bg-indigo-500/10 -z-0 origin-left"
                   />
-                  <motion.span 
+                  <motion.span
                     initial={{ width: 0 }}
                     whileInView={{ width: "100%" }}
                     transition={{ duration: 1, delay: 0.8 }}
@@ -293,10 +293,10 @@ const PMFPartnerPage = () => {
                   />
                 </strong></p>
                 <p>We’re looking for a few PMF partners who want early access, a direct voice in the roadmap, and a close feedback loop with the founder.</p>
-                
+
                 <div className="pt-4 md:pt-6">
-                   <div className="text-slate-900 font-bold text-xl tracking-tight mb-1">— Founder, SupaEval</div>
-                   <div className="text-indigo-600/50 font-mono text-xs font-bold font-serif italic text-lg opacity-40">Founder Signature Hash: 0x8a92f...</div>
+                  <div className="text-slate-900 font-bold text-xl tracking-tight mb-1">— Founder, SupaEval</div>
+                  <div className="text-indigo-600/50 font-mono text-xs font-bold font-serif italic text-lg opacity-40">Founder Signature Hash: 0x8a92f...</div>
                 </div>
               </div>
 
@@ -306,8 +306,8 @@ const PMFPartnerPage = () => {
                   { label: "You shape", value: "The future roadmap", icon: Edit3 },
                   { label: "We ask", value: "Candid product feedback", icon: MessageSquare },
                 ].map((item, idx) => (
-                  <motion.div 
-                    key={idx} 
+                  <motion.div
+                    key={idx}
                     whileHover={{ x: 10, backgroundColor: "rgba(248, 250, 252, 1)", borderColor: "rgba(199, 210, 254, 0.5)" }}
                     className="p-4 md:p-5 rounded-2xl bg-slate-50 border border-slate-100 transition-all cursor-default group"
                   >
@@ -318,7 +318,7 @@ const PMFPartnerPage = () => {
                     <div className="text-lg md:text-xl font-bold text-slate-900">{item.value}</div>
                   </motion.div>
                 ))}
-                
+
                 <div className="pt-4">
                   <MagneticButton className="w-full h-12 md:h-14 text-base md:text-lg font-bold shadow-xl shadow-indigo-500/10 group">
                     <a href="https://calendly.com/yourlink" className="flex items-center justify-center w-full">

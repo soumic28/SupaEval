@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SupaEval - AI Agent Evaluation Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     DESIGN SYSTEM - SupaEval Brand (EvalMark + Geometric)
+     Light theme, per founder preference
+     ============================================================ */
+  :root {
+    --ink: #0A0A0F;
+    --blue: #1B6FEE;
+    --deep-blue: #0D47A1;
+    --navy: #111827;
+    --charcoal: #1E293B;
+    --cloud: #E8F1FD;
+    --white: #FFFFFF;
+    --slate: #64748B;
+    --light-gray: #F8FAFC;
+    --border: #E2E8F0;
+    --red: #EF4444;
+    --green: #22C55E;
+    --amber: #F59E0B;
+    --orange: #F97316;
+
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--white);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============================================================
+     SLIDE BASE
+     ============================================================ */
+  .slide {
+    width: 100vw;
+    height: 100vh;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 6rem 8rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Geometric accent - subtle diagonal line pattern (brand "geometric" concept) */
+  .slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle at 100% 0%, var(--cloud) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .slide > * { position: relative; z-index: 1; }
+
+  /* ============================================================
+     TYPOGRAPHY
+     ============================================================ */
+  .section-label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: white;
+    background: var(--blue);
+    display: inline-block;
+    align-self: flex-start;
+    padding: 0.35rem 1.2rem 0.35rem 0.8rem;
+    margin-bottom: 1.5rem;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%);
+  }
+
+  .slide-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2.8rem;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+    max-width: 800px;
+  }
+
+  .slide-title .blue { color: var(--blue); }
+
+  .slide-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: var(--charcoal);
+    max-width: 680px;
+    margin-bottom: 2rem;
+  }
+
+  .punchline {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: var(--ink);
+    margin-top: 1.5rem;
+  }
+
+  /* ============================================================
+     SLIDE COUNTER (bottom-right)
+     ============================================================ */
+  .slide-num {
+    position: absolute;
+    bottom: 2rem;
+    right: 3rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--slate);
+    opacity: 0.5;
+  }
+
+  /* ============================================================
+     FOOTER BAR
+     ============================================================ */
+  .slide-footer {
+    position: absolute;
+    bottom: 2rem;
+    left: 8rem;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    color: var(--slate);
+  }
+
+  .slide-footer .logo-small {
+    font-weight: 800;
+    font-size: 0.8rem;
+  }
+
+  .slide-footer .logo-small .supa { color: var(--ink); }
+  .slide-footer .logo-small .eval { color: var(--blue); }
+
+  .slide-footer .footer-sep {
+    margin: 0 0.5rem;
+    color: var(--border);
+  }
+
+  .slide-footer .footer-tagline {
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: var(--slate);
+    opacity: 0.5;
+  }
+
+  /* ============================================================
+     NAVIGATION DOTS
+     ============================================================ */
+  .nav-dots {
+    position: fixed;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 100;
+  }
+
+  .nav-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    padding: 0;
+  }
+
+  .nav-dot.active {
+    background: var(--blue);
+    transform: scale(1.3);
+  }
+
+  .nav-dot:hover { background: var(--blue); opacity: 0.7; }
+
+  /* ============================================================
+     KEYBOARD HINT
+     ============================================================ */
+  .key-hint {
+    position: fixed;
+    bottom: 2rem;
+    right: 50%;
+    transform: translateX(50%);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--slate);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 100;
+    background: var(--white);
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .key-hint.visible { opacity: 0.6; }
+
+  /* ============================================================
+     SLIDE 1: TITLE
+     ============================================================ */
+  .slide-title-page {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-top: 4rem;
+  }
+
+  .slide-title-page::before {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background:
+      radial-gradient(ellipse at 20% 80%, rgba(27,111,238,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(27,111,238,0.03) 0%, transparent 50%);
+  }
+
+  .brand-pill {
+    display: inline-block;
+    background: var(--cloud);
+    color: var(--blue);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.4rem 1.2rem;
+    border-radius: 100px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+  }
+
+  .brand-name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 8rem;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  .brand-name .supa { color: var(--ink); }
+  .brand-name .eval { color: var(--blue); }
+
+  .brand-tagline {
+    font-family: var(--font-body);
+    font-size: 1.4rem;
+    color: var(--slate);
+    margin-bottom: 1.5rem;
+  }
+
+  .brand-contact {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--slate);
+  }
+
+  .brand-contact a {
+    color: var(--blue);
+    text-decoration: none;
+  }
+
+  /* ============================================================
+     SLIDE 2: THE BIG SHIFT (text-forward)
+     ============================================================ */
+  [data-slide="1"] > .slide-title {
+    max-width: 100%;
+  }
+
+  .slide-2-layout {
+    display: flex;
+    gap: 4rem;
+    flex: 1;
+    align-items: center;
+  }
+
+  .slide-2-left {
+    flex: 0 0 62%;
+  }
+
+  .slide-2-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .narrative-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    justify-content: center;
+  }
+
+  .narrative-beat {
+    font-family: var(--font-body);
+    font-size: 1.5rem;
+    line-height: 1.7;
+    color: var(--charcoal);
+    padding: 1.2rem 0;
+  }
+
+  .narrative-beat:not(:last-child) {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .narrative-beat .stat-inline {
+    font-family: var(--font-display);
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .narrative-beat .keyword-red {
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  /* Stat card */
+  .stat-card {
+    padding: 2.5rem 2.5rem;
+    border-radius: 14px;
+    border-left: 4px solid;
+    width: 100%;
+  }
+
+  .stat-card--red {
+    border-color: var(--red);
+    background: rgba(239, 68, 68, 0.05);
+  }
+
+  .stat-card-number {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 3.5rem;
+    line-height: 1.1;
+    color: var(--red);
+  }
+
+  .stat-card-text {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: var(--slate);
+    margin-top: 0.6rem;
+    line-height: 1.5;
+  }
+
+  /* ============================================================
+     SLIDE 3: SOUND FAMILIAR
+     ============================================================ */
+  /* Slide 3 two-column layout */
+  [data-slide="2"] {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+
+  .slide-3-layout {
+    display: flex;
+    gap: 4rem;
+    flex: 1;
+    align-items: center;
+  }
+
+  .slide-3-left {
+    flex: 0 0 55%;
+    display: flex;
+    align-items: center;
+  }
+
+  .slide-3-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Slack-style message container */
+  .slack-container {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  .slack-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--light-gray);
+  }
+
+  .slack-header-hash {
+    font-size: 1rem;
+    color: var(--slate);
+    font-weight: 600;
+  }
+
+  .slack-header-channel {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .slack-messages {
+    display: flex;
+    flex-direction: column;
+    padding: 0.4rem 0;
+  }
+
+  .slack-msg {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 0.55rem 1.2rem;
+    transition: background 0.15s ease;
+  }
+
+  .slack-msg:hover {
+    background: var(--light-gray);
+  }
+
+  .slack-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    flex-shrink: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .slack-msg-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .slack-msg-name {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .slack-msg-time {
+    font-size: 0.65rem;
+    color: var(--slate);
+    font-weight: 400;
+    margin-left: 0.4rem;
+  }
+
+  .slack-msg-body {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--charcoal);
+    margin-top: 0.1rem;
+    line-height: 1.45;
+  }
+
+  /* Punchline */
+  .bottom-punchline {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--charcoal);
+    line-height: 1.5;
+  }
+
+  .bottom-punchline .punchline-red {
+    color: var(--red);
+    font-weight: 800;
+  }
+
+  .bottom-punchline .punchline-highlight {
+    color: var(--blue);
+    font-weight: 800;
+  }
+
+  /* ============================================================
+     SLIDE 4: THE INSIGHT (layer pipeline)
+     ============================================================ */
+  .slide-4-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .layer-stack {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    justify-content: flex-start;
+  }
+
+  .layer-node {
+    background: var(--cloud);
+    border: 2px solid var(--blue);
+    border-radius: 10px;
+    padding: 0.6rem 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--blue);
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .layer-arrow-right {
+    font-size: 1.2rem;
+    color: var(--blue);
+    padding: 0 0.4rem;
+    line-height: 1;
+  }
+
+  .slide-4-bottom {
+    display: flex;
+    gap: 3rem;
+    width: 100%;
+    align-items: center;
+  }
+
+  .slide-4-punchline {
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: 1.5rem;
+    color: var(--charcoal);
+    line-height: 1.7;
+    text-align: left;
+  }
+
+  .example-box {
+    flex: 0 0 auto;
+    background: var(--light-gray);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    width: fit-content;
+    min-width: 510px;
+  }
+
+  .example-box .example-title {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 1rem;
+  }
+
+  .example-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 0;
+  }
+
+  .example-row .label {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--charcoal);
+  }
+
+  .example-row .value {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .value.green { color: var(--green); }
+  .value.red { color: var(--red); }
+  .value.amber { color: var(--amber); }
+
+  /* ============================================================
+     SLIDE 5: THE PROMISE
+     ============================================================ */
+  .slide-5-layout {
+    display: flex;
+    gap: 3.5rem;
+    flex: 1;
+    align-items: center;
+  }
+
+  .slide-5-left {
+    flex: 1;
+  }
+
+  .slide-5-right {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .promise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .promise-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .promise-arrow {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--blue);
+    line-height: 1.8;
+    flex-shrink: 0;
+  }
+
+  .promise-text {
+    font-family: var(--font-body);
+    font-size: 1.5rem;
+    color: var(--charcoal);
+    line-height: 1.7;
+  }
+
+  .promise-text strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* ============================================================
+     SLIDE 6: THE SOLUTION
+     ============================================================ */
+  .steps-row {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .step-card {
+    flex: 1;
+    background: var(--light-gray);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .step-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: var(--white);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .step-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .step-desc {
+    font-size: 0.9rem;
+    color: var(--slate);
+    line-height: 1.6;
+  }
+
+  /* ============================================================
+     SLIDE 7: AGENT HEALTH MONITOR
+     ============================================================ */
+  .dashboard-wrapper {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .dashboard-card {
+    background: var(--navy);
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    flex: 1;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  }
+
+  .dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .dash-agent {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--slate);
+  }
+
+  .dash-live {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--green);
+  }
+
+  .dash-live::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .dash-layers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .dash-layer {
+    display: grid;
+    grid-template-columns: 130px 1fr 50px;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .dash-layer-name {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .dash-bar-bg {
+    height: 10px;
+    background: var(--charcoal);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .dash-bar-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 1s ease;
+  }
+
+  .dash-pct {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--white);
+    text-align: right;
+  }
+
+  .dash-rootcause {
+    margin-top: 1.5rem;
+    padding: 1.2rem 1.5rem;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    border-left: 3px solid var(--red);
+  }
+
+  .dash-rootcause .rc-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.4rem;
+  }
+
+  .dash-rootcause .rc-text {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+  }
+
+  .dash-fix {
+    margin-top: 0.8rem;
+    padding: 1.2rem 1.5rem;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    border-left: 3px solid var(--green);
+  }
+
+  .dash-fix .fix-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 0.4rem;
+  }
+
+  .dash-fix .fix-text {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+  }
+
+  .dashboard-context {
+    flex: 0.8;
+    padding-top: 1rem;
+  }
+
+  .dashboard-context p {
+    font-family: var(--font-body);
+    font-size: 1.5rem;
+    color: var(--charcoal);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .dashboard-context .callout {
+    background: var(--cloud);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--charcoal);
+    line-height: 1.6;
+    margin-top: 1.5rem;
+  }
+
+  .dashboard-context .callout strong { color: var(--blue); }
+
+  /* ============================================================
+     SLIDE 8: BEFORE / AFTER
+     ============================================================ */
+  .ba-grid {
+    display: flex;
+    gap: 3rem;
+    margin-top: 2rem;
+    width: 100%;
+  }
+
+  .ba-col {
+    flex: 1;
+    border-radius: 14px;
+    padding: 2.5rem 2.5rem;
+    border-left: 4px solid;
+  }
+
+  .ba-col.before {
+    border-color: var(--red);
+    background: rgba(239, 68, 68, 0.05);
+  }
+
+  .ba-col.after {
+    border-color: var(--blue);
+    background: rgba(27, 111, 238, 0.05);
+  }
+
+  .ba-col h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+  }
+
+  .ba-col.before h3 { color: var(--red); }
+  .ba-col.after h3 { color: var(--blue); }
+
+  .ba-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    line-height: 1.5;
+  }
+
+  .ba-row:last-child { border-bottom: none; }
+
+  .ba-metric {
+    font-family: var(--font-body);
+    color: var(--slate);
+    font-size: 0.95rem;
+    flex: 1;
+  }
+
+  .ba-value {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .ba-col.before .ba-value { color: var(--red); }
+  .ba-col.after .ba-value { color: var(--blue); }
+
+  /* ============================================================
+     SLIDE 9: REAL RESULTS
+     ============================================================ */
+  [data-slide="8"] {
+    justify-content: center;
+  }
+
+  .case-card {
+    background: rgba(27, 111, 238, 0.05);
+    border-left: 4px solid var(--blue);
+    border-radius: 14px;
+    padding: 2.5rem 3rem;
+    margin-top: 1.5rem;
+    width: 100%;
+    position: relative;
+    text-align: left;
+  }
+
+  .case-card::before {
+    content: '\201C';
+    position: absolute;
+    top: 1rem;
+    left: 2rem;
+    font-family: Georgia, serif;
+    font-size: 5rem;
+    color: var(--blue);
+    opacity: 0.15;
+    line-height: 1;
+  }
+
+  .case-quote {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: var(--charcoal);
+    line-height: 1.8;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+
+  .case-results {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    width: 100%;
+  }
+
+  .case-result {
+    flex: 1;
+    text-align: center;
+  }
+
+  .case-result .number {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--blue);
+    line-height: 1;
+  }
+
+  .case-result .label {
+    font-size: 0.8rem;
+    color: var(--slate);
+    margin-top: 0.3rem;
+  }
+
+  /* ============================================================
+     SLIDE 10: WHAT'S INCLUDED
+     ============================================================ */
+  .features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    width: 100%;
+  }
+
+  .feature-card {
+    background: var(--light-gray);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.8rem;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--blue);
+  }
+
+  .feature-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--cloud);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+
+  .feature-desc {
+    font-size: 0.85rem;
+    color: var(--slate);
+    line-height: 1.6;
+  }
+
+  /* ============================================================
+     SLIDE 11: DESIGN PARTNER PROGRAM
+     ============================================================ */
+  .partner-grid {
+    display: flex;
+    gap: 3rem;
+    margin-top: 2rem;
+    width: 100%;
+    justify-content: center;
+    align-items: flex-start;
+    flex: 1;
+  }
+
+  .partner-col {
+    flex: 1;
+  }
+
+  .partner-col h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
+    color: var(--blue);
+  }
+
+  .partner-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    list-style: none;
+  }
+
+  .partner-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    font-size: 0.95rem;
+    color: var(--charcoal);
+    line-height: 1.5;
+  }
+
+  .partner-list .icon {
+    flex-shrink: 0;
+    font-size: 1rem;
+    margin-top: 2px;
+  }
+
+  /* ============================================================
+     SLIDE 12: CTA
+     ============================================================ */
+  .slide-cta {
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    padding-top: 4rem;
+  }
+
+  .slide-cta::before {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background:
+      radial-gradient(ellipse at 30% 70%, rgba(27,111,238,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 30%, rgba(27,111,238,0.04) 0%, transparent 50%);
+  }
+
+  .cta-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 2rem 0 2.5rem;
+  }
+
+  .cta-step {
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    color: var(--charcoal);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    justify-content: flex-start;
+  }
+
+  .cta-step .arrow {
+    color: var(--blue);
+    font-weight: 800;
+    font-family: var(--font-display);
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: var(--blue);
+    color: var(--white);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 1rem 3rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 20px rgba(27,111,238,0.3);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(27,111,238,0.4);
+  }
+
+  .cta-contact {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: var(--slate);
+  }
+
+  .cta-contact a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  /* ============================================================
+     ANIMATIONS
+     ============================================================ */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .slide.visible .section-label { animation: fadeInUp 0.5s ease forwards; }
+  .slide.visible .slide-title { animation: fadeInUp 0.5s ease 0.1s forwards; }
+  .slide.visible .slide-subtitle { animation: fadeInUp 0.5s ease 0.2s forwards; }
+
+  /* Initially hidden for animation */
+  .slide .section-label,
+  .slide .slide-title,
+  .slide .slide-subtitle {
+    opacity: 0;
+  }
+
+  .slide.visible .section-label,
+  .slide.visible .slide-title,
+  .slide.visible .slide-subtitle {
+    opacity: 1;
+  }
+
+  /* ============================================================
+     RESPONSIVE (basic)
+     ============================================================ */
+  @media (max-width: 1100px) {
+    .slide { padding: 5rem 4rem 3rem; }
+    .slide-title { font-size: 2.2rem; }
+    .brand-name { font-size: 5.5rem; }
+    .dashboard-wrapper { flex-direction: column; }
+    .features-grid { grid-template-columns: 1fr 1fr; }
+    .ba-grid { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation Dots -->
+<nav class="nav-dots" id="navDots"></nav>
+<div class="key-hint visible" id="keyHint">↓ scroll or arrow keys to navigate</div>
+
+<!-- ============================================================
+     SLIDE 1: TITLE
+     ============================================================ -->
+<section class="slide slide-title-page visible" data-slide="0">
+  <div class="brand-pill">AI Agent Evaluation Platform</div>
+  <div class="brand-name"><span class="supa">supa</span><span class="eval">eval</span></div>
+  <div class="brand-tagline">Pinpoint where your AI agents are failing.</div>
+  <div class="brand-contact">
+    <a href="mailto:imran@supaeval.com">imran@supaeval.com</a> &nbsp;|&nbsp; <a href="https://supaeval.com">supaeval.com</a>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 2: THE BIG SHIFT (text-forward)
+     ============================================================ -->
+<section class="slide" data-slide="1">
+  <div class="section-label">The Shift</div>
+  <div class="slide-title">AI agents are going into production. Fast.<br><span class="blue">But nobody can pinpoint what's actually breaking.</span></div>
+
+  <div class="slide-2-layout">
+    <div class="slide-2-left">
+      <div class="narrative-block">
+        <div class="narrative-beat">
+          <span class="stat-inline">Quality</span> is the <span class="stat-inline">#1 barrier</span> to adopting AI agents - <span class="keyword-red">not cost.</span>
+        </div>
+        <div class="narrative-beat">
+          <span class="stat-inline">Trust</span> and <span class="stat-inline">accuracy</span> beat everything else.
+        </div>
+        <div class="narrative-beat">
+          <span class="stat-inline">Yet</span> most teams are still evaluating with <span class="keyword-red">ad-hoc, manual methods.</span>
+        </div>
+      </div>
+    </div>
+    <div class="slide-2-right">
+      <div class="stat-card stat-card--red">
+        <div class="stat-card-number">78%</div>
+        <div class="stat-card-text">cite quality &amp; trust as the #1 barrier to scaling AI agents</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">02</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 3: SOUND FAMILIAR?
+     ============================================================ -->
+<section class="slide" data-slide="2">
+  <div class="section-label">The Problem</div>
+  <div class="slide-title">Sound familiar?</div>
+  <div class="slide-3-layout">
+    <div class="slide-3-left">
+      <div class="slack-container">
+        <div class="slack-header">
+          <span class="slack-header-hash">#</span>
+          <span class="slack-header-channel">ai-agent-quality</span>
+        </div>
+        <div class="slack-messages">
+          <div class="slack-msg">
+            <div class="slack-avatar" style="background: var(--red);">CS</div>
+            <div class="slack-msg-content">
+              <div class="slack-msg-name">Customer Success<span class="slack-msg-time">10:14 AM</span></div>
+              <div class="slack-msg-body">The AI agent isn't working - three enterprise customers escalated this morning alone.</div>
+            </div>
+          </div>
+          <div class="slack-msg">
+            <div class="slack-avatar" style="background: var(--amber);">EM</div>
+            <div class="slack-msg-content">
+              <div class="slack-msg-name">Engineering Manager<span class="slack-msg-time">10:22 AM</span></div>
+              <div class="slack-msg-body">Checked the logs. Overall score looks fine? The model must be hallucinating on edge cases.</div>
+            </div>
+          </div>
+          <div class="slack-msg">
+            <div class="slack-avatar" style="background: var(--charcoal);">VP</div>
+            <div class="slack-msg-content">
+              <div class="slack-msg-name">VP of Technology<span class="slack-msg-time">10:31 AM</span></div>
+              <div class="slack-msg-body">We can't keep scaling this without knowing what's actually breaking. What's the root cause?</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-3-right">
+      <div class="bottom-punchline">
+        Your Customer Success team escalates. Engineering investigates.<br>Everyone blames the model.<br><br>
+        But <span class="punchline-red">nobody can pinpoint</span> <span class="punchline-highlight">which layer</span> is actually failing.
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">03</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 4: THE ROOT CAUSE
+     ============================================================ -->
+<section class="slide" data-slide="3">
+  <div class="section-label">The Insight</div>
+  <div class="slide-title">Every AI agent has 7 layers.<br>Each one can fail <span class="blue">independently.</span></div>
+  <div class="slide-4-layout">
+    <div class="layer-stack">
+      <div class="layer-node">Intent</div>
+      <div class="layer-arrow-right">→</div>
+      <div class="layer-node">Reasoning</div>
+      <div class="layer-arrow-right">→</div>
+      <div class="layer-node">Retrieval</div>
+      <div class="layer-arrow-right">→</div>
+      <div class="layer-node">Memory</div>
+      <div class="layer-arrow-right">→</div>
+      <div class="layer-node">Tool Use</div>
+      <div class="layer-arrow-right">→</div>
+      <div class="layer-node">Generation</div>
+      <div class="layer-arrow-right">→</div>
+      <div class="layer-node">Business</div>
+    </div>
+    <div class="slide-4-bottom">
+      <div class="slide-4-punchline">
+        Most tools <strong>only</strong> score the <strong>final answer</strong>.<br>
+        A green overall score hides failing layers underneath.
+      </div>
+      <div class="example-box">
+        <div class="example-title">Current tool vs. reality</div>
+        <div class="example-row">
+          <span class="label">Final Answer Quality</span>
+          <span class="value green">88% ✓</span>
+        </div>
+        <div class="example-row" style="border-top: 1px dashed var(--border); padding-top: 0.8rem; margin-top: 0.4rem;">
+          <span class="label">Intent Routing (hidden)</span>
+          <span class="value red">41% ✗</span>
+        </div>
+        <div class="example-row">
+          <span class="label">Retrieval Precision (hidden)</span>
+          <span class="value amber">68% ~</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">04</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 5: THE PROMISE
+     ============================================================ -->
+<section class="slide" data-slide="4">
+  <div class="section-label">The Promise</div>
+  <div class="slide-title">What if you could...</div>
+  <div class="slide-5-layout">
+    <div class="slide-5-left">
+      <div class="promise-list">
+        <div class="promise-item">
+          <span class="promise-arrow">→</span>
+          <span class="promise-text">See <strong>exactly which layer</strong> is failing - in minutes, not days</span>
+        </div>
+        <div class="promise-item">
+          <span class="promise-arrow">→</span>
+          <span class="promise-text">Get <strong>fix suggestions</strong>, not just scores</span>
+        </div>
+        <div class="promise-item">
+          <span class="promise-arrow">→</span>
+          <span class="promise-text">Run <strong>2,000+ test cases</strong> instead of 30 manual prompts</span>
+        </div>
+        <div class="promise-item">
+          <span class="promise-arrow">→</span>
+          <span class="promise-text">Catch regressions <strong>before customers complain</strong></span>
+        </div>
+        <div class="promise-item">
+          <span class="promise-arrow">→</span>
+          <span class="promise-text">Replace a <strong>$300-500K/year</strong> eval team with a subscription</span>
+        </div>
+      </div>
+    </div>
+    <div class="slide-5-right">
+      <svg width="280" height="360" viewBox="0 0 280 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- 7 stacked layers (16px gap between) -->
+        <rect x="40" y="20" width="160" height="28" rx="6" fill="#E8F1FD" stroke="#1B6FEE" stroke-width="2"/>
+        <text x="120" y="39" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#1B6FEE">Intent</text>
+
+        <rect x="40" y="64" width="160" height="28" rx="6" fill="#E8F1FD" stroke="#1B6FEE" stroke-width="2"/>
+        <text x="120" y="83" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#1B6FEE">Reasoning</text>
+
+        <rect x="40" y="108" width="160" height="28" rx="6" fill="#FEF2F2" stroke="#EF4444" stroke-width="2"/>
+        <text x="120" y="127" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#EF4444">Retrieval</text>
+
+        <rect x="40" y="152" width="160" height="28" rx="6" fill="#E8F1FD" stroke="#1B6FEE" stroke-width="2"/>
+        <text x="120" y="171" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#1B6FEE">Memory</text>
+
+        <rect x="40" y="196" width="160" height="28" rx="6" fill="#E8F1FD" stroke="#1B6FEE" stroke-width="2"/>
+        <text x="120" y="215" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#1B6FEE">Tool Use</text>
+
+        <rect x="40" y="240" width="160" height="28" rx="6" fill="#E8F1FD" stroke="#1B6FEE" stroke-width="2"/>
+        <text x="120" y="259" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#1B6FEE">Generation</text>
+
+        <rect x="40" y="284" width="160" height="28" rx="6" fill="#E8F1FD" stroke="#1B6FEE" stroke-width="2"/>
+        <text x="120" y="303" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#1B6FEE">Business</text>
+
+        <!-- Magnifying glass over the failing Retrieval layer -->
+        <circle cx="200" cy="122" r="50" fill="none" stroke="#1E293B" stroke-width="5" stroke-dasharray="6 3" opacity="0.45"/>
+        <line x1="235" y1="157" x2="270" y2="192" stroke="#1E293B" stroke-width="6" stroke-linecap="round" opacity="0.45"/>
+
+        <!-- Alert badge -->
+        <circle cx="220" cy="122" r="11" fill="#EF4444"/>
+        <text x="220" y="127" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="white">!</text>
+      </svg>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">05</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 6: THE SOLUTION
+     ============================================================ -->
+<section class="slide" data-slide="5">
+  <div class="section-label">The Solution</div>
+  <div class="slide-title" style="max-width: 100%;">supa<span class="blue">eval</span> pinpoints where your agents are failing.</div>
+  <div class="slide-subtitle">
+    Layer-by-layer evaluation. Not "overall quality is fine."<br>
+    Each layer scored independently. <strong>Root cause + fix suggestions</strong> included.
+  </div>
+  <div class="steps-row">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-name">Connect</div>
+      <div class="step-desc">One SDK call, any framework.<br>Python or TypeScript.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-name">Evaluate</div>
+      <div class="step-desc">Every layer scored independently.<br>Synthetic data amplifies your test coverage from 30 to 2,000+ cases.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-name">Fix</div>
+      <div class="step-desc">Root cause identified with fix suggestions.<br>Not just what's broken - how to fix it.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">06</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 7: AGENT HEALTH MONITOR
+     ============================================================ -->
+<section class="slide" data-slide="6">
+  <div class="section-label">Agent Health Monitor</div>
+  <div class="dashboard-wrapper">
+    <div class="dashboard-card">
+      <div class="dash-header">
+        <div class="dash-agent">// ENTERPRISE RAG AGENT - PROD</div>
+        <div class="dash-live">LIVE</div>
+      </div>
+      <div class="dash-layers">
+        <div class="dash-layer">
+          <div class="dash-layer-name">Intent Routing</div>
+          <div class="dash-bar-bg"><div class="dash-bar-fill" style="width: 41%; background: var(--red);"></div></div>
+          <div class="dash-pct" style="color: var(--red);">41%</div>
+        </div>
+        <div class="dash-layer">
+          <div class="dash-layer-name">Doc Hit Rate</div>
+          <div class="dash-bar-bg"><div class="dash-bar-fill" style="width: 68%; background: var(--amber);"></div></div>
+          <div class="dash-pct" style="color: var(--amber);">68%</div>
+        </div>
+        <div class="dash-layer">
+          <div class="dash-layer-name">Retrieval Prec.</div>
+          <div class="dash-bar-bg"><div class="dash-bar-fill" style="width: 72%; background: var(--amber);"></div></div>
+          <div class="dash-pct" style="color: var(--amber);">72%</div>
+        </div>
+        <div class="dash-layer">
+          <div class="dash-layer-name">Chunking</div>
+          <div class="dash-bar-bg"><div class="dash-bar-fill" style="width: 91%; background: var(--green);"></div></div>
+          <div class="dash-pct" style="color: var(--green);">91%</div>
+        </div>
+        <div class="dash-layer">
+          <div class="dash-layer-name">Final Answer</div>
+          <div class="dash-bar-bg"><div class="dash-bar-fill" style="width: 88%; background: var(--green);"></div></div>
+          <div class="dash-pct" style="color: var(--green);">88%</div>
+        </div>
+      </div>
+      <div class="dash-rootcause">
+        <div class="rc-label">Root Cause</div>
+        <div class="rc-text">Intent routing is broken at layer 1. Queries are being misclassified, sending retrieval down the wrong path.</div>
+      </div>
+      <div class="dash-fix">
+        <div class="fix-label">Suggested Fix</div>
+        <div class="fix-text">Update system prompt to include explicit intent categories with example queries. Add fallback routing for ambiguous intents.</div>
+      </div>
+    </div>
+    <div class="dashboard-context">
+      <div class="slide-title" style="max-width: 100%; font-size: 2.2rem;"><span class="blue">Zero Guesswork.</span><br>One Dashboard.</div>
+      <p>The Agent Health Monitor shows every layer of your agent - scored independently.</p>
+      <p>No more guessing. The root cause and fix are right there.</p>
+      <div class="callout">
+        <strong>Notice:</strong><br>Final answer: 88%. Looks healthy.<br>Intent routing: 41%. Completely broken.<br>Your current tool misses this. <strong><span style="color: var(--ink);">supa</span><span style="color: var(--blue);">eval</span></strong> doesn't.
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">07</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 8: BEFORE / AFTER
+     ============================================================ -->
+<section class="slide" data-slide="7">
+  <div class="section-label">The Transformation</div>
+  <div class="slide-title">Before and after supa<span class="blue">eval</span></div>
+  <div class="ba-grid">
+    <div class="ba-col before">
+      <h3>Before</h3>
+      <div class="ba-row">
+        <span class="ba-metric">Time to find root cause</span>
+        <span class="ba-value">Days</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Test coverage</span>
+        <span class="ba-value">10-30 prompts</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Diagnosis</span>
+        <span class="ba-value">"It's hallucinating"</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Annual cost</span>
+        <span class="ba-value">$300-500K</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Detection</span>
+        <span class="ba-value">Reactive</span>
+      </div>
+    </div>
+    <div class="ba-col after">
+      <h3>After</h3>
+      <div class="ba-row">
+        <span class="ba-metric">Time to find root cause</span>
+        <span class="ba-value">30 minutes</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Test coverage</span>
+        <span class="ba-value">2,000+ cases</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Diagnosis</span>
+        <span class="ba-value">"Intent at L1: 41%"</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Annual cost</span>
+        <span class="ba-value">$50-100/run</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Detection</span>
+        <span class="ba-value">Proactive</span>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">08</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 9: REAL RESULTS
+     ============================================================ -->
+<section class="slide" data-slide="8">
+  <div class="section-label">Validation</div>
+  <div class="slide-title">Real production <span class="blue">results</span></div>
+  <div class="case-card">
+    <div class="case-quote">
+      An enterprise B2B SaaS ($3B+ company, 20+ production agents) saw their existing eval tool report overall quality above 90%. But customer complaints kept rising. Layer-by-layer evaluation revealed retrieval and intent layers were driving production failures - completely hidden by the aggregate score.
+    </div>
+    <div class="case-results">
+      <div class="case-result">
+        <div class="number">30 min</div>
+        <div class="label">to identify root cause</div>
+      </div>
+      <div class="case-result">
+        <div class="number">63% → 81%</div>
+        <div class="label">quality improvement</div>
+      </div>
+      <div class="case-result">
+        <div class="number">2</div>
+        <div class="label">layers identified as root cause</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">09</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 10: WHAT'S INCLUDED
+     ============================================================ -->
+<section class="slide" data-slide="9">
+  <div class="section-label">Platform</div>
+  <div class="slide-title" style="max-width: 100%;">Everything you need to <span class="blue">ship better agents</span></div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <div class="feature-name">Layer-by-Layer Evaluation</div>
+      <div class="feature-desc">Score every layer independently.<br>Retrieval, intent, chunking, generation, tool use.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <div class="feature-name">Agent Health Monitor</div>
+      <div class="feature-desc">One dashboard, zero guessing.<br>Real-time layer scores for every agent.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧪</div>
+      <div class="feature-name">Synthetic Data Pipeline</div>
+      <div class="feature-desc">200 seed prompts → 2,000+ test cases.<br>No manual prompt writing.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔧</div>
+      <div class="feature-name">Fix Suggestions</div>
+      <div class="feature-desc">Actionable recommendations for each failing layer.<br>Not just scores.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-name">SDK (Python & TypeScript)</div>
+      <div class="feature-desc">One function call to connect.<br>Any framework. Any model provider.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔄</div>
+      <div class="feature-name">CI/CD Integration</div>
+      <div class="feature-desc">Eval on every PR. Pre-deployment quality gates.<br>Catch regressions automatically.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">10</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 11: DESIGN PARTNER PROGRAM
+     ============================================================ -->
+<section class="slide" data-slide="10">
+  <div class="section-label">Design Partner Program</div>
+  <div class="slide-title">We're looking for <span class="blue">5 design partners.</span></div>
+  <div class="slide-subtitle">Join us in building the evaluation platform your team actually needs.</div>
+  <div class="partner-grid">
+    <div class="partner-col get">
+      <h3>What you get</h3>
+      <ul class="partner-list">
+        <li><span class="icon">✅</span> 3 months free access on any tier</li>
+        <li><span class="icon">✅</span> Direct Slack channel with founders</li>
+        <li><span class="icon">✅</span> Priority feature requests</li>
+        <li><span class="icon">✅</span> White-glove onboarding</li>
+      </ul>
+    </div>
+    <div class="partner-col ask">
+      <h3>What we ask</h3>
+      <ul class="partner-list">
+        <li><span class="icon">📞</span> Weekly 30-min feedback call</li>
+        <li><span class="icon">📝</span> Share what works and what doesn't</li>
+        <li><span class="icon">🎯</span> 1+ agent in production to evaluate</li>
+        <li><span class="icon">🤝</span> Be a reference if it works out</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">11</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 12: CTA
+     ============================================================ -->
+<section class="slide slide-cta" data-slide="11">
+  <div class="slide-title" style="max-width: none;">Ready to <span class="blue">pinpoint</span> where<br>your agents are failing?</div>
+  <div class="cta-steps">
+    <div class="cta-step"><span class="arrow">→</span> Book a 20-minute demo</div>
+    <div class="cta-step"><span class="arrow">→</span> See your agent's health dashboard in Week 1</div>
+    <div class="cta-step"><span class="arrow">→</span> Fix the root cause, not the symptoms</div>
+  </div>
+  <a href="mailto:imran@supaeval.com" class="cta-button">Book a Demo</a>
+  <div class="cta-contact">
+    <a href="mailto:imran@supaeval.com">imran@supaeval.com</a> &nbsp;|&nbsp; <a href="https://supaeval.com">supaeval.com</a>
+  </div>
+</section>
+
+<!-- ============================================================
+     JAVASCRIPT: Navigation, scroll-snap, keyboard
+     ============================================================ -->
+<script>
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const navDots = document.getElementById('navDots');
+  const keyHint = document.getElementById('keyHint');
+
+  // Create nav dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    dot.addEventListener('click', () => {
+      slides[i].scrollIntoView({ behavior: 'smooth' });
+    });
+    navDots.appendChild(dot);
+  });
+
+  const dots = document.querySelectorAll('.nav-dot');
+
+  // Intersection observer for active slide
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = parseInt(entry.target.dataset.slide);
+
+        // Update dots
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+
+        // Add visible class for animations
+        entry.target.classList.add('visible');
+
+        // Hide key hint after first scroll
+        if (idx > 0) keyHint.classList.remove('visible');
+      }
+    });
+  }, { threshold: 0.5 });
+
+  slides.forEach(slide => observer.observe(slide));
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+      e.preventDefault();
+      const current = getCurrentSlide();
+      if (current < slides.length - 1) {
+        slides[current + 1].scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      const current = getCurrentSlide();
+      if (current > 0) {
+        slides[current - 1].scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  });
+
+  function getCurrentSlide() {
+    let current = 0;
+    slides.forEach((slide, i) => {
+      const rect = slide.getBoundingClientRect();
+      if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+        current = i;
+      }
+    });
+    return current;
+  }
+
+  // Auto-hide key hint after 5s
+  setTimeout(() => keyHint.classList.remove('visible'), 5000);
+})();
+</script>
+
+</body>
+</html>

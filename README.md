@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## SupaEval Landing Page
 
-## Getting Started
+This repo contains the SupaEval marketing site built with Next.js, plus a local Strapi CMS project under `strapi/my-strapi-project`.
 
-First, run the development server:
+## Setup
+
+1. Install dependencies for the Next.js app:
+
+```bash
+npm install
+```
+
+2. Create a local environment file:
+
+```bash
+cp .env.example .env.local
+```
+
+3. Start the landing page:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app runs at `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Optional: Run Strapi locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+If you want CMS-backed content locally, install and run the Strapi app separately:
 
-## Learn More
+```bash
+cd strapi/my-strapi-project
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Strapi runs at `http://localhost:1337/admin`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Useful Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `npm run dev` or `npm run dev:web`: start the Next.js app
+- `npm run dev:cms`: start the Strapi app from the repo root
+- `npm run build`: production build for Next.js
+- `npm run lint`: lint the Next.js app
 
-## Deploy on Vercel
+## Environment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Copy `.env.example` to `.env.local` and update as needed:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```env
+NEXT_PUBLIC_STRAPI_API_URL=http://localhost:1337
+NEXT_PUBLIC_STRAPI_API_TOKEN=
+```
+
+The API token is optional unless your Strapi instance requires authenticated API access.

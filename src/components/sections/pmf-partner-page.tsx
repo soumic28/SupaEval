@@ -93,10 +93,74 @@ const PMFPartnerPage = () => {
           </div>
         </ScrollReveal>
 
-        {/* Hero Section */}
+        {/* Letter Section - NOW FIRST */}
+        <ScrollReveal width="100%" delay={0.2}>
+          <HolographicCard className="p-6 sm:p-10 md:p-16 relative overflow-hidden border-slate-200 bg-white/50 mb-16 md:mb-20 lg:mb-32">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight mb-8 text-slate-900">This is a personal invite.</h2>
+
+            <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-12">
+              <div className="space-y-4 md:space-y-6 text-slate-600 text-base md:text-lg lg:text-xl leading-relaxed">
+                <p>Hi — I’m building <strong className="text-indigo-600 font-bold italic tracking-tight">SupaEval</strong>.</p>
+                <p>Too many AI products are launched without a reliable way to know if quality is improving, breaking, or drifting over time.</p>
+                <p className="text-pretty">Our mission is simple: <strong className="relative inline-block group">
+                  <span className="relative z-10 text-indigo-700 font-bold">make every AI agent work with 90%+ quality.</span>
+                  <motion.span
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    transition={{ duration: 1, delay: 0.5 }}
+                    className="absolute bottom-1 left-0 w-full h-3 bg-indigo-500/10 -z-0 origin-left"
+                  />
+                  <motion.span
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "100%" }}
+                    transition={{ duration: 1, delay: 0.8 }}
+                    className="absolute -bottom-1 left-0 h-0.5 bg-indigo-400/30"
+                  />
+                </strong></p>
+                <p>We’re looking for a few PMF partners who want early access, a direct voice in the roadmap, and a close feedback loop with the founder.</p>
+
+                <div className="pt-4 md:pt-6">
+                  <div className="text-slate-900 font-bold text-xl tracking-tight mb-1">— Founder, SupaEval</div>
+                  <div className="text-indigo-600/50 font-mono text-xs font-bold font-serif italic text-lg opacity-40">Founder Signature Hash: 0x8a92f...</div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {[
+                  { label: "You get", value: "Early access to the platform", icon: CheckCircle },
+                  { label: "You shape", value: "The future roadmap", icon: Edit3 },
+                  { label: "We ask", value: "Candid product feedback", icon: MessageSquare },
+                ].map((item, idx) => (
+                  <motion.div
+                    key={idx}
+                    whileHover={{ x: 10, backgroundColor: "rgba(248, 250, 252, 1)", borderColor: "rgba(199, 210, 254, 0.5)" }}
+                    className="p-4 md:p-5 rounded-2xl bg-slate-50 border border-slate-100 transition-all cursor-default group"
+                  >
+                    <div className="flex items-center gap-3 mb-1.5 md:mb-2 text-indigo-600 font-bold tracking-widest text-[10px] md:text-xs uppercase">
+                      <item.icon className="h-3 w-3 group-hover:scale-110 group-hover:rotate-12 transition-transform" />
+                      {item.label}
+                    </div>
+                    <div className="text-lg md:text-xl font-bold text-slate-900">{item.value}</div>
+                  </motion.div>
+                ))}
+
+                <div className="pt-4">
+                  <MagneticButton className="w-full h-12 md:h-14 text-base md:text-lg font-bold shadow-xl shadow-indigo-500/10 group">
+                    <a href="https://calendly.com/yourlink" className="flex items-center justify-center w-full">
+                      Become a PMF partner
+                      <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    </a>
+                  </MagneticButton>
+                </div>
+              </div>
+            </div>
+          </HolographicCard>
+        </ScrollReveal>
+
+        {/* Hero Section - NOW SECOND */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_.85fr] gap-6 md:gap-8 mb-16 md:mb-20 lg:mb-32">
           {/* Main Hero Card */}
-          <ScrollReveal width="100%" delay={0.1}>
+          <ScrollReveal width="100%" delay={0.3}>
             <motion.div style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}>
               <HolographicCard className="p-6 sm:p-8 md:p-12 relative overflow-hidden flex flex-col justify-center min-h-[450px] md:min-h-[500px] border-slate-200 bg-white/50 shadow-2xl shadow-indigo-500/5">
                 <motion.div
@@ -199,7 +263,7 @@ const PMFPartnerPage = () => {
 
           {/* Side Cards */}
           <div className="flex flex-col gap-6 md:gap-8">
-            <ScrollReveal width="100%" delay={0.2}>
+            <ScrollReveal width="100%" delay={0.4}>
               <HolographicCard className="p-6 md:p-8 group border-slate-200 bg-white/50 hover:bg-white transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-indigo-600 text-[10px] md:text-xs uppercase tracking-widest font-bold">Now inviting</h3>
@@ -222,7 +286,7 @@ const PMFPartnerPage = () => {
               </HolographicCard>
             </ScrollReveal>
 
-            <ScrollReveal width="100%" delay={0.3}>
+            <ScrollReveal width="100%" delay={0.5}>
               <HolographicCard className="p-6 md:p-8 border-slate-200 bg-white/50 hover:bg-white transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1 group">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-indigo-600 text-[10px] md:text-xs uppercase tracking-widest font-bold">Ideal Cohort</h3>
@@ -268,72 +332,8 @@ const PMFPartnerPage = () => {
           </div>
         </div>
 
-        {/* Letter Section */}
-        <ScrollReveal width="100%" delay={0.4}>
-          <HolographicCard className="p-6 sm:p-10 md:p-16 relative overflow-hidden border-slate-200 bg-white/50">
-            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight mb-8 text-slate-900">This is a personal invite.</h2>
-
-            <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-12">
-              <div className="space-y-4 md:space-y-6 text-slate-600 text-base md:text-lg lg:text-xl leading-relaxed">
-                <p>Hi — I’m building <strong className="text-indigo-600 font-bold italic tracking-tight">SupaEval</strong>.</p>
-                <p>Too many AI products are launched without a reliable way to know if quality is improving, breaking, or drifting over time.</p>
-                <p className="text-pretty">Our mission is simple: <strong className="relative inline-block group">
-                  <span className="relative z-10 text-indigo-700 font-bold">make every AI agent work with 90%+ quality.</span>
-                  <motion.span
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    transition={{ duration: 1, delay: 0.5 }}
-                    className="absolute bottom-1 left-0 w-full h-3 bg-indigo-500/10 -z-0 origin-left"
-                  />
-                  <motion.span
-                    initial={{ width: 0 }}
-                    whileInView={{ width: "100%" }}
-                    transition={{ duration: 1, delay: 0.8 }}
-                    className="absolute -bottom-1 left-0 h-0.5 bg-indigo-400/30"
-                  />
-                </strong></p>
-                <p>We’re looking for a few PMF partners who want early access, a direct voice in the roadmap, and a close feedback loop with the founder.</p>
-
-                <div className="pt-4 md:pt-6">
-                  <div className="text-slate-900 font-bold text-xl tracking-tight mb-1">— Founder, SupaEval</div>
-                  <div className="text-indigo-600/50 font-mono text-xs font-bold font-serif italic text-lg opacity-40">Founder Signature Hash: 0x8a92f...</div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  { label: "You get", value: "Early access to the platform", icon: CheckCircle },
-                  { label: "You shape", value: "The future roadmap", icon: Edit3 },
-                  { label: "We ask", value: "Candid product feedback", icon: MessageSquare },
-                ].map((item, idx) => (
-                  <motion.div
-                    key={idx}
-                    whileHover={{ x: 10, backgroundColor: "rgba(248, 250, 252, 1)", borderColor: "rgba(199, 210, 254, 0.5)" }}
-                    className="p-4 md:p-5 rounded-2xl bg-slate-50 border border-slate-100 transition-all cursor-default group"
-                  >
-                    <div className="flex items-center gap-3 mb-1.5 md:mb-2 text-indigo-600 font-bold tracking-widest text-[10px] md:text-xs uppercase">
-                      <item.icon className="h-3 w-3 group-hover:scale-110 group-hover:rotate-12 transition-transform" />
-                      {item.label}
-                    </div>
-                    <div className="text-lg md:text-xl font-bold text-slate-900">{item.value}</div>
-                  </motion.div>
-                ))}
-
-                <div className="pt-4">
-                  <MagneticButton className="w-full h-12 md:h-14 text-base md:text-lg font-bold shadow-xl shadow-indigo-500/10 group">
-                    <a href="https://calendly.com/yourlink" className="flex items-center justify-center w-full">
-                      Become a PMF partner
-                      <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                    </a>
-                  </MagneticButton>
-                </div>
-              </div>
-            </div>
-          </HolographicCard>
-        </ScrollReveal>
-
         {/* Footer info */}
-        <ScrollReveal width="100%" delay={0.5}>
+        <ScrollReveal width="100%" delay={0.7}>
           <div className="mt-16 md:mt-20 py-8 border-t border-slate-100 text-center text-slate-500 text-xs md:text-sm">
             <p className="font-medium">Join the next generation of AI teams building with confidence.</p>
             <p className="mt-3 flex flex-wrap items-center justify-center gap-1.5">

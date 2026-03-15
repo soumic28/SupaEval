@@ -75,7 +75,7 @@ const PMFPartnerPage = () => {
 
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
         {/* Topbar / Tag with Live Indicator */}
-        <ScrollReveal width="100%">
+        {/* <ScrollReveal width="100%">
           <div className="flex justify-center mb-8 md:mb-12">
             <motion.div
               whileHover={{ scale: 1.05, y: -2 }}
@@ -91,7 +91,7 @@ const PMFPartnerPage = () => {
               <span className="group-hover:text-indigo-600 transition-colors">Met us at AI Startup Festival?</span>
             </motion.div>
           </div>
-        </ScrollReveal>
+        </ScrollReveal> */}
 
         {/* Letter Section - NOW FIRST */}
         <ScrollReveal width="100%" delay={0.2}>
@@ -121,7 +121,7 @@ const PMFPartnerPage = () => {
 
                 <div className="pt-4 md:pt-6">
                   <div className="text-slate-900 font-bold text-xl tracking-tight mb-1">— Founder, SupaEval</div>
-                  <div className="text-indigo-600/50 font-mono text-xs font-bold font-serif italic text-lg opacity-40">Founder Signature Hash: 0x8a92f...</div>
+                  <div className="text-indigo-600/50 font-mono text-xs font-bold font-serif italic text-lg ">Imran, Founder SupaEval</div>
                 </div>
               </div>
 

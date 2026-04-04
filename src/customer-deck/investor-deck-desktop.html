@@ -1,0 +1,3884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<title>SupaEval - AI Agent Evaluation Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     DESIGN SYSTEM - SupaEval Brand (EvalMark + Geometric)
+     Light theme, per founder preference
+     ============================================================ */
+  :root {
+    --ink: #0A0A0F;
+    --blue: #1B6FEE;
+    --deep-blue: #0D47A1;
+    --navy: #111827;
+    --charcoal: #1E293B;
+    --cloud: #E8F1FD;
+    --white: #FFFFFF;
+    --slate: #64748B;
+    --light-gray: #F8FAFC;
+    --border: #E2E8F0;
+    --red: #EF4444;
+    --green: #22C55E;
+    --amber: #F59E0B;
+    --orange: #F97316;
+
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+    min-width: 1280px;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--white);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-width: 1280px;
+  }
+
+  .slide :where(
+    .section-label,
+    .slide-footer,
+    .slide-footer *,
+    .slide-num,
+    .brand-pill,
+    .brand-tagline,
+    .brand-contact,
+    .brand-contact a,
+    .key-hint,
+    .roadmap-year,
+    .roadmap-card-title,
+    .roadmap-card-text,
+    .evolution-axis-y,
+    .evolution-line-label,
+    .evolution-gap-label,
+    .evolution-years,
+    .evolution-signal-label,
+    .evolution-signal-title,
+    .evolution-note-copy,
+    .learning-step-kicker,
+    .learning-step-title,
+    .learning-step-points li,
+    .learning-result-label,
+    .learning-result-title,
+    .learning-result-subtext,
+    .learning-insight-label,
+    .learning-insight-copy,
+    .quality-compare-label,
+    .quality-equals-text,
+    .tree-card-label,
+    .tree-message-copy,
+    .tree-bottom-copy,
+    .tree-compare-copy,
+    .tree-compare-title,
+    .tree-compare-flow,
+    .stack-frame-kicker,
+    .stack-group-title,
+    .stack-layer-label,
+    .stack-layer-name,
+    .infra-stack-label,
+    .infra-roadmap-label,
+    .infra-layer .layer-name,
+    .infra-layer .layer-copy,
+    .infra-roadmap-copy,
+    .step-name,
+    .step-desc,
+    .dash-agent,
+    .dash-live,
+    .dash-layer-name,
+    .dash-pct,
+    .dash-rootcause .rc-label,
+    .dash-rootcause .rc-text,
+    .dash-fix .fix-label,
+    .dash-fix .fix-text,
+    .dashboard-context p,
+    .dashboard-context .callout,
+    .ba-metric,
+    .ba-value,
+    .case-quote,
+    .case-result .label,
+    .feature-name,
+    .feature-desc,
+    .partner-col h3,
+    .partner-list li,
+    .cta-step
+  ) {
+    font-size: max(1.25rem, 1em);
+  }
+
+  /* ============================================================
+     SLIDE BASE
+     ============================================================ */
+  .slide {
+    width: 100vw;
+    height: 100vh;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 4rem 6rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Geometric accent - subtle diagonal line pattern (brand "geometric" concept) */
+  .slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle at 100% 0%, var(--cloud) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .slide > * { position: relative; z-index: 1; }
+
+  /* ============================================================
+     TYPOGRAPHY
+     ============================================================ */
+  .section-label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: white;
+    background: var(--blue);
+    display: inline-block;
+    align-self: flex-start;
+    padding: 0.35rem 1.2rem 0.35rem 0.8rem;
+    margin-bottom: 0.75rem;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%);
+  }
+
+  .slide-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2.2rem;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+    max-width: 100%;
+  }
+
+  .slide-title .blue { color: var(--blue); }
+
+  .slide-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: var(--charcoal);
+    max-width: 680px;
+    margin-bottom: 2rem;
+  }
+
+  .punchline {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: var(--ink);
+    margin-top: 1.5rem;
+  }
+
+  /* ============================================================
+     SLIDE COUNTER (bottom-right)
+     ============================================================ */
+  .slide-num {
+    position: absolute;
+    bottom: 2rem;
+    right: 3rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--slate);
+    opacity: 0.5;
+  }
+
+  /* ============================================================
+     FOOTER BAR
+     ============================================================ */
+  .slide-footer {
+    position: absolute;
+    bottom: 3rem;
+    left: 8rem;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    color: var(--slate);
+  }
+
+  .slide-footer .logo-small {
+    font-weight: 800;
+    font-size: 0.8rem;
+  }
+
+  .slide-footer .logo-small .supa { color: var(--ink); }
+  .slide-footer .logo-small .eval { color: var(--blue); }
+
+  .slide-footer .footer-sep {
+    margin: 0 0.5rem;
+    color: var(--border);
+  }
+
+  .slide-footer .footer-tagline {
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: var(--slate);
+    opacity: 0.5;
+  }
+
+  /* ============================================================
+     NAVIGATION DOTS
+     ============================================================ */
+  .nav-dots {
+    position: fixed;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 100;
+  }
+
+  .nav-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    padding: 0;
+  }
+
+  .nav-dot.active {
+    background: var(--blue);
+    transform: scale(1.3);
+  }
+
+  .nav-dot:hover { background: var(--blue); opacity: 0.7; }
+
+  /* ============================================================
+     KEYBOARD HINT
+     ============================================================ */
+  .key-hint {
+    position: fixed;
+    bottom: 2rem;
+    right: 50%;
+    transform: translateX(50%);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--slate);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 100;
+    background: var(--white);
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .key-hint.visible { opacity: 0.6; }
+
+  /* ============================================================
+     SLIDE 1: TITLE
+     ============================================================ */
+  .slide-title-page {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-top: 4rem;
+  }
+
+  .slide-title-page::before {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background:
+      radial-gradient(ellipse at 20% 80%, rgba(27,111,238,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(27,111,238,0.03) 0%, transparent 50%);
+  }
+
+  .brand-pill {
+    display: inline-block;
+    background: var(--cloud);
+    color: var(--blue);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.25rem;
+    padding: 0.4rem 1.2rem;
+    border-radius: 100px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+  }
+
+  .brand-name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 8rem;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  .brand-name .supa { color: var(--ink); }
+  .brand-name .eval { color: var(--blue); }
+
+  .brand-tagline {
+    font-family: var(--font-body);
+    font-size: 1.4rem;
+    color: var(--slate);
+    margin-bottom: 1.5rem;
+  }
+
+  .brand-contact {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--slate);
+  }
+
+  .brand-contact a {
+    color: var(--blue);
+    text-decoration: none;
+  }
+
+  /* ============================================================
+     SLIDE 2: THE BIG SHIFT (text-forward)
+     ============================================================ */
+  [data-slide="6"] > .slide-title {
+    max-width: 100%;
+  }
+
+  .slide-2-layout {
+    display: flex;
+    gap: 4rem;
+    flex: 1;
+    align-items: center;
+  }
+
+  .slide-2-left {
+    flex: 0 0 62%;
+  }
+
+  .slide-2-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .narrative-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    justify-content: center;
+  }
+
+  .narrative-beat {
+    font-family: var(--font-body);
+    font-size: 1.5rem;
+    line-height: 1.7;
+    color: var(--charcoal);
+    padding: 1.2rem 0;
+  }
+
+  .narrative-beat:not(:last-child) {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .narrative-beat .stat-inline {
+    font-family: var(--font-display);
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .narrative-beat .keyword-red {
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  /* Stat card */
+  .stat-card {
+    padding: 2.5rem 2.5rem;
+    border-radius: 14px;
+    border-left: 4px solid;
+    width: 100%;
+  }
+
+  .stat-card--red {
+    border-color: var(--red);
+    background: rgba(239, 68, 68, 0.05);
+  }
+
+  .stat-card-number {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 3.5rem;
+    line-height: 1.1;
+    color: var(--red);
+  }
+
+  .stat-card-text {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    color: var(--slate);
+    margin-top: 0.6rem;
+    line-height: 1.5;
+  }
+
+  /* ============================================================
+     SLIDE 3: SOUND FAMILIAR
+     ============================================================ */
+  /* Slide 3 two-column layout */
+  [data-slide="7"] {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+
+  .slide-3-layout {
+    display: flex;
+    gap: 4rem;
+    flex: 1;
+    align-items: center;
+  }
+
+  .slide-3-left {
+    flex: 0 0 55%;
+    display: flex;
+    align-items: center;
+  }
+
+  .slide-3-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Slack-style message container */
+  .slack-container {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  .slack-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--light-gray);
+  }
+
+  .slack-header-hash {
+    font-size: 1.25rem;
+    color: var(--slate);
+    font-weight: 600;
+  }
+
+  .slack-header-channel {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .slack-messages {
+    display: flex;
+    flex-direction: column;
+    padding: 0.4rem 0;
+  }
+
+  .slack-msg {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 0.55rem 1.2rem;
+    transition: background 0.15s ease;
+  }
+
+  .slack-msg:hover {
+    background: var(--light-gray);
+  }
+
+  .slack-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    flex-shrink: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .slack-msg-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .slack-msg-name {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .slack-msg-time {
+    font-size: 0.65rem;
+    color: var(--slate);
+    font-weight: 400;
+    margin-left: 0.4rem;
+  }
+
+  .slack-msg-body {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--charcoal);
+    margin-top: 0.1rem;
+    line-height: 1.45;
+  }
+
+  /* Punchline */
+  .bottom-punchline {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--charcoal);
+    line-height: 1.5;
+  }
+
+  .bottom-punchline .punchline-red {
+    color: var(--red);
+    font-weight: 800;
+  }
+
+  .bottom-punchline .punchline-highlight {
+    color: var(--blue);
+    font-weight: 800;
+  }
+
+  /* ============================================================
+     SLIDE 4: THE INSIGHT (layer pipeline)
+     ============================================================ */
+  .slide-4-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .layer-stack {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    justify-content: flex-start;
+  }
+
+  .layer-node {
+    background: var(--cloud);
+    border: 2px solid var(--blue);
+    border-radius: 10px;
+    padding: 0.6rem 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--blue);
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .layer-arrow-right {
+    font-size: 1.2rem;
+    color: var(--blue);
+    padding: 0 0.4rem;
+    line-height: 1;
+  }
+
+  .slide-4-bottom {
+    display: flex;
+    gap: 3rem;
+    width: 100%;
+    align-items: center;
+  }
+
+  .slide-4-punchline {
+    flex: 1;
+    font-family: var(--font-body);
+    font-size: 1.5rem;
+    color: var(--charcoal);
+    line-height: 1.7;
+    text-align: left;
+  }
+
+  .example-box {
+    flex: 0 0 auto;
+    background: var(--light-gray);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    width: fit-content;
+    min-width: 510px;
+  }
+
+  .example-box .example-title {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 1rem;
+  }
+
+  .example-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 0;
+  }
+
+  .example-row .label {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--charcoal);
+  }
+
+  .example-row .value {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .value.green { color: var(--green); }
+  .value.red { color: var(--red); }
+  .value.amber { color: var(--amber); }
+
+  /* ============================================================
+     SLIDE 5: THE PROMISE
+     ============================================================ */
+  .slide-5-layout {
+    display: flex;
+    gap: 3.5rem;
+    flex: 1;
+    align-items: center;
+  }
+
+  .slide-5-left {
+    flex: 1;
+  }
+
+  .slide-5-right {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .promise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .promise-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .promise-arrow {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--blue);
+    line-height: 1.8;
+    flex-shrink: 0;
+  }
+
+  .promise-text {
+    font-family: var(--font-body);
+    font-size: 1.5rem;
+    color: var(--charcoal);
+    line-height: 1.7;
+  }
+
+  .promise-text strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* ============================================================
+     SLIDE 6: THE SOLUTION
+     ============================================================ */
+  .steps-row {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .step-card {
+    flex: 1;
+    background: var(--light-gray);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .step-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: var(--white);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .step-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .step-desc {
+    font-size: 1rem;
+    color: var(--slate);
+    line-height: 1.6;
+  }
+
+  /* ============================================================
+     SLIDE 7: AGENT HEALTH MONITOR
+     ============================================================ */
+  .dashboard-wrapper {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .dashboard-card {
+    background: var(--navy);
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    flex: 1;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  }
+
+  .dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .dash-agent {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--slate);
+  }
+
+  .dash-live {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--green);
+  }
+
+  .dash-live::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .dash-layers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .dash-layer {
+    display: grid;
+    grid-template-columns: 130px 1fr 50px;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .dash-layer-name {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .dash-bar-bg {
+    height: 10px;
+    background: var(--charcoal);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .dash-bar-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 1s ease;
+  }
+
+  .dash-pct {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--white);
+    text-align: right;
+  }
+
+  .dash-rootcause {
+    margin-top: 1.5rem;
+    padding: 1.2rem 1.5rem;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    border-left: 3px solid var(--red);
+  }
+
+  .dash-rootcause .rc-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.4rem;
+  }
+
+  .dash-rootcause .rc-text {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+  }
+
+  .dash-fix {
+    margin-top: 0.8rem;
+    padding: 1.2rem 1.5rem;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    border-left: 3px solid var(--green);
+  }
+
+  .dash-fix .fix-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 0.4rem;
+  }
+
+  .dash-fix .fix-text {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+  }
+
+  .dashboard-context {
+    flex: 0.8;
+    padding-top: 1rem;
+  }
+
+  .dashboard-context p {
+    font-family: var(--font-body);
+    font-size: 1.5rem;
+    color: var(--charcoal);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .dashboard-context .callout {
+    background: var(--cloud);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--charcoal);
+    line-height: 1.6;
+    margin-top: 1.5rem;
+  }
+
+  .dashboard-context .callout strong { color: var(--blue); }
+
+  [data-slide="12"] .dashboard-wrapper {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1.75rem;
+  }
+
+  [data-slide="12"] .dashboard-context {
+    width: 100%;
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  [data-slide="12"] .dashboard-context .slide-title {
+    max-width: 100%;
+    margin-bottom: 0.75rem;
+  }
+
+  [data-slide="12"] .dashboard-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* ============================================================
+     SLIDE 8: BEFORE / AFTER
+     ============================================================ */
+  .ba-grid {
+    display: flex;
+    gap: 3rem;
+    margin-top: 2rem;
+    width: 100%;
+  }
+
+  .ba-col {
+    flex: 1;
+    border-radius: 14px;
+    padding: 2.5rem 2.5rem;
+    border-left: 4px solid;
+  }
+
+  .ba-col.before {
+    border-color: var(--red);
+    background: rgba(239, 68, 68, 0.05);
+  }
+
+  .ba-col.after {
+    border-color: var(--blue);
+    background: rgba(27, 111, 238, 0.05);
+  }
+
+  .ba-col h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+  }
+
+  .ba-col.before h3 { color: var(--red); }
+  .ba-col.after h3 { color: var(--blue); }
+
+  .ba-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    line-height: 1.5;
+  }
+
+  .ba-row:last-child { border-bottom: none; }
+
+  .ba-metric {
+    font-family: var(--font-body);
+    color: var(--slate);
+    font-size: 1.02rem;
+    flex: 1;
+  }
+
+  .ba-value {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 1.02rem;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .ba-col.before .ba-value { color: var(--red); }
+  .ba-col.after .ba-value { color: var(--blue); }
+
+  /* ============================================================
+     SLIDE 9: REAL RESULTS
+     ============================================================ */
+  [data-slide="14"] {
+    justify-content: center;
+  }
+
+  .case-card {
+    background: rgba(27, 111, 238, 0.05);
+    border-left: 4px solid var(--blue);
+    border-radius: 14px;
+    padding: 2.5rem 3rem;
+    margin-top: 1.5rem;
+    width: 100%;
+    position: relative;
+    text-align: left;
+  }
+
+  .case-card::before {
+    content: '\201C';
+    position: absolute;
+    top: 1rem;
+    left: 2rem;
+    font-family: Georgia, serif;
+    font-size: 5rem;
+    color: var(--blue);
+    opacity: 0.15;
+    line-height: 1;
+  }
+
+  .case-quote {
+    font-family: var(--font-body);
+    font-size: 1.18rem;
+    color: var(--charcoal);
+    line-height: 1.8;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+
+  .case-results {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    width: 100%;
+  }
+
+  .case-result {
+    flex: 1;
+    text-align: center;
+  }
+
+  .case-result .number {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--blue);
+    line-height: 1;
+  }
+
+  .case-result .label {
+    font-size: 0.9rem;
+    color: var(--slate);
+    margin-top: 0.3rem;
+  }
+
+  /* ============================================================
+     SLIDE 10: WHAT'S INCLUDED
+     ============================================================ */
+  .features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    width: 100%;
+  }
+
+  .feature-card {
+    background: var(--light-gray);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.8rem;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--blue);
+  }
+
+  .feature-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--cloud);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+
+  .feature-desc {
+    font-size: 0.95rem;
+    color: var(--slate);
+    line-height: 1.6;
+  }
+
+  /* ============================================================
+     SLIDE 11: DESIGN PARTNER PROGRAM
+     ============================================================ */
+  .partner-grid {
+    display: flex;
+    gap: 3rem;
+    margin-top: 2rem;
+    width: 100%;
+    justify-content: center;
+    align-items: flex-start;
+    flex: 1;
+  }
+
+  .partner-col {
+    flex: 1;
+  }
+
+  .partner-col h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
+    color: var(--blue);
+  }
+
+  .partner-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    list-style: none;
+  }
+
+  .partner-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    font-size: 1.25rem;
+    color: var(--charcoal);
+    line-height: 1.5;
+  }
+
+  .partner-list .icon {
+    flex-shrink: 0;
+    font-size: 1rem;
+    margin-top: 2px;
+  }
+
+  /* ============================================================
+     SLIDE 12: CTA
+     ============================================================ */
+  .slide-cta {
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    padding-top: 4rem;
+  }
+
+  .slide-cta::before {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background:
+      radial-gradient(ellipse at 30% 70%, rgba(27,111,238,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 30%, rgba(27,111,238,0.04) 0%, transparent 50%);
+  }
+
+  .cta-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 2rem 0 2.5rem;
+  }
+
+  .cta-step {
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    color: var(--charcoal);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    justify-content: flex-start;
+  }
+
+  .cta-step .arrow {
+    color: var(--blue);
+    font-weight: 800;
+    font-family: var(--font-display);
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: var(--blue);
+    color: var(--white);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 1rem 3rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 20px rgba(27,111,238,0.3);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(27,111,238,0.4);
+  }
+
+  .cta-contact {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: var(--slate);
+  }
+
+  .cta-contact a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .cta-partners {
+    width: 100%;
+    margin: 0 0 2rem;
+  }
+
+  .cta-partners-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+
+  .cta-partner-logos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 220px));
+    gap: 1rem;
+  }
+
+  .cta-partner-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 92px;
+    padding: 1rem 1.25rem;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.82);
+    border: 1px solid var(--border);
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+  }
+
+  .cta-partner-card img {
+    max-width: 100%;
+    max-height: 120px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* ============================================================
+     INVESTOR SLIDES: FOUNDER INTRO + ROADMAP
+     ============================================================ */
+  .founder-intro-layout {
+    display: grid;
+    grid-template-columns: 430px minmax(0, 1fr);
+    gap: 2rem;
+    align-items: center;
+    width: 100%;
+    margin-top: 0.6rem;
+    flex: 1;
+  }
+
+  .founder-intro-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 1.5rem;
+  }
+
+  .founder-intro-copy .slide-title {
+    max-width: 100%;
+    margin-bottom: 0.9rem;
+  }
+
+  .founder-intro-summary {
+    max-width: 820px;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--charcoal);
+    margin-bottom: 1.25rem;
+  }
+
+  .founder-profile-card {
+    position: relative;
+    background:
+      linear-gradient(145deg, rgba(27,111,238,0.08), rgba(27,111,238,0.02)),
+      var(--white);
+    border: 1px solid rgba(27,111,238,0.18);
+    border-radius: 28px;
+    padding: 1rem;
+    box-shadow: 0 22px 56px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .founder-profile-card::before {
+    content: '';
+    position: absolute;
+    inset: auto -20% -25% auto;
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, rgba(27,111,238,0.16) 0%, rgba(27,111,238,0) 72%);
+    pointer-events: none;
+  }
+
+  .founder-profile-image {
+    width: 100%;
+    aspect-ratio: 4 / 3.2;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 22px;
+    display: block;
+  }
+
+  .founder-roadmap {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .roadmap-track {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.9rem;
+    margin-top: 0.35rem;
+    min-height: 25rem;
+    align-items: start;
+  }
+
+  .roadmap-track::before {
+    content: '';
+    position: absolute;
+    top: 11.1rem;
+    left: 0;
+    right: 1.5rem;
+    height: 14px;
+    border-radius: 999px;
+    background:
+      linear-gradient(90deg,
+        rgba(27,111,238,0.16) 0%,
+        rgba(27,111,238,0.32) 38%,
+        rgba(27,111,238,0.58) 72%,
+        rgba(27,111,238,0.9) 100%);
+    clip-path: polygon(0 35%, 74% 35%, 88% 18%, 100% 50%, 88% 82%, 74% 65%, 0 65%);
+    box-shadow: 0 10px 24px rgba(27,111,238,0.16);
+  }
+
+  .roadmap-track::after {
+    content: '';
+    position: absolute;
+    top: 10.84rem;
+    right: 0.1rem;
+    width: 0;
+    height: 0;
+    border-top: 13px solid transparent;
+    border-bottom: 13px solid transparent;
+    border-left: 24px solid var(--blue);
+    filter: drop-shadow(0 8px 16px rgba(27,111,238,0.24));
+  }
+
+  .roadmap-step {
+    position: relative;
+    min-height: 25rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .roadmap-step:nth-child(odd) {
+    justify-content: flex-start;
+    padding-bottom: 13rem;
+  }
+
+  .roadmap-step:nth-child(even) {
+    justify-content: flex-end;
+    padding-top: 13rem;
+  }
+
+  .roadmap-flag {
+    position: absolute;
+    top: 9.1rem;
+    left: 0.1rem;
+    width: 18px;
+    height: 26px;
+    border-left: 2px solid var(--deep-blue);
+  }
+
+  .roadmap-flag::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    width: 17px;
+    height: 11px;
+    background: var(--blue);
+    clip-path: polygon(0 0, 100% 0, 76% 50%, 100% 100%, 0 100%);
+    box-shadow: 0 4px 12px rgba(27,111,238,0.25);
+  }
+
+  .roadmap-year {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: var(--ink);
+    margin-left: 1.9rem;
+  }
+
+  .roadmap-step:nth-child(odd) .roadmap-card {
+    order: 1;
+    margin-bottom: 1rem;
+  }
+
+  .roadmap-step:nth-child(odd) .roadmap-year {
+    order: 2;
+    margin-bottom: 0;
+  }
+
+  .roadmap-step:nth-child(even) .roadmap-year {
+    order: 1;
+    margin-bottom: 0.75rem;
+  }
+
+  .roadmap-step:nth-child(even) .roadmap-card {
+    order: 2;
+  }
+
+  .roadmap-card {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.9rem 0.9rem 1rem;
+    min-height: 156px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+  }
+
+  .roadmap-card-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 0.45rem;
+  }
+
+  .roadmap-card-text {
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--charcoal);
+  }
+
+  .roadmap-card-text strong {
+    color: var(--ink);
+  }
+
+  /* ============================================================
+     INVESTOR SLIDE: AI EVOLUTION
+     ============================================================ */
+  .evolution-layout {
+    flex: 1;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    min-height: 0;
+  }
+
+  .evolution-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    min-height: 0;
+  }
+
+  .evolution-graph-card {
+    width: 100%;
+    position: relative;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 1.75rem 2rem 1.5rem;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+    overflow: hidden;
+  }
+
+  .evolution-graph-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right, rgba(226,232,240,0.65) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(226,232,240,0.65) 1px, transparent 1px);
+    background-size: 16.66% 25%;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  .evolution-graph {
+    width: 100%;
+    position: relative;
+    aspect-ratio: 1000 / 420;
+    z-index: 1;
+  }
+
+  .evolution-axis-y {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 2.8rem;
+    width: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--slate);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  .evolution-plot {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .evolution-gap {
+    fill: rgba(59, 130, 246, 0.12);
+  }
+
+  .evolution-line {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .evolution-line--hype {
+    stroke: #2563eb;
+    stroke-width: 5;
+  }
+
+  .evolution-line--reliability {
+    stroke: #ef4444;
+    stroke-width: 4;
+    stroke-dasharray: 8 6;
+  }
+
+  .evolution-line-label {
+    position: absolute;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0.55rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    white-space: nowrap;
+  }
+
+  .evolution-line-label.hype {
+    color: var(--blue);
+    right: 40px;
+    top: 20px;
+  }
+
+  .evolution-line-label.reliability {
+    color: var(--red);
+    left: 40px;
+    bottom: 90px;
+  }
+
+  .evolution-gap-label {
+    position: absolute;
+    left: 52%;
+    top: 38%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.9);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 15px;
+    color: #1e3a8a;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+
+  .evolution-years {
+    position: absolute;
+    left: 3.7rem;
+    right: 0.6rem;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.94rem;
+    color: var(--slate);
+    text-align: center;
+  }
+
+  .evolution-insight {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  .evolution-signal-card {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 0.9rem 1.2rem;
+    box-shadow: 0 14px 36px rgba(15, 23, 42, 0.06);
+  }
+
+  .evolution-signal-label {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 0.75rem;
+  }
+
+  .evolution-signal-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+  }
+
+  .evolution-emoji {
+    font-size: 1.65rem;
+    letter-spacing: 0.2rem;
+    margin: 0.4rem 0 0.2rem;
+  }
+
+  .evolution-emoji.up {
+    color: var(--blue);
+  }
+
+  .evolution-emoji.down {
+    color: var(--red);
+  }
+
+  .evolution-note {
+    background: linear-gradient(135deg, rgba(27,111,238,0.08), rgba(27,111,238,0.02));
+    border: 1px solid rgba(27,111,238,0.16);
+    border-radius: 24px;
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .evolution-note-title {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 0.8rem;
+  }
+
+  .evolution-note-copy {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--charcoal);
+  }
+
+  /* ============================================================
+     INVESTOR SLIDE: MICROSOFT LEARNINGS
+     ============================================================ */
+  .learning-flow {
+    flex: 1;
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 0.75rem;
+    margin-top: 0.4rem;
+  }
+
+  .learning-steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: stretch;
+    position: relative;
+  }
+
+  .learning-step {
+    position: relative;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 0.9rem 1rem;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+    min-height: 170px;
+  }
+
+  .learning-step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--blue);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 800;
+    z-index: 2;
+  }
+
+  .learning-step-icon {
+    font-size: 1.3rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .learning-step-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 0.55rem;
+  }
+
+  .learning-step-title {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  .learning-step-points {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .learning-step-points li {
+    font-size: 1rem;
+    line-height: 1.45;
+    color: var(--charcoal);
+  }
+
+  .learning-step-points strong {
+    color: var(--orange);
+  }
+
+  .learning-step--warning {
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFF7F5 100%);
+    border-color: rgba(249,115,22,0.18);
+  }
+
+  .learning-step--warning .learning-step-title {
+    color: var(--orange);
+  }
+
+  .learning-step--attempt {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+  }
+
+  .learning-step--breakthrough {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F1F7FF 100%);
+    border-color: rgba(27,111,238,0.18);
+  }
+
+  .learning-step--breakthrough .learning-step-title {
+    color: var(--blue);
+  }
+
+  .learning-bottom {
+    display: grid;
+    grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.2fr);
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  .learning-result-card {
+    background: linear-gradient(135deg, rgba(27,111,238,0.1), rgba(27,111,238,0.02));
+    border: 1px solid rgba(27,111,238,0.18);
+    border-radius: 28px;
+    padding: 1.5rem;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .learning-result-label {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 0.75rem;
+  }
+
+  .learning-result-title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 0.85rem;
+  }
+
+  .learning-result-metric {
+    font-family: var(--font-display);
+    font-size: 2.9rem;
+    line-height: 1.05;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .learning-result-metric .from {
+    color: var(--slate);
+  }
+
+  .learning-result-metric .to {
+    color: var(--blue);
+  }
+
+  .learning-result-subtext {
+    margin-top: 0.75rem;
+    font-size: 1.04rem;
+    color: var(--charcoal);
+  }
+
+  .learning-insight-card {
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF7 100%);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 28px;
+    padding: 1.55rem 1.7rem;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .learning-insight-label {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 0.8rem;
+  }
+
+  .learning-insight-quote {
+    font-family: var(--font-display);
+    font-size: 1.65rem;
+    line-height: 1.25;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+
+  .learning-insight-copy {
+    font-size: 1.06rem;
+    line-height: 1.75;
+    color: var(--charcoal);
+  }
+
+  /* ============================================================
+     INVESTOR SLIDE: DECISION TREE
+     ============================================================ */
+  .tree-slide-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+    gap: 1.5rem;
+    align-items: stretch;
+    margin-top: 0.75rem;
+  }
+
+  .tree-visual-card {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 1.5rem 1.5rem 1.25rem;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .tree-svg-wrap {
+    width: 100%;
+    border-radius: 22px;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(27,111,238,0.08), transparent 35%),
+      linear-gradient(180deg, #FFFFFF 0%, #FBFDFF 100%);
+    border: 1px solid rgba(27,111,238,0.08);
+    padding: 0.75rem;
+  }
+
+  .tree-caption {
+    margin-top: 1rem;
+    font-size: 0.96rem;
+    line-height: 1.7;
+    color: var(--charcoal);
+  }
+
+  .tree-caption strong {
+    color: var(--ink);
+  }
+
+  .tree-copy-panel {
+    display: grid;
+    grid-template-rows: auto auto auto;
+    gap: 1rem;
+  }
+
+  .tree-message-card,
+  .tree-bottom-card,
+  .tree-compare-card {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 1.35rem 1.4rem;
+    box-shadow: 0 14px 36px rgba(15, 23, 42, 0.05);
+  }
+
+  .tree-message-card {
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFF8F6 100%);
+    border-color: rgba(239,68,68,0.14);
+  }
+
+  .tree-card-label {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 0.7rem;
+  }
+
+  .tree-message-title {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    line-height: 1.25;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 0.7rem;
+  }
+
+  .tree-message-title .warn {
+    color: var(--red);
+  }
+
+  .tree-message-copy,
+  .tree-bottom-copy,
+  .tree-compare-copy {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--charcoal);
+  }
+
+  .tree-bottom-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    line-height: 1.3;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 0.65rem;
+  }
+
+  .tree-compare-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    margin-top: 0.3rem;
+  }
+
+  .tree-compare-row {
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 0.95rem 1rem;
+    background: var(--white);
+  }
+
+  .tree-compare-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 0.35rem;
+  }
+
+  .tree-compare-flow {
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: var(--slate);
+  }
+
+  /* ============================================================
+     INVESTOR SLIDE: PLATFORM STACK
+     ============================================================ */
+  .stack-slide-layout {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.35rem;
+    min-height: 0;
+  }
+
+  .stack-frame {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    padding: 1.2rem 1.35rem 1.35rem;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+  }
+
+  .stack-frame-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .stack-frame-title {
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    line-height: 1.1;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .stack-frame-title .blue {
+    color: var(--blue);
+  }
+
+  .stack-frame-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    padding: 0.5rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(27,111,238,0.08);
+    border: 1px solid rgba(27,111,238,0.12);
+    white-space: nowrap;
+  }
+
+  .stack-grid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .stack-visual {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-height: 0;
+  }
+
+  .stack-group {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 0.8rem;
+    align-items: stretch;
+    min-height: 0;
+  }
+
+  .stack-brace {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .stack-brace svg {
+    width: 44px;
+    height: 100%;
+    display: block;
+  }
+
+  .stack-group-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .stack-group-title {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 0.1rem;
+  }
+
+  .stack-layer {
+    position: relative;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+    box-shadow: 0 14px 36px rgba(15, 23, 42, 0.05);
+  }
+
+  .stack-layer-label {
+    display: inline-block;
+    margin-bottom: 0.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate);
+  }
+
+  .stack-layer-name {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .stack-layer.current {
+    background: linear-gradient(135deg, rgba(27,111,238,0.12), rgba(27,111,238,0.04));
+    border-color: rgba(27,111,238,0.22);
+  }
+
+  .stack-layer.current .stack-layer-name {
+    color: var(--blue);
+  }
+
+  .stack-layer.evaluation {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+  }
+
+  .stack-layer.optimization {
+    background: linear-gradient(180deg, #FFFFFF 0%, #FCFDFF 100%);
+  }
+
+  .stack-layer.trust {
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFFCF5 100%);
+  }
+
+  /* ============================================================
+     INVESTOR SLIDE: QUALITY INFRA ROADMAP
+     ============================================================ */
+  .infra-roadmap-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(300px, 1.05fr);
+    gap: 1rem;
+    align-items: stretch;
+    margin-top: 0.4rem;
+  }
+
+  .infra-stack-card,
+  .infra-roadmap-card {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+  }
+
+  .infra-stack-card {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .infra-stack-label,
+  .infra-roadmap-label {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate);
+  }
+
+  .infra-layer {
+    border-radius: 18px;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--border);
+  }
+
+  .infra-layer .layer-name {
+    font-family: var(--font-display);
+    font-size: 1.02rem;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+
+  .infra-layer .layer-copy {
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--charcoal);
+  }
+
+  .infra-layer.trust {
+    background: linear-gradient(180deg, #FFF9ED 0%, #FFFFFF 100%);
+    border-color: rgba(245,158,11,0.22);
+  }
+
+  .infra-layer.optimization {
+    background: linear-gradient(180deg, #F3F8FF 0%, #FFFFFF 100%);
+    border-color: rgba(27,111,238,0.22);
+  }
+
+  .infra-layer.evaluation {
+    background: linear-gradient(180deg, #F8FBFF 0%, #FFFFFF 100%);
+    border-color: rgba(59,130,246,0.18);
+  }
+
+  .infra-layer.release {
+    background: linear-gradient(180deg, #F5FBFF 0%, #FFFFFF 100%);
+    border-color: rgba(14,165,233,0.2);
+  }
+
+  .infra-layer.data {
+    background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+    border-color: rgba(100,116,139,0.2);
+  }
+
+  .infra-layer.foundation {
+    background: linear-gradient(135deg, rgba(27,111,238,0.12), rgba(27,111,238,0.04));
+    border-color: rgba(27,111,238,0.25);
+  }
+
+  .infra-roadmap-card {
+    padding: 1.35rem 1.35rem 1.2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .infra-roadmap-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .infra-roadmap-title {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    line-height: 1.15;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .infra-roadmap-title .blue {
+    color: var(--blue);
+  }
+
+  .infra-roadmap-copy {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--charcoal);
+    max-width: 430px;
+  }
+
+  .infra-svg-wrap {
+    margin-top: 0.5rem;
+    border-radius: 24px;
+    background:
+      radial-gradient(circle at 50% 100%, rgba(27,111,238,0.08), transparent 42%),
+      linear-gradient(180deg, #FFFFFF 0%, #FBFDFF 100%);
+    border: 1px solid rgba(27,111,238,0.08);
+    padding: 0.85rem;
+  }
+
+  /* ============================================================
+     INVESTOR SLIDE: OBSERVABILITY VS QUALITY
+     ============================================================ */
+  .quality-compare-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 90px minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1rem;
+  }
+
+  .quality-compare-card {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 1.5rem;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+    min-height: 100%;
+  }
+
+  .quality-compare-label {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 0.9rem;
+  }
+
+  .quality-compare-title {
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    line-height: 1.15;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+
+  .quality-compare-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .quality-pill {
+    border-radius: 18px;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--border);
+    background: var(--white);
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .quality-pill.obs {
+    background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+  }
+
+  .quality-pill.eval {
+    background: linear-gradient(180deg, #F8FBFF 0%, #FFFFFF 100%);
+    border-color: rgba(59,130,246,0.18);
+  }
+
+  .quality-pill.gov {
+    background: linear-gradient(180deg, #FFF9ED 0%, #FFFFFF 100%);
+    border-color: rgba(245,158,11,0.2);
+  }
+
+  .quality-equals {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .quality-equals-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(27,111,238,0.12), rgba(27,111,238,0.03));
+    border: 1px solid rgba(27,111,238,0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--blue);
+  }
+
+  .quality-equals-text {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate);
+    text-align: center;
+  }
+
+  /* ============================================================
+     INVESTOR SLIDE: LANDSCAPE POSITIONING
+     ============================================================ */
+  .landscape-layout {
+    flex: 1;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    min-height: 0;
+    gap: 1.25rem;
+    margin-top: 0.75rem;
+  }
+
+  .landscape-card {
+    position: relative;
+    border-radius: 28px;
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+    padding: 2rem 2rem 1.5rem;
+    overflow: hidden;
+  }
+
+  .landscape-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right, rgba(226,232,240,0.6) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(226,232,240,0.6) 1px, transparent 1px);
+    background-size: 20% 20%;
+    opacity: 0.65;
+    pointer-events: none;
+  }
+
+  .landscape-chart {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    min-height: 320px;
+  }
+
+  .landscape-y-label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 4.2rem;
+    width: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--font-mono);
+    color: var(--slate);
+  }
+
+  .landscape-axis-x {
+    position: absolute;
+    left: 4.5rem;
+    right: 1.5rem;
+    bottom: 2.8rem;
+    height: 4px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(15,23,42,0.18), rgba(15,23,42,0.8));
+  }
+
+  .landscape-axis-x::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: -6px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 14px solid var(--ink);
+  }
+
+  .landscape-axis-y {
+    position: absolute;
+    left: 4.5rem;
+    top: 1.2rem;
+    bottom: 2.8rem;
+    width: 4px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(15,23,42,0.18), rgba(15,23,42,0.8));
+  }
+
+  .landscape-axis-y::after {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: -1px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 14px solid var(--ink);
+  }
+
+  .landscape-x-labels {
+    position: absolute;
+    left: 4.5rem;
+    right: 1.2rem;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    color: var(--slate);
+  }
+
+  .landscape-bubbles {
+    position: absolute;
+    left: 6.7rem;
+    right: 2rem;
+    top: 2.2rem;
+    bottom: 5rem;
+  }
+
+  .landscape-bubble {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .landscape-dot {
+    border-radius: 999px;
+    flex-shrink: 0;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.14);
+    border: 3px solid rgba(255,255,255,0.95);
+  }
+
+  .landscape-bubble-name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+
+  .landscape-bubble-copy {
+    color: var(--slate);
+    line-height: 1.35;
+    margin-top: 0.15rem;
+  }
+
+  .landscape-bubble.evaluation .landscape-dot { background: #2563eb; }
+  .landscape-bubble.observability .landscape-dot { background: #7c3aed; }
+  .landscape-bubble.agent .landscape-dot { background: #f97316; }
+  .landscape-bubble.infrastructure .landscape-dot { background: #16a34a; }
+
+  .landscape-bubble.promptfoo { left: 12%; bottom: 19%; }
+  .landscape-bubble.ragas { left: 2%; bottom: 6%; }
+  .landscape-bubble.braintrust { left: 27%; bottom: 34%; }
+  .landscape-bubble.arize { left: 42%; bottom: 48%; }
+  .landscape-bubble.futureagi { left: 55%; bottom: 50%; }
+  .landscape-bubble.supaeval { left: 65%; bottom: 80%; }
+
+  .landscape-bubble.promptfoo .landscape-dot { width: 28px; height: 28px; }
+  .landscape-bubble.ragas .landscape-dot { width: 34px; height: 34px; }
+  .landscape-bubble.braintrust .landscape-dot { width: 40px; height: 40px; }
+  .landscape-bubble.arize .landscape-dot { width: 46px; height: 46px; }
+  .landscape-bubble.futureagi .landscape-dot { width: 52px; height: 52px; }
+  .landscape-bubble.supaeval .landscape-dot { width: 72px; height: 72px; }
+
+  .landscape-bubble.supaeval .landscape-bubble-name {
+    color: var(--green);
+  }
+
+  .landscape-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 1.25rem;
+    z-index: 1;
+    position: relative;
+  }
+
+  .landscape-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.84);
+    border: 1px solid var(--border);
+    color: var(--charcoal);
+  }
+
+  .landscape-legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .landscape-legend-item.blue .landscape-legend-swatch { background: #2563eb; }
+  .landscape-legend-item.purple .landscape-legend-swatch { background: #7c3aed; }
+  .landscape-legend-item.orange .landscape-legend-swatch { background: #f97316; }
+  .landscape-legend-item.green .landscape-legend-swatch { background: #16a34a; }
+
+  .landscape-insight {
+    border-radius: 24px;
+    border: 1px solid rgba(27,111,238,0.15);
+    background: linear-gradient(135deg, rgba(27,111,238,0.08), rgba(27,111,238,0.02));
+    padding: 0.75rem 1.25rem;
+  }
+
+  .landscape-insight-strong {
+    font-family: var(--font-display);
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 0.45rem;
+  }
+
+  .landscape-insight-copy {
+    color: var(--charcoal);
+    line-height: 1.5;
+  }
+
+  /* ============================================================
+     ANIMATIONS
+     ============================================================ */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .slide.visible .section-label { animation: fadeInUp 0.5s ease forwards; }
+  .slide.visible .slide-title { animation: fadeInUp 0.5s ease 0.1s forwards; }
+  .slide.visible .slide-subtitle { animation: fadeInUp 0.5s ease 0.2s forwards; }
+
+  /* Initially hidden for animation */
+  .slide .section-label,
+  .slide .slide-title,
+  .slide .slide-subtitle {
+    opacity: 0;
+  }
+
+  .slide.visible .section-label,
+  .slide.visible .slide-title,
+  .slide.visible .slide-subtitle {
+    opacity: 1;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Navigation Dots -->
+<nav class="nav-dots" id="navDots"></nav>
+<div class="key-hint visible" id="keyHint">↓ scroll or arrow keys to navigate</div>
+
+<!-- ============================================================
+     SLIDE 1: TITLE
+     ============================================================ -->
+<section class="slide slide-title-page visible" data-slide="0">
+  <div class="brand-pill">AI Agent Evaluation Platform</div>
+  <div class="brand-name"><span class="supa">supa</span><span class="eval">eval</span></div>
+  <div class="brand-tagline">Pinpoint where your AI agents are failing.</div>
+  <div class="brand-contact">
+    <a href="mailto:imran@supaeval.com">imran@supaeval.com</a> &nbsp;|&nbsp; <a href="https://supaeval.com">supaeval.com</a>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 2: FOUNDER INTRO
+     ============================================================ -->
+<section class="slide" data-slide="1">
+  <div class="section-label">Founder Intro</div>
+  <div class="founder-intro-layout">
+    <div class="founder-profile-card">
+      <img class="founder-profile-image" src="./founder-image.png" alt="Imran, founder of SupaEval">
+    </div>
+    <div class="founder-intro-copy">
+      <div class="slide-title">Hi, I'm Imran. <span class="blue">1X Failed Entrepreneur | AI Engineer | Start-up Mentor</span></div>
+      <div class="founder-intro-summary">
+      
+      </div>
+      <div class="founder-roadmap">
+        <div class="roadmap-track">
+          <div class="roadmap-step">
+            <div class="roadmap-flag"></div>
+            <div class="roadmap-year">2013</div>
+            <div class="roadmap-card">
+              <div class="roadmap-card-title">NIT Warangal</div>
+              <div class="roadmap-card-text">Founded Aashayam - an NGO <strong>impacted 10000+ poor students </strong></div>
+            </div>
+          </div>
+          <div class="roadmap-step">
+            <div class="roadmap-flag"></div>
+            <div class="roadmap-year">2013-2015</div>
+            <div class="roadmap-card">
+              <div class="roadmap-card-title">FactSet Research</div>
+              <div class="roadmap-card-text"><strong>3 promotions in 2 years</strong> </div>
+              <div class="roadmap-card-text"><strong>Large scale data systems</strong> </div>
+            </div>
+          </div>
+          <div class="roadmap-step">
+            <div class="roadmap-flag"></div>
+            <div class="roadmap-year">2015 to 2017</div>
+            <div class="roadmap-card">
+              <div class="roadmap-card-title">Founder: Ad Wagons</div>
+              <div class="roadmap-card-text"><strong>5 cities | 200+ clients | $100K ARR</strong> Scale challenges</div>
+            </div>
+          </div>
+          <div class="roadmap-step">
+            <div class="roadmap-flag"></div>
+            <div class="roadmap-year">2025</div>
+            <div class="roadmap-card">
+              <div class="roadmap-card-title">Enterprise + AI Systems</div>
+              <div class="roadmap-card-text">  <strong>Microsoft | Seismic | Entain Games </strong></div>
+            </div>
+          </div>
+          <div class="roadmap-step">
+            <div class="roadmap-flag"></div>
+            <div class="roadmap-year">2026</div>
+            <div class="roadmap-card">
+              <div class="roadmap-card-title">SupaEval</div>
+              <div class="roadmap-card-text">On a mission to make <strong>AI agents reliable</strong> </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">02</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 3: AI EVOLUTION
+     ============================================================ -->
+<section class="slide" data-slide="2">
+  <div class="section-label">Market Timing</div>
+  <div class="slide-title">Enterprise AI Investment is Huge <span class="blue">→ But Production Success Still Lags</span></div>
+
+  <div class="evolution-layout">
+    <div class="evolution-container">
+      <div class="evolution-graph-card">
+        <div class="evolution-graph">
+          <div class="evolution-axis-y">Signal Strength</div>
+          <svg class="evolution-plot" viewBox="0 0 1000 420" preserveAspectRatio="none" aria-hidden="true">
+            <path class="evolution-gap"
+              d="M20 300 
+                 C 200 260, 380 180, 560 110 
+                 S 820 50, 980 25
+                 L980 255
+                 C 820 265, 600 275, 400 285
+                 S 200 295, 20 300
+                 Z"></path>
+            <path class="evolution-line evolution-line--hype"
+              d="M20 300 C 200 260, 380 180, 560 110 S 820 50, 980 25"></path>
+            <path class="evolution-line evolution-line--reliability"
+              d="M20 300 C 200 295, 400 285, 600 275 S 820 265, 980 255"></path>
+          </svg>
+          <div class="evolution-line-label hype">AI Investment / Hype</div>
+          <div class="evolution-line-label reliability">Production Reliability</div>
+          <div class="evolution-gap-label">AI Reliability Gap</div>
+          <div class="evolution-years">
+            <span>2023</span>
+            <span>2024</span>
+            <span>2025</span>
+            <span>2026</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evolution-insight">
+      <div class="evolution-signal-card">
+        <div class="evolution-signal-label">Observed Trend</div>
+        <div class="evolution-signal-title">AI Investment / Hype</div>
+        <div class="evolution-emoji up">📈📈📈📈📈</div>
+        <div class="roadmap-card-text">2023 → 2026</div>
+      </div>
+      <!-- <div class="evolution-note">
+        <div class="evolution-note-title">Companies are racing ahead on AI spend while production trust still lags behind.</div>
+        <div class="evolution-note-copy">AI excitement and investment keep rising, but real production systems still break under noisy data, edge cases, and inconsistent agent behavior.</div>
+      </div> -->
+      <div class="evolution-signal-card">
+        <div class="evolution-signal-label">Reality Check</div>
+        <div class="evolution-signal-title">Production reliability</div>
+        <div class="evolution-emoji down">📉📉📉</div>
+        <div class="roadmap-card-text">Production systems still fail frequently.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">03</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 9: DECISION TREE
+     ============================================================ -->
+<section class="slide" data-slide="8">
+  <div class="section-label">Complexity Explosion</div>
+  <div class="slide-title">Final agent response could come from <span class="blue">dozens of hidden decisions.</span></div>
+
+  <div class="tree-slide-layout">
+    <div class="tree-visual-card">
+      <div class="tree-svg-wrap">
+        <svg width="100%" viewBox="0 0 760 610" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="treeLine" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1B6FEE"/>
+              <stop offset="100%" stop-color="#93C5FD"/>
+            </linearGradient>
+          </defs>
+
+          <path d="M380 82 L380 126" stroke="url(#treeLine)" stroke-width="4" stroke-linecap="round"/>
+          <path d="M380 174 L380 220" stroke="url(#treeLine)" stroke-width="4" stroke-linecap="round"/>
+
+          <path d="M380 268 C340 302, 250 330, 160 354" stroke="url(#treeLine)" stroke-width="4" stroke-linecap="round"/>
+          <path d="M380 268 C380 306, 380 328, 380 354" stroke="url(#treeLine)" stroke-width="4" stroke-linecap="round"/>
+          <path d="M380 268 C420 302, 510 330, 600 354" stroke="url(#treeLine)" stroke-width="4" stroke-linecap="round"/>
+
+          <path d="M160 402 L160 454" stroke="#93C5FD" stroke-width="4" stroke-linecap="round"/>
+          <path d="M380 402 L380 454" stroke="#93C5FD" stroke-width="4" stroke-linecap="round"/>
+          <path d="M600 402 L600 454" stroke="#93C5FD" stroke-width="4" stroke-linecap="round"/>
+
+          <path d="M160 502 C210 520, 288 536, 360 548" stroke="#CBD5E1" stroke-width="4" stroke-linecap="round"/>
+          <path d="M380 502 C390 518, 396 530, 400 548" stroke="#CBD5E1" stroke-width="4" stroke-linecap="round"/>
+          <path d="M600 502 C550 520, 472 536, 400 548" stroke="#CBD5E1" stroke-width="4" stroke-linecap="round"/>
+
+          <rect x="300" y="34" width="160" height="48" rx="16" fill="#0F172A"/>
+          <text x="380" y="64" text-anchor="middle" font-family="Outfit, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">User Query</text>
+
+          <rect x="315" y="126" width="130" height="48" rx="16" fill="#E8F1FD" stroke="#1B6FEE" stroke-width="2.5"/>
+          <text x="380" y="156" text-anchor="middle" font-family="Outfit, sans-serif" font-size="22" font-weight="700" fill="#1B6FEE">Intent</text>
+
+          <rect x="292" y="220" width="176" height="48" rx="16" fill="#E8F1FD" stroke="#1B6FEE" stroke-width="2.5"/>
+          <text x="380" y="250" text-anchor="middle" font-family="Outfit, sans-serif" font-size="22" font-weight="700" fill="#1B6FEE">Reasoning</text>
+
+          <rect x="88" y="354" width="144" height="48" rx="16" fill="#FFFFFF" stroke="#1B6FEE" stroke-width="2.5"/>
+          <text x="160" y="384" text-anchor="middle" font-family="Outfit, sans-serif" font-size="20" font-weight="700" fill="#0F172A">Retrieval</text>
+
+          <rect x="314" y="354" width="132" height="48" rx="16" fill="#FFFFFF" stroke="#1B6FEE" stroke-width="2.5"/>
+          <text x="380" y="384" text-anchor="middle" font-family="Outfit, sans-serif" font-size="20" font-weight="700" fill="#0F172A">Tool</text>
+
+          <rect x="528" y="354" width="144" height="48" rx="16" fill="#FFFFFF" stroke="#1B6FEE" stroke-width="2.5"/>
+          <text x="600" y="384" text-anchor="middle" font-family="Outfit, sans-serif" font-size="20" font-weight="700" fill="#0F172A">Memory</text>
+
+          <rect x="90" y="454" width="140" height="48" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+          <text x="160" y="484" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="18" font-weight="600" fill="#475569">Documents</text>
+
+          <rect x="320" y="454" width="120" height="48" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+          <text x="380" y="484" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="18" font-weight="600" fill="#475569">API</text>
+
+          <rect x="530" y="454" width="140" height="48" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+          <text x="600" y="484" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="18" font-weight="600" fill="#475569">Context</text>
+
+          <rect x="284" y="548" width="232" height="50" rx="18" fill="#FEF2F2" stroke="#EF4444" stroke-width="2.5"/>
+          <text x="400" y="579" text-anchor="middle" font-family="Outfit, sans-serif" font-size="21" font-weight="800" fill="#EF4444">Final Response  X</text>
+
+          <text x="510" y="188" font-family="JetBrains Mono, monospace" font-size="15" font-weight="600" fill="#64748B">Intent ?</text>
+          <text x="540" y="286" font-family="JetBrains Mono, monospace" font-size="15" font-weight="600" fill="#64748B">Reasoning ?</text>
+          <text x="30" y="432" font-family="JetBrains Mono, monospace" font-size="15" font-weight="600" fill="#64748B">Retrieval ?</text>
+          <text x="336" y="432" font-family="JetBrains Mono, monospace" font-size="15" font-weight="600" fill="#64748B">Tool ?</text>
+          <text x="614" y="432" font-family="JetBrains Mono, monospace" font-size="15" font-weight="600" fill="#64748B">Memory ?</text>
+          <text x="560" y="520" font-family="JetBrains Mono, monospace" font-size="15" font-weight="600" fill="#64748B">Prompt ?</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="tree-copy-panel">
+      <div class="tree-message-card">
+        <div class="tree-card-label">Message</div>
+        <div class="tree-message-title"><span class="warn">⚠️ Teams only see the wrong answer</span></div>
+        <div class="tree-message-copy">What broke could be intent classification, retrieval quality, tool execution, memory state, prompt design, or reasoning itself. The visible symptom is only the last node.</div>
+      </div>
+
+      <div class="tree-bottom-card">
+        <div class="tree-card-label">Bottom Line</div>
+        <div class="tree-bottom-title">Debugging AI agents today is hard across dozens of decision paths.</div>
+        <div class="tree-bottom-copy">Tree-shaped debugging explodes fast Prod because each branch creates another place for silent failure.</div>
+      </div>
+
+      <div class="tree-compare-card">
+        <div class="tree-compare-grid">
+          <div class="tree-compare-row">
+            <div class="tree-compare-title">Traditional software</div>
+            <div class="tree-compare-flow">Input → Logic → Output</div>
+          </div>
+          <!-- <div class="tree-compare-row">
+            <div class="tree-compare-title">AI agents</div>
+            <div class="tree-compare-flow">Input → Intent → Reasoning
+↙ Retrieval   ↓ Tool   ↘ Memory
+→ Documents   → API    → Context</div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">04</div>
+</section>
+<!-- ============================================================
+     SLIDE 7: THE BIG SHIFT (text-forward)
+     ============================================================ -->
+<section class="slide" data-slide="6">
+  <div class="section-label">The Problem</div>
+  <div class="slide-title">Enterprise agents are failing silently production  <span class="blue"> - unable to pinpoint what's actually breaking.</span></div>
+
+  <div class="slide-2-layout">
+    <div class="slide-2-left">
+      <div class="narrative-block">
+        <div class="narrative-beat">
+          <span class="stat-inline">Quality</span> is the <span class="stat-inline">#1 barrier</span> to adopting AI agents - <span class="keyword-red">not cost.</span>
+        </div>
+        <div class="narrative-beat">
+          <span class="stat-inline">Trust</span> and <span class="stat-inline">accuracy</span> beat everything else.
+        </div>
+        <div class="narrative-beat">
+          <span class="stat-inline">Yet</span> most teams are still evaluating with <span class="keyword-red">ad-hoc, manual methods.</span>
+        </div>
+      </div>
+    </div>
+    <div class="slide-2-right">
+      <div class="stat-card stat-card--red">
+        <div class="stat-card-number">74%</div>
+        <div class="stat-card-text">cite quality &amp; trust as the #1 barrier to scaling AI agents </div>
+        <div class="stat-card-text"> - gartner report</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">08</div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 8: SOUND FAMILIAR?
+     ============================================================ -->
+<!-- <section class="slide" data-slide="7">
+  <div class="section-label">The Problem</div>
+  <div class="slide-title">Sound familiar?</div>
+  <div class="slide-3-layout">
+    <div class="slide-3-left">
+      <div class="slack-container">
+        <div class="slack-header">
+          <span class="slack-header-hash">#</span>
+          <span class="slack-header-channel">ai-agent-quality</span>
+        </div>
+        <div class="slack-messages">
+          <div class="slack-msg">
+            <div class="slack-avatar" style="background: var(--red);">CS</div>
+            <div class="slack-msg-content">
+              <div class="slack-msg-name">Customer Success<span class="slack-msg-time">10:14 AM</span></div>
+              <div class="slack-msg-body">The AI agent isn't working - three enterprise customers escalated this morning alone.</div>
+            </div>
+          </div>
+          <div class="slack-msg">
+            <div class="slack-avatar" style="background: var(--amber);">EM</div>
+            <div class="slack-msg-content">
+              <div class="slack-msg-name">Engineering Manager<span class="slack-msg-time">10:22 AM</span></div>
+              <div class="slack-msg-body">Checked the logs. Overall score looks fine? The model must be hallucinating on edge cases.</div>
+            </div>
+          </div>
+          <div class="slack-msg">
+            <div class="slack-avatar" style="background: var(--charcoal);">VP</div>
+            <div class="slack-msg-content">
+              <div class="slack-msg-name">VP of Technology<span class="slack-msg-time">10:31 AM</span></div>
+              <div class="slack-msg-body">We can't keep scaling this without knowing what's actually breaking. What's the root cause?</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-3-right">
+      <div class="bottom-punchline">
+        Your Customer Success team escalates. Engineering investigates.<br>Everyone blames the model.<br><br>
+        But <span class="punchline-red">Unable to pinpoint</span> <span class="punchline-highlight">which layer</span> is actually failing.
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">09</div>
+</section> -->
+
+<!-- ============================================================
+     SLIDE 4: MICROSOFT LEARNINGS
+     ============================================================ -->
+<section class="slide" data-slide="3">
+  <div class="section-label">Founder Insight</div>
+  <div class="slide-title">What I Learned Building AI Agents at <span class="blue">Microsoft</span></div>
+
+  <div class="learning-flow">
+    <div class="learning-steps">
+      <div class="learning-step">
+        <div class="learning-step-icon">🤖</div>
+        <div class="learning-step-kicker">Step 1</div>
+        <div class="learning-step-title">Build Agents</div>
+        <ul class="learning-step-points">
+          <li><strong>Enterprise AI agents</strong></li>
+          <li>Deployed for early enterprise customers</li>
+          <li>Strong interest and clear demand</li>
+        </ul>
+      </div>
+      <div class="learning-step learning-step--warning">
+        <div class="learning-step-icon">❗</div>
+        <div class="learning-step-kicker">Step 2</div>
+        <div class="learning-step-title">Customer Pushback</div>
+        <ul class="learning-step-points">
+          <li>Low reliability</li>
+          <li>Hallucinations</li>
+          <li>Hard to debug</li>
+          <li><strong>Quality ~60%</strong></li>
+        </ul>
+      </div>
+      <div class="learning-step learning-step--attempt">
+        <div class="learning-step-icon">🔧</div>
+        <div class="learning-step-kicker">Step 3</div>
+        <div class="learning-step-title">First Attempt</div>
+        <ul class="learning-step-points">
+          <li>Final answer evals</li>
+          <li>More tools</li>
+          <li>More reasoning</li>
+          <li><strong>Still inconsistent</strong></li>
+        </ul>
+      </div>
+      <div class="learning-step learning-step--breakthrough">
+        <div class="learning-step-icon">🔬</div>
+        <div class="learning-step-kicker">Step 4</div>
+        <div class="learning-step-title">Breakthrough</div>
+        <ul class="learning-step-points">
+          <li>Layer-wise evaluation</li>
+          <li>Measured: intent, retrieval, reasoning, tools</li>
+          <li>Offline evals + production signals</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="learning-bottom">
+      <div class="learning-result-card">
+        <div class="learning-result-label">Result</div>
+        <div class="learning-result-title">Agent Quality</div>
+        <div class="learning-result-metric"><span class="from">60%</span> → <span class="to">83%</span></div>
+        <div class="learning-result-subtext">And improving as evaluation became Layer-wise instead of output-only.</div>
+      </div>
+      <div class="learning-insight-card">
+        <div class="learning-insight-label">Most Important Insight</div>
+        <div class="learning-insight-quote">⚠️ The problem wasn’t the model - It was everything else around.</div>
+        <!-- <div class="learning-insight-copy">Teams couldn’t see where the agent failed. Once we measured the full system instead of just the final answer, improvement became faster, more reliable, and easier to explain.</div> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">05</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 5: SEISMIC LEARNINGS
+     ============================================================ -->
+<section class="slide" data-slide="4">
+  <div class="section-label">Founder Insight</div>
+  <div class="slide-title">What I Learned Building AI Agents at <span class="blue">Seismic</span></div>
+
+  <div class="learning-flow">
+    <div class="learning-steps">
+      <div class="learning-step">
+        <div class="learning-step-icon">🏢</div>
+        <div class="learning-step-kicker">Step 1</div>
+        <div class="learning-step-title">Enterprise B2B Agents</div>
+        <ul class="learning-step-points">
+          <li>Customers across multiple industries</li>
+          <li>Real enterprise workflows and demand</li>
+          <li>Momentum for broader AI adoption</li>
+        </ul>
+      </div>
+      <div class="learning-step learning-step--warning">
+        <div class="learning-step-icon">⚠️</div>
+        <div class="learning-step-kicker">Step 2</div>
+        <div class="learning-step-title">Production Pushback</div>
+        <ul class="learning-step-points">
+          <li>Dataset with <strong>100+ prompts</strong> looked good</li>
+          <li>C0 / offline signal said "good"</li>
+          <li>But production feedback was critical and kept pushing back</li>
+        </ul>
+      </div>
+      <div class="learning-step learning-step--attempt">
+        <div class="learning-step-icon">🔁</div>
+        <div class="learning-step-kicker">Step 3</div>
+        <div class="learning-step-title">Reactive Loop</div>
+        <ul class="learning-step-points">
+          <li>Debug only after failures showed up</li>
+          <li>Reactive loop became exhausting</li>
+          <li><strong>CTO + CPO slowed down AI growth</strong></li>
+        </ul>
+      </div>
+      <div class="learning-step learning-step--breakthrough">
+        <div class="learning-step-icon">🔬</div>
+        <div class="learning-step-kicker">Step 4</div>
+        <div class="learning-step-title">Breakthrough</div>
+        <ul class="learning-step-points">
+          <li>Introduced <strong>synthetic data + layer evals</strong></li>
+          <li>Found multiple root causes</li>
+          <li>Shifted the team toward eval-driven development</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="learning-bottom">
+      <div class="learning-result-card">
+        <div class="learning-result-label">Result</div>
+        <div class="learning-result-title">Reliability</div>
+        <div class="learning-result-metric"><span class="to">81%</span></div>
+        <div class="learning-result-subtext">Still improving as synthetic data and layer-level evaluation became part of the workflow.</div>
+      </div>
+      <div class="learning-insight-card">
+        <div class="learning-insight-label">Operating Change</div>
+        <div class="learning-insight-quote">CPO strictly implemented “eval-driven development.”</div>
+        <div class="learning-insight-copy">The moment evaluation became part of how teams shipped, reliability improved and leadership regained confidence to keep investing in AI.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">06</div>
+</section>
+
+
+
+
+
+<!-- ============================================================
+     SLIDE 10: THE ROOT CAUSE
+     ============================================================ -->
+<!-- <section class="slide" data-slide="9">
+  <div class="section-label">The Insight</div>
+  <div class="slide-title">Every AI agent has 7 layers, and each one can fail <span class="blue">independently.</span></div>
+  <div class="slide-4-layout">
+    <div class="layer-stack">
+      <div class="layer-node">Intent</div>
+      <div class="layer-arrow-right">→</div>
+      <div class="layer-node">Reasoning</div>
+      <div class="layer-arrow-right">→</div>
+      <div class="layer-node">Retrieval</div>
+      <div class="layer-arrow-right">→</div>
+      <div class="layer-node">Memory</div>
+      <div class="layer-arrow-right">→</div>
+      <div class="layer-node">Tool Use</div>
+      <div class="layer-arrow-right">→</div>
+      <div class="layer-node">Generation</div>
+      <div class="layer-arrow-right">→</div>
+      <div class="layer-node">Business</div>
+    </div>
+    <div class="slide-4-bottom">
+      <div class="slide-4-punchline">
+        Most tools <strong>only</strong> score the <strong>final answer</strong>.<br>
+        A green overall score hides failing layers underneath.
+      </div>
+      <div class="example-box">
+        <div class="example-title">Current tool vs. reality</div>
+        <div class="example-row">
+          <span class="label">Final Answer Quality</span>
+          <span class="value green">88% ✓</span>
+        </div>
+        <div class="example-row" style="border-top: 1px dashed var(--border); padding-top: 0.8rem; margin-top: 0.4rem;">
+          <span class="label">Intent Routing (hidden)</span>
+          <span class="value red">41% ✗</span>
+        </div>
+        <div class="example-row">
+          <span class="label">Retrieval Precision (hidden)</span>
+          <span class="value amber">68% ~</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">10</div>
+</section> -->
+
+<!-- ============================================================
+     SLIDE 11: THE PROMISE
+     ============================================================ -->
+
+<!-- ============================================================
+     SLIDE 12: THE SOLUTION
+     ============================================================ -->
+<!-- <section class="slide" data-slide="11">
+  <div class="section-label">The Solution</div>
+  <div class="slide-title" style="max-width: 100%;">supa<span class="blue">eval</span> pinpoints where your agents are failing.</div>
+  <div class="steps-row">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-name">Connect</div>
+      <div class="step-desc">One SDK call, any framework.<br>Python or TypeScript.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-name">Evaluate</div>
+      <div class="step-desc">Every layer scored independently.<br>Synthetic data amplifies your test coverage from 30 to 2,000+ cases.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-name">Fix</div>
+      <div class="step-desc">Root cause identified with fix suggestions.<br>Not just what's broken - how to fix it.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">12</div>
+</section> -->
+
+<!-- ============================================================
+     SLIDE 13: AGENT HEALTH MONITOR
+     ============================================================ -->
+<section class="slide" data-slide="12">
+  <div class="section-label">The Solution: SupaEval Platform</div>
+  <div class="dashboard-wrapper">
+    <div class="dashboard-context">
+      <div class="slide-title" style="max-width: 100%; font-size: 2.2rem;"><span class="blue">Pin Point & Fix where your agents are failing</span></div>
+      <div class="slide-title" style="max-width: 100%; font-size: 2.2rem;"><span>No more trace by trace. The root cause and fix are right there.</span></div>
+      <!-- <p>The Agent Health Monitor shows every layer of your agent - scored independently.</p> -->
+      <!-- <p>No more trace by trace. The root cause and fix are right there.</p> -->
+      <!-- <div class="callout">
+        <strong>Notice:</strong><br>Final answer: 88%. Looks healthy.<br>Intent routing: 41%. Completely broken.<br>Your current tool misses this. <strong><span style="color: var(--ink);">supa</span><span style="color: var(--blue);">eval</span></strong> doesn't.
+      </div> -->
+    </div>
+    <div class="dashboard-card">
+      <div class="dash-header">
+        <div class="dash-agent">// ENTERPRISE RAG AGENT - PROD</div>
+        <div class="dash-live">LIVE</div>
+      </div>
+      <div class="dash-layers">
+        <div class="dash-layer">
+          <div class="dash-layer-name">Intent Routing</div>
+          <div class="dash-bar-bg"><div class="dash-bar-fill" style="width: 41%; background: var(--red);"></div></div>
+          <div class="dash-pct" style="color: var(--red);">41%</div>
+        </div>
+        <div class="dash-layer">
+          <div class="dash-layer-name">Doc Hit Rate</div>
+          <div class="dash-bar-bg"><div class="dash-bar-fill" style="width: 68%; background: var(--amber);"></div></div>
+          <div class="dash-pct" style="color: var(--amber);">68%</div>
+        </div>
+        <div class="dash-layer">
+          <div class="dash-layer-name">Retrieval Prec.</div>
+          <div class="dash-bar-bg"><div class="dash-bar-fill" style="width: 72%; background: var(--amber);"></div></div>
+          <div class="dash-pct" style="color: var(--amber);">72%</div>
+        </div>
+        <div class="dash-layer">
+          <div class="dash-layer-name">Chunking</div>
+          <div class="dash-bar-bg"><div class="dash-bar-fill" style="width: 91%; background: var(--green);"></div></div>
+          <div class="dash-pct" style="color: var(--green);">91%</div>
+        </div>
+        <div class="dash-layer">
+          <div class="dash-layer-name">Final Answer</div>
+          <div class="dash-bar-bg"><div class="dash-bar-fill" style="width: 88%; background: var(--green);"></div></div>
+          <div class="dash-pct" style="color: var(--green);">88%</div>
+        </div>
+      </div>
+      <div class="dash-rootcause">
+        <div class="rc-label">Root Cause</div>
+        <div class="rc-text">Intent routing is broken at layer 1. Queries are being misclassified, sending retrieval down the wrong path.</div>
+      </div>
+      <div class="dash-fix">
+        <div class="fix-label">Suggested Fix</div>
+        <div class="fix-text">Update system prompt to include explicit intent categories with example queries. Add fallback routing for ambiguous intents.</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">13</div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 14: BEFORE / AFTER
+     ============================================================ -->
+<!-- <section class="slide" data-slide="13">
+  <div class="section-label">The Transformation</div>
+  <div class="slide-title">Before and after supa<span class="blue">eval</span></div>
+  <div class="ba-grid">
+    <div class="ba-col before">
+      <h3>Before</h3>
+      <div class="ba-row">
+        <span class="ba-metric">Time to find root cause</span>
+        <span class="ba-value">Days</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Test coverage</span>
+        <span class="ba-value">10-30 prompts</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Diagnosis</span>
+        <span class="ba-value">"It's hallucinating"</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Annual cost</span>
+        <span class="ba-value">$300-500K</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Detection</span>
+        <span class="ba-value">Reactive</span>
+      </div>
+    </div>
+    <div class="ba-col after">
+      <h3>After</h3>
+      <div class="ba-row">
+        <span class="ba-metric">Time to find root cause</span>
+        <span class="ba-value">30 minutes</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Test coverage</span>
+        <span class="ba-value">2,000+ cases</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Diagnosis</span>
+        <span class="ba-value">"Intent at L1: 41%"</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Annual cost</span>
+        <span class="ba-value">$50-100/run</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-metric">Detection</span>
+        <span class="ba-value">Proactive</span>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">14</div>
+</section> -->
+
+<!-- ============================================================
+     SLIDE 15: REAL RESULTS
+     ============================================================ -->
+<!-- <section class="slide" data-slide="14">
+  <div class="section-label">Validation</div>
+  <div class="slide-title">Real production <span class="blue">results</span></div>
+  <div class="case-card">
+    <div class="case-quote">
+      An enterprise B2B SaaS ($3B+ company, 20+ production agents) saw their existing eval tool report overall quality above 90%. But customer complaints kept rising. Layer-by-layer evaluation revealed retrieval and intent layers were driving production failures - completely hidden by the aggregate score.
+    </div>
+    <div class="case-results">
+      <div class="case-result">
+        <div class="number">30 min</div>
+        <div class="label">to identify root cause</div>
+      </div>
+      <div class="case-result">
+        <div class="number">63% → 81%</div>
+        <div class="label">quality improvement</div>
+      </div>
+      <div class="case-result">
+        <div class="number">2</div>
+        <div class="label">layers identified as root cause</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">15</div>
+</section> -->
+<!-- ============================================================
+     SLIDE 6: OBSERVABILITY VS QUALITY
+     ============================================================ -->
+<section class="slide" data-slide="5">
+  <div class="section-label">Category Shift</div>
+  <div class="slide-title" style="max-width: 100%;">Observability tells you what happened. <span class="blue">Quality tells you whether the AI is Reliable.</span></div>
+
+  <div class="quality-compare-layout">
+    <div class="quality-compare-card">
+      <div class="quality-compare-label">Traditional Software</div>
+      <div class="quality-compare-title">Logs + metrics + tracing = <span class="blue">observability</span></div>
+      <div class="quality-compare-stack">
+        <div class="quality-pill obs">Logs</div>
+        <div class="quality-pill obs">Metrics</div>
+        <div class="quality-pill obs">Tracing</div>
+      </div>
+    </div>
+
+    <div class="quality-equals">
+      <div class="quality-equals-icon">vs</div>
+      <div class="quality-equals-text">What changes for AI</div>
+    </div>
+
+    <div class="quality-compare-card">
+      <div class="quality-compare-label">AI Systems</div>
+      <div class="quality-compare-title">Observability + evals + Latency + Cost + governance = <span class="blue">AI quality</span></div>
+      <div class="quality-compare-stack">
+        <div class="quality-pill obs">Observability</div>
+        <div class="quality-pill eval">Evaluation</div>
+        <div class="quality-pill eval">Latency+ Cost</div>
+        <div class="quality-pill gov">Governance</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">07</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 16: WHAT'S INCLUDED
+     ============================================================ -->
+<!-- <section class="slide" data-slide="15">
+  <div class="section-label">Platform</div>
+  <div class="slide-title" style="max-width: 100%;">Everything you need to <span class="blue">ship better agents</span></div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <div class="feature-name">Layer-by-Layer Evaluation</div>
+      <div class="feature-desc">Score every layer independently.<br>Retrieval, intent, chunking, generation, tool use.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <div class="feature-name">Agent Health Monitor</div>
+      <div class="feature-desc">One dashboard, zero guessing.<br>Real-time layer scores for every agent.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧪</div>
+      <div class="feature-name">Synthetic Data Pipeline</div>
+      <div class="feature-desc">200 seed prompts → 2,000+ test cases.<br>No manual prompt writing.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔧</div>
+      <div class="feature-name">Fix Suggestions</div>
+      <div class="feature-desc">Actionable recommendations for each failing layer.<br>Not just scores.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-name">SDK (Python & TypeScript)</div>
+      <div class="feature-desc">One function call to connect.<br>Any framework. Any model provider.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔄</div>
+      <div class="feature-name">CI/CD Integration</div>
+      <div class="feature-desc">Eval on every PR. Pre-deployment quality gates.<br>Catch regressions automatically.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">16</div>
+</section> -->
+
+<!-- ============================================================
+     SLIDE 17: PLATFORM STACK
+     ============================================================ -->
+<section class="slide" data-slide="16">
+  <div class="section-label">Platform Vision</div>
+  <div class="slide-title" style="max-width: 100%; margin-bottom: 0.5rem;">SupaEval is building the <span class="blue">quality infrastructure platform</span> for AI applications.</div>
+
+  <div class="stack-slide-layout">
+    <div class="stack-frame">
+      <div class="stack-frame-header">
+        <div class="stack-frame-title">SupaEval <span class="blue">quality infra</span></div>
+        <div class="stack-frame-kicker">Foundation → Optimization → Trust</div>
+      </div>
+
+      <div class="stack-grid">
+        <div class="stack-visual">
+          <div class="stack-group">
+            <div class="stack-brace" aria-hidden="true">
+              <svg viewBox="0 0 40 220" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 4 C14 4, 14 20, 14 42 L14 70 C14 86, 8 96, 2 100 C8 104, 14 114, 14 130 L14 178 C14 200, 14 216, 32 216" stroke="#F59E0B" stroke-width="3" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="stack-group-content">
+              <div class="stack-group-title">Trust</div>
+              <div class="stack-layer trust">
+                <div class="stack-layer-label">Trust Layer</div>
+                <div class="stack-layer-name">Governance / Compliance</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stack-group">
+            <div class="stack-brace" aria-hidden="true">
+              <svg viewBox="0 0 40 220" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 4 C14 4, 14 20, 14 42 L14 70 C14 86, 8 96, 2 100 C8 104, 14 114, 14 130 L14 178 C14 200, 14 216, 32 216" stroke="#1B6FEE" stroke-width="3" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="stack-group-content">
+              <div class="stack-group-title">Optimization & Evals+</div>
+              <div class="stack-layer optimization">
+                <div class="stack-layer-label">Optimization Layer</div>
+                <div class="stack-layer-name">Performance &amp; Cost Observability</div>
+              </div>
+              <div class="stack-layer evaluation">
+                <div class="stack-layer-label">Evaluation Layer</div>
+                <div class="stack-layer-name">Multimodal / Voice Evaluation</div>
+              </div>
+              <div class="stack-layer evaluation">
+                <div class="stack-layer-label">Evaluation Layer</div>
+                <div class="stack-layer-name">SOTA SLM Judge Models</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stack-group">
+            <div class="stack-brace" aria-hidden="true">
+              <svg viewBox="0 0 40 220" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 4 C14 4, 14 20, 14 42 L14 70 C14 86, 8 96, 2 100 C8 104, 14 114, 14 130 L14 178 C14 200, 14 216, 32 216" stroke="#0F172A" stroke-width="3" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="stack-group-content">
+              <div class="stack-group-title">Foundation</div>
+              <div class="stack-layer evaluation">
+                <div class="stack-layer-label">Foundation</div>
+                <div class="stack-layer-name">Synthetic Data Generation</div>
+              </div>
+              <div class="stack-layer current">
+                <div class="stack-layer-label">Foundation</div>
+                <div class="stack-layer-name">Agent Debugging (SupaEval Today)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-num">17</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 18: QUALITY INFRA ROADMAP
+     ============================================================ -->
+<!-- <section class="slide" data-slide="17">
+  <div class="section-label">Quality Infra</div>
+  <div class="slide-title" style="max-width: 100%;">AI needs <span class="blue">quality</span> more than observability. SupaEval is building a quality infra.</div>
+
+  <div class="infra-roadmap-layout">
+    <div class="infra-stack-card">
+      <div class="infra-stack-label">Layered Quality Stack</div>
+      <div class="infra-layer trust">
+        <div class="layer-name">Trust Layer</div>
+        <div class="layer-copy">Security • Compliance • Governance</div>
+      </div>
+      <div class="infra-layer optimization">
+        <div class="layer-name">Optimization Layer</div>
+        <div class="layer-copy">Performance • Latency • Cost</div>
+      </div>
+      <div class="infra-layer evaluation">
+        <div class="layer-name">Evaluation Layer</div>
+        <div class="layer-copy">Voice • Multimodal • Agents</div>
+      </div>
+      <div class="infra-layer release">
+        <div class="layer-name">Release Layer</div>
+        <div class="layer-copy">Regression • Version comparison</div>
+      </div>
+      <div class="infra-layer data">
+        <div class="layer-name">Data Layer</div>
+        <div class="layer-copy">Synthetic data generation</div>
+      </div>
+      <div class="infra-layer foundation">
+        <div class="layer-name">Foundation</div>
+        <div class="layer-copy">Agent debugging</div>
+      </div>
+    </div>
+
+    <div class="infra-roadmap-card">
+      <div class="infra-roadmap-head">
+        <div>
+          <div class="infra-roadmap-label">Roadmap</div>
+          <div class="infra-roadmap-title">Building from the <span class="blue">bottom up</span></div>
+        </div>
+        <div class="stack-frame-kicker">SupaEval Today → Release &amp; Regressions</div>
+      </div>
+      <div class="infra-roadmap-copy">The roadmap starts with agent debugging, grows through synthetic data and release evaluation, and expands upward into multimodal quality, optimization, and trust infrastructure.</div>
+      <div class="infra-svg-wrap">
+        <svg width="100%" viewBox="0 0 540 540" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M270 500 L270 110" stroke="#0F172A" stroke-width="10" stroke-linecap="round"/>
+          <path d="M270 70 L235 130 H305 L270 70Z" fill="#1B6FEE"/>
+
+          <rect x="120" y="430" width="300" height="56" rx="18" fill="url(#foundationGrad)" stroke="#1B6FEE" stroke-width="2.5"/>
+          <text x="270" y="452" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" fill="#1B6FEE">FOUNDATION</text>
+          <text x="270" y="472" text-anchor="middle" font-family="Outfit, sans-serif" font-size="20" font-weight="800" fill="#0F172A">Agent Debugging</text>
+
+          <rect x="144" y="354" width="252" height="52" rx="18" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2"/>
+          <text x="270" y="375" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#64748B">DATA</text>
+          <text x="270" y="394" text-anchor="middle" font-family="Outfit, sans-serif" font-size="17" font-weight="700" fill="#0F172A">Synthetic Data</text>
+
+          <rect x="132" y="282" width="276" height="54" rx="18" fill="#F5FBFF" stroke="#0EA5E9" stroke-width="2"/>
+          <text x="270" y="304" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#0284C7">RELEASE</text>
+          <text x="270" y="323" text-anchor="middle" font-family="Outfit, sans-serif" font-size="17" font-weight="700" fill="#0F172A">Regression + Version Comparison</text>
+
+          <rect x="150" y="206" width="240" height="52" rx="18" fill="#F8FBFF" stroke="#3B82F6" stroke-width="2"/>
+          <text x="270" y="228" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#2563EB">EVALUATION</text>
+          <text x="270" y="247" text-anchor="middle" font-family="Outfit, sans-serif" font-size="17" font-weight="700" fill="#0F172A">Voice • Multimodal • Agents</text>
+
+          <rect x="176" y="138" width="188" height="48" rx="18" fill="#F3F8FF" stroke="#1B6FEE" stroke-width="2"/>
+          <text x="270" y="159" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#1D4ED8">OPTIMIZATION</text>
+          <text x="270" y="177" text-anchor="middle" font-family="Outfit, sans-serif" font-size="16" font-weight="700" fill="#0F172A">Perf • Latency • Cost</text>
+
+          <rect x="194" y="82" width="152" height="40" rx="16" fill="#FFF9ED" stroke="#F59E0B" stroke-width="2"/>
+          <text x="270" y="98" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#B45309">TRUST</text>
+          <text x="270" y="113" text-anchor="middle" font-family="Outfit, sans-serif" font-size="15" font-weight="700" fill="#0F172A">Security • Compliance • Governance</text>
+
+          <defs>
+            <linearGradient id="foundationGrad" x1="120" y1="430" x2="420" y2="486" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#E8F1FD"/>
+              <stop offset="1" stop-color="#FFFFFF"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <div class="slide-num">18</div>
+</section> -->
+<!-- ============================================================
+     SLIDE: POSITIONING LANDSCAPE
+     ============================================================ -->
+<section class="slide" data-slide="13">
+  <div class="section-label">Category Landscape</div>
+  <div class="slide-title">Positioning in the <span class="blue">AI Evaluation Landscape</span></div>
+
+  <div class="landscape-layout">
+    <div class="landscape-card">
+      <div class="landscape-chart">
+        <div class="landscape-y-label"> Evaluation → AI Quality Infrastructure</div>
+        <div class="landscape-axis-y"></div>
+        <div class="landscape-axis-x"></div>
+        <div class="landscape-bubbles">
+          <div class="landscape-bubble evaluation promptfoo">
+            <div class="landscape-dot"></div>
+            <div>
+              <div class="landscape-bubble-name">DeepEval</div>
+              <div class="landscape-bubble-copy">Final Ans Eval</div>
+            </div>
+          </div>
+          <div class="landscape-bubble evaluation ragas">
+            <div class="landscape-dot"></div>
+            <div>
+              <div class="landscape-bubble-name">RAGAS</div>
+              <div class="landscape-bubble-copy">Final Ans Eval</div>
+            </div>
+          </div>
+          <div class="landscape-bubble evaluation braintrust">
+            <div class="landscape-dot"></div>
+            <div>
+              <div class="landscape-bubble-name">Braintrust</div>
+              <div class="landscape-bubble-copy">Final Ans Eval + Integrations</div>
+            </div>
+          </div>
+          <div class="landscape-bubble observability arize">
+            <div class="landscape-dot"></div>
+            <div>
+              <div class="landscape-bubble-name">Arize / Phoenix</div>
+              <div class="landscape-bubble-copy">Final Answer Eval</div>
+            </div>
+          </div>
+          <div class="landscape-bubble agent futureagi">
+            <div class="landscape-dot"></div>
+            <div>
+              <div class="landscape-bubble-name">FutureAGI</div>
+              <div class="landscape-bubble-copy">Layer Eval</div>
+            </div>
+          </div>
+          <div class="landscape-bubble infrastructure supaeval">
+            <div class="landscape-dot"></div>
+            <div>
+              <div class="landscape-bubble-name">SupaEval</div>
+              <div class="landscape-bubble-copy">Layer-wise evaluation + Quality Infra Roadmap</div>
+            </div>
+          </div>
+        </div>
+        <div class="landscape-x-labels">
+          <span>Prompt-Level</span>
+          <span>System-Level Understanding</span>
+        </div>
+      </div>
+
+      <div class="landscape-legend">
+        <div class="landscape-legend-item blue"><span class="landscape-legend-swatch"></span><span>Evaluation tools</span></div>
+        <div class="landscape-legend-item purple"><span class="landscape-legend-swatch"></span><span>Observability</span></div>
+        <div class="landscape-legend-item orange"><span class="landscape-legend-swatch"></span><span>Agent evaluation</span></div>
+        <div class="landscape-legend-item green"><span class="landscape-legend-swatch"></span><span>Quality infrastructure</span></div>
+      </div>
+    </div>
+
+    <div class="landscape-insight">
+      <div class="landscape-insight-strong">Most tools evaluate prompts, retrieval, or traces. SupaEval evaluates the entire AI system.</div>
+      <div class="landscape-insight-copy">The category is evolving from evaluation to observability to AI quality infrastructure, and SupaEval sits at the top-right of that evolution with system-depth plus broad quality coverage.</div>
+    </div>
+  </div>
+
+  <div class="slide-num">14</div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 19: CTA
+     ============================================================ -->
+<section class="slide slide-cta" data-slide="18">
+  <!-- <div class="slide-title" style="max-width: none;"><span class="blue">ASK</span> </div>
+  <div class="cta-steps">
+    <div class="cta-step"><span class="arrow">→</span> Mentors</div>
+    <div class="cta-step"><span class="arrow">→</span> GTM /Sales motion</div>
+    <div class="cta-step"><span class="arrow">→</span> Design Partners</div>
+  </div> -->
+  <div class="cta-partners">
+    <div class="slide-title"><span class="blue">Current Stage: PMF & Way to One Paying customer</span></div>
+    <div class="cta-partner-logos">
+      <div class="cta-partner-card">
+        <img src="./partners/Mozark%20Logo%20Blue.avif" alt="Mozark logo">
+      </div>
+      <div class="cta-partner-card">
+        <img src="./partners/featurebox_ai_logo.jpeg" alt="Featurebox AI logo">
+      </div>
+    </div>
+  </div>
+  <div class="slide-title" style="max-width: none;"><span class="blue">Q & A</span> </div>
+  <div class="slide-footer"><span class="logo-small"><span class="supa">supa</span><span class="eval">eval</span></span><span class="footer-sep">|</span><span class="footer-tagline">eval. ship. repeat.</span></div>
+  <!-- <a href="mailto:imran@supaeval.com" class="cta-button">Book a Demo</a>
+  <div class="cta-contact">
+    <a href="mailto:imran@supaeval.com">imran@supaeval.com</a> &nbsp;|&nbsp; <a href="https://supaeval.com">supaeval.com</a>
+  </div> -->
+</section>
+
+<!-- ============================================================
+     JAVASCRIPT: Navigation, scroll-snap, keyboard
+     ============================================================ -->
+<script>
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const navDots = document.getElementById('navDots');
+  const keyHint = document.getElementById('keyHint');
+
+  // Create nav dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    dot.addEventListener('click', () => {
+      slides[i].scrollIntoView({ behavior: 'smooth' });
+    });
+    navDots.appendChild(dot);
+  });
+
+  const dots = document.querySelectorAll('.nav-dot');
+
+  // Intersection observer for active slide
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = parseInt(entry.target.dataset.slide);
+
+        // Update dots
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+
+        // Add visible class for animations
+        entry.target.classList.add('visible');
+
+        // Hide key hint after first scroll
+        if (idx > 0) keyHint.classList.remove('visible');
+      }
+    });
+  }, { threshold: 0.5 });
+
+  slides.forEach(slide => observer.observe(slide));
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+      e.preventDefault();
+      const current = getCurrentSlide();
+      if (current < slides.length - 1) {
+        slides[current + 1].scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      const current = getCurrentSlide();
+      if (current > 0) {
+        slides[current - 1].scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  });
+
+  function getCurrentSlide() {
+    let current = 0;
+    slides.forEach((slide, i) => {
+      const rect = slide.getBoundingClientRect();
+      if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+        current = i;
+      }
+    });
+    return current;
+  }
+
+  // Auto-hide key hint after 5s
+  setTimeout(() => keyHint.classList.remove('visible'), 5000);
+})();
+</script>
+
+</body>
+</html>

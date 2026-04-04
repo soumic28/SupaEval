@@ -67,9 +67,11 @@ export function Navbar() {
                     )}>
                         Log in
                     </Link>
-                    <MagneticButton className="h-9 px-4 text-sm hidden sm:flex bg-foreground text-background hover:bg-foreground/90">
-                        Get Started
-                    </MagneticButton>
+                    <a href="https://calendly.com/imran-supaeval/30min" target="_blank" rel="noopener noreferrer">
+                        <MagneticButton className="h-9 px-4 text-sm hidden sm:flex bg-foreground text-background hover:bg-foreground/90">
+                            Get Started
+                        </MagneticButton>
+                    </a>
 
                     {/* Mobile Menu Button */}
                     <button
@@ -143,7 +145,9 @@ export function Navbar() {
                                 >
                                     Log in
                                 </Link>
-                                <MagneticButton className="w-full justify-center bg-foreground text-background hover:bg-foreground/90">Get Started</MagneticButton>
+                                <a href="https://calendly.com/imran-supaeval/30min" target="_blank" rel="noopener noreferrer" className="w-full">
+                                    <MagneticButton className="w-full justify-center bg-foreground text-background hover:bg-foreground/90">Get Started</MagneticButton>
+                                </a>
                             </div>
                         </div>
                     </motion.div>

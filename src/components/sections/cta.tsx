@@ -88,9 +88,11 @@ export function CTASection() {
                                 <span>Connect, evaluate, fix — your first root cause analysis <span className="text-emerald-500 font-bold tracking-wide">in one week</span>.</span>
                             </li>
                         </ul>
-                        <MagneticButton className="h-12 px-8 text-base mb-12">
-                            Book a Demo
-                        </MagneticButton>
+                        <a href="https://calendly.com/imran-supaeval/30min" target="_blank" rel="noopener noreferrer">
+                            <MagneticButton className="h-12 px-8 text-base mb-12">
+                                Book a Demo
+                            </MagneticButton>
+                        </a>
                     </ScrollReveal>
                 </div>
             </div>
@@ -142,12 +144,16 @@ export function CTASection() {
                             </p>
 
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                                <MagneticButton className="h-12 px-8 text-base">
-                                    Book a Demo
-                                </MagneticButton>
-                                <MagneticButton variant="secondary" className="h-12 px-8 text-base">
-                                    Start Free Trial
-                                </MagneticButton>
+                                <a href="https://calendly.com/imran-supaeval/30min" target="_blank" rel="noopener noreferrer">
+                                    <MagneticButton className="h-12 px-8 text-base">
+                                        Book a Demo
+                                    </MagneticButton>
+                                </a>
+                                <a href="https://calendly.com/imran-supaeval/30min" target="_blank" rel="noopener noreferrer">
+                                    <MagneticButton variant="secondary" className="h-12 px-8 text-base">
+                                        Start Free Trial
+                                    </MagneticButton>
+                                </a>
                             </div>
                         </div>
                     </div>

@@ -46,13 +46,17 @@ export function Hero() {
 
                 <ScrollReveal width="100%" delay={0.3}>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-                        <MagneticButton className="w-full sm:w-auto h-12 px-8 text-base">
-                            Book a Demo
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                        </MagneticButton>
-                        <MagneticButton variant="secondary" className="w-full sm:w-auto h-12 px-8 text-base">
-                            Start Free Trial
-                        </MagneticButton>
+                        <a href="https://calendly.com/imran-supaeval/30min" target="_blank" rel="noopener noreferrer">
+                            <MagneticButton className="w-full sm:w-auto h-12 px-8 text-base">
+                                Book a Demo
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                            </MagneticButton>
+                        </a>
+                        <a href="https://calendly.com/imran-supaeval/30min" target="_blank" rel="noopener noreferrer">
+                            <MagneticButton variant="secondary" className="w-full sm:w-auto h-12 px-8 text-base">
+                                Start Free Trial
+                            </MagneticButton>
+                        </a>
                     </div>
                 </ScrollReveal>
 

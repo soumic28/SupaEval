@@ -63,7 +63,7 @@ export function Footer() {
                                 <li><a href="#" onClick={handleComingSoon("About Us")} className="hover:text-[var(--foreground)] cursor-pointer">About</a></li>
                                 <li><a href="#" onClick={handleComingSoon("Careers")} className="hover:text-[var(--foreground)] cursor-pointer">Careers</a></li>
                                 <li><a href="#" onClick={handleComingSoon("Legal Terms")} className="hover:text-[var(--foreground)] cursor-pointer">Legal</a></li>
-                                <li><a href="#" onClick={handleComingSoon("Contact Form")} className="hover:text-[var(--foreground)] cursor-pointer">Contact</a></li>
+                                <li><a href="mailto:imran@supaeval.com" className="hover:text-[var(--foreground)]">Contact</a></li>
                             </ul>
                         </div>
                     </div>

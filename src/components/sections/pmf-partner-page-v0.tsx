@@ -6,13 +6,8 @@ import { motion, useTransform, useMotionValue, useInView, animate } from "framer
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { TextScramble } from "@/components/ui/text-scramble";
 import { OrbEffect } from "@/components/ui/orb-effect";
-import { AgentFlow } from "@/components/ui/agent-flow";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
-const StaticCard = ({ children, className = "", ...props }: { children: React.ReactNode; className?: string; [key: string]: unknown }) => (
-  <div className={`relative rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm ${className}`} {...props}>
-    <div className="relative z-10 h-full">{children}</div>
-  </div>
-);
+import { HolographicCard } from "@/components/ui/holographic-card";
 
 // Count Up Component
 const CountUp = ({ value, suffix = "", delay = 0 }: { value: number; suffix?: string; delay?: number }) => {
@@ -104,7 +99,7 @@ const PMFPartnerPage = () => {
 
         {/* Letter Section - NOW FIRST */}
         <ScrollReveal width="100%" delay={0.2}>
-          <StaticCard className="p-6 sm:p-10 md:p-16 relative border-slate-200 bg-white/50 mb-16 md:mb-20 lg:mb-32">
+          <HolographicCard className="p-6 sm:p-10 md:p-16 relative overflow-hidden border-slate-200 bg-white/50 mb-16 md:mb-20 lg:mb-32">
             <motion.div
               aria-hidden="true"
               animate={{ x: ["-12%", "12%", "-12%"], opacity: [0.35, 0.6, 0.35] }}
@@ -137,7 +132,94 @@ const PMFPartnerPage = () => {
                 <p>
                   I&apos;ve been working on a way to <HighlightPhrase className="text-slate-900">pinpoint failures</HighlightPhrase> and optimize AI agents faster.
                 </p>
-                         <AgentFlow />
+                         <motion.div
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.35 }}
+                  transition={{ duration: 0.7, ease: "easeOut" }}
+                  className="rounded-3xl border border-slate-200 bg-white/75 p-5 md:p-6 shadow-lg shadow-slate-200/40"
+                >
+                  <div className="mb-4 text-xs font-bold uppercase tracking-[0.24em] text-indigo-600">
+                    AI Agent Flow
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 md:gap-3">
+                    {["Intent", "Retrieval", "Reasoning", "Tool", "Response"].map((step, idx) => (
+                      <React.Fragment key={step}>
+                        <motion.div
+                          animate={
+                            step === "Retrieval"
+                              ? {
+                                  boxShadow: [
+                                    "0 0 0 rgba(239,68,68,0)",
+                                    "0 0 28px rgba(239,68,68,0.28)",
+                                    "0 0 0 rgba(239,68,68,0)",
+                                  ],
+                                }
+                              : {
+                                  boxShadow: [
+                                    "0 0 0 rgba(99,102,241,0)",
+                                    "0 0 18px rgba(99,102,241,0.12)",
+                                    "0 0 0 rgba(99,102,241,0)",
+                                  ],
+                                }
+                          }
+                          transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut", delay: idx * 0.15 }}
+                          className={`relative rounded-2xl border px-3 py-2 text-sm font-semibold md:px-4 md:py-2.5 md:text-base ${
+                            step === "Retrieval"
+                              ? "border-red-300 bg-red-50 text-red-600"
+                              : "border-slate-200 bg-slate-50 text-slate-700"
+                          }`}
+                        >
+                          {step}
+                          {step === "Retrieval" ? (
+                            <motion.span
+                              aria-hidden="true"
+                              animate={{ opacity: [0.5, 1, 0.5], scale: [0.95, 1.06, 0.95] }}
+                              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                              className="absolute inset-[-4px] rounded-[1.15rem] border border-red-400/50"
+                            />
+                          ) : null}
+                        </motion.div>
+                        {idx < 4 ? (
+                          <motion.span
+                            aria-hidden="true"
+                            animate={{ opacity: [0.35, 1, 0.35], x: [0, 3, 0] }}
+                            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: idx * 0.12 }}
+                            className="text-slate-300"
+                          >
+                            →
+                          </motion.span>
+                        ) : null}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                  <div className="mt-3 ml-20 md:ml-28">
+                    <motion.div
+                      aria-hidden="true"
+                      animate={{ opacity: [0.35, 1, 0.35], y: [0, 4, 0] }}
+                      transition={{ duration: 1.7, repeat: Infinity, ease: "easeInOut" }}
+                      className="mb-2 text-2xl leading-none text-red-500"
+                    >
+                      ↓
+                    </motion.div>
+                    <div className="flex items-center gap-3">
+                      <motion.span
+                        animate={{ scale: [0.92, 1.08, 0.92], opacity: [0.7, 1, 0.7] }}
+                        transition={{ duration: 1.9, repeat: Infinity, ease: "easeInOut" }}
+                        className="text-2xl text-red-500"
+                      >
+                        ✕
+                      </motion.span>
+                      <motion.div
+                        animate={{ boxShadow: ["0 0 0 rgba(99,102,241,0)", "0 0 24px rgba(99,102,241,0.18)", "0 0 0 rgba(99,102,241,0)"] }}
+                        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                        className="rounded-2xl border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-700 md:text-base"
+                      >
+                        SupaEval finds this
+                      </motion.div>
+                    </div>
+                  </div>
+                </motion.div>
 
                 <p>That&apos;s why I&apos;m building <strong className="text-indigo-600 font-bold italic tracking-tight">SupaEval</strong>.</p>
                 <p className="text-pretty">Our mission:</p>
@@ -170,7 +252,7 @@ const PMFPartnerPage = () => {
               <div className="space-y-4">
                 <div className="pt-4">
                   <ScrollReveal width="100%" delay={0.4}>
-                    <StaticCard className="mb-6 p-6 md:p-8 group border-slate-200 bg-white/50 hover:bg-white transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1">
+                    <HolographicCard className="mb-6 p-6 md:p-8 group border-slate-200 bg-white/50 hover:bg-white transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1">
                       <div className="flex justify-between items-start mb-4">
                         <h3 className="text-indigo-600 text-[10px] md:text-xs uppercase tracking-widest font-bold">Now inviting</h3>
                         <motion.div
@@ -194,18 +276,18 @@ const PMFPartnerPage = () => {
                       >
                         Apply Today <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                       </a>
-                    </StaticCard>
+                    </HolographicCard>
                   </ScrollReveal>
 
                   <ScrollReveal width="100%" delay={0.45}>
-                    <StaticCard className="mb-6 p-6 md:p-8 border-red-200 bg-red-50/70 hover:bg-red-50 transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/10 hover:-translate-y-1">
+                    <HolographicCard className="mb-6 p-6 md:p-8 border-red-200 bg-red-50/70 hover:bg-red-50 transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/10 hover:-translate-y-1">
                       <div className="text-[10px] md:text-xs uppercase tracking-widest font-bold text-red-500 mb-4">
                         Limited availability
                       </div>
                       <p className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
                         Only <span className="text-red-500">7</span> spots left
                       </p>
-                    </StaticCard>
+                    </HolographicCard>
                   </ScrollReveal>
 
                   <div className="relative mb-6">
@@ -292,7 +374,7 @@ const PMFPartnerPage = () => {
 
               </div>
             </div>
-          </StaticCard>
+          </HolographicCard>
         </ScrollReveal>
 
         {/* Hero Section - NOW SECOND */}
@@ -300,7 +382,7 @@ const PMFPartnerPage = () => {
           {/* Main Hero Card */}
           <ScrollReveal width="100%" delay={0.3}>
             <motion.div>
-              <StaticCard className="p-6 sm:p-8 md:p-12 relative overflow-hidden flex flex-col justify-center min-h-[450px] md:min-h-[500px] border-slate-200 bg-white/50 shadow-2xl shadow-indigo-500/5">
+              <HolographicCard className="p-6 sm:p-8 md:p-12 relative overflow-hidden flex flex-col justify-center min-h-[450px] md:min-h-[500px] border-slate-200 bg-white/50 shadow-2xl shadow-indigo-500/5">
                 <motion.div
                   aria-hidden="true"
                   animate={{ x: ["-10%", "16%", "-10%"], opacity: [0.3, 0.55, 0.3] }}
@@ -420,14 +502,14 @@ const PMFPartnerPage = () => {
                     </div>
                   </motion.div>
                 </div> */}
-              </StaticCard>
+              </HolographicCard>
             </motion.div>
           </ScrollReveal>
 
           {/* Side Cards */}
           <div className="flex flex-col gap-6 md:gap-8">
             {/* <ScrollReveal width="100%" delay={0.4}>
-              <StaticCard className="p-6 md:p-8 group border-slate-200 bg-white/50 hover:bg-white transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1">
+              <HolographicCard className="p-6 md:p-8 group border-slate-200 bg-white/50 hover:bg-white transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-indigo-600 text-[10px] md:text-xs uppercase tracking-widest font-bold">Now inviting</h3>
                   <motion.div
@@ -446,11 +528,11 @@ const PMFPartnerPage = () => {
                 <div className="mt-6 md:mt-8 flex items-center text-indigo-600 font-bold text-sm group-hover:gap-2 transition-all cursor-pointer">
                   Apply Today <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </div>
-              </StaticCard>
+              </HolographicCard>
             </ScrollReveal> */}
 
             <ScrollReveal width="100%" delay={0.5}>
-              <StaticCard className="p-6 md:p-8 border-slate-200 bg-white/50 hover:bg-white transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1 group">
+              <HolographicCard className="p-6 md:p-8 border-slate-200 bg-white/50 hover:bg-white transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1 group">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-indigo-600 text-[10px] md:text-xs uppercase tracking-widest font-bold">Ideal Cohort</h3>
                   <motion.div
@@ -490,7 +572,7 @@ const PMFPartnerPage = () => {
                 <p className="text-slate-600 leading-relaxed text-sm md:text-base">
                   If you’re building production-grade AI systems, this partnership is designed for you.
                 </p>
-              </StaticCard>
+              </HolographicCard>
             </ScrollReveal>
           </div>
         </div>
